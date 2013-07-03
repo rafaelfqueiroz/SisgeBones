@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-class EmprestimoDao extends AbstractEntity{
+class Emprestimo extends AbstractEntity{
     private $dataEmprestimo;
     private $dataDevolucao;
     private $emprestante;

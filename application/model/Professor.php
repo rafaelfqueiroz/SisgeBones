@@ -11,10 +11,12 @@
  * @author RAFAEL
  */
 class Professor extends AbstractEntity{
+    
     private $nome;
     private $matricula;
     private $email;
     private $rg;
+    private $login;
     private $senha;
     
     public function Professor() {}

@@ -10,10 +10,11 @@
  *
  * @author RAFAEL
  */
-class AdministradorDao extends AbstractEntity {
+class Administrador extends AbstractEntity {
     private $nome;
     private $matricula;
     private $email;
+    private $login;
     private $senha;
     
     public function Administrador() {}

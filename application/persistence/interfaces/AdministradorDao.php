@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-interface AdministradorDao extends Dao {
+interface Administrador extends Dao {
     //put your code here
 }
 

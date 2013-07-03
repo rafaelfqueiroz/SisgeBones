@@ -17,6 +17,7 @@ class Aluno extends AbstractEntity {
     private $curso;
     private $email;
     private $eMonitor;
+    private $login;
     private $senha;
     
     public function Aluno() {}

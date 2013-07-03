@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-interface EmprestimoDao extends Dao{
+interface Emprestimo extends Dao{
 }
 
 ?>

@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-class OssoDao extends AbstractEntity{
+class Osso extends AbstractEntity{
     private $nome;
     private $quantidade;
     private $codigo;
