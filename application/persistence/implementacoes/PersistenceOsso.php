@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-class OssoPersistence extends AbstractPersistence implements Osso {
+class OssoPersistence extends AbstractPersistence implements OssoDao {
 
     protected function conseguirNomeDaTabela() {
         return "Osso";
@@ -19,10 +19,10 @@ class OssoPersistence extends AbstractPersistence implements Osso {
     protected function dadosParaModel() {
         while ($row = mysql_fetch_array($this->resultado)) {
             $model = new Osso();
-            $model->id = $row["id"];
-            $model->nome = $row["nome"];
-            $model->matricula = $row["quantidade"];
-            $model->email = $row["codigo"];
+            $model->setId($row["id"]);
+            $model->setNome($row["nome"]);
+            $model->setQuantidade($row["quantidade"]);
+            $model->setEmail($row["codigo"]);
             $this->lista[] = $model;
         }
     }
@@ -38,17 +38,16 @@ class OssoPersistence extends AbstractPersistence implements Osso {
     }
 
     protected function listarColunasComValores($model) {
-        $columns[] = "nome = '$model->nome'";
-        $columns[] = "matricula = '$model->quantidade'";
-        $columns[] = "email = '$model->codigo'";
+        $columns[] = "nome = '$model->getNome()'";
+        $columns[] = "matricula = '$model->getQuantidade()'";
+        $columns[] = "email = '$model->getCodigo()'";
         return implode(', ', $columns);
     }
 
     protected function listarValores($model) {
-        $values[] = "'$model->id'";
-        $values[] = "'$model->nome'";
-        $values[] = "'$model->quantidade'";
-        $values[] = "'$model->codigo'";
+        $values[] = "'{$model->getNome()}'";
+        $values[] = "'{$model->getQuantidade()}'";
+        $values[] = "'{$model->getCodigo()}'";
         return implode(', ', $values);
     }
 }

@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-class AlunoPersistence extends AbstractPersistence {
+class AlunoPersistence extends AbstractPersistence implements AlunoDao{
 
     protected function conseguirNomeDaTabela() {
         return "Aluno";

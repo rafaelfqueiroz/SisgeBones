@@ -1,6 +1,25 @@
 <?php 
     include_once 'application/view/header.view.php';
+    include_once 'application/config.php';
+    
+    include_once 'application/controller/Controller.php';
+    include_once 'application/controller/CrudController.php';
+    include_once 'application/model/AbstractEntity.php';
+    include_once 'application/view/AbstractView.php';
+            
+    include_once 'application/persistence/abstracao/Dao.php';
+    include_once 'application/persistence/abstracao/Persistencia.php';
+    include_once 'application/persistence/interfaces/OssoDao.php';
+    
+    include_once 'application/model/Osso.php';
+    include_once 'application/controller/ControllerOsso.php';    
+    include_once 'application/persistence/implementacoes/PersistenceOsso.php';
+    include_once 'application/view/ViewOsso.php';
+    
+    $viewOsso = new ViewOsso();
 ?>
+
+<script src="resource/js/sisgebones/scriptValidateOsso.js"></script>
 
 <header>
     <div class="navbar navbar-inverse">
@@ -15,7 +34,8 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="index.php"></a><span class="divider"></span></li>
+                    <li class="home"><a href="index.php"></a><span class="divider"></span></li>                  
+                    <li class="active">Página de Ossos</li>
                 </ul>
                 
                 <ul class="profileBar">
@@ -46,13 +66,13 @@
     </form>
     
     <ul class="sideMenu">
-        <li class="active">
+        <li>
             <a href="index.php">Dashboard</a>
         </li>
         <li>
             <a href="emprestimo.php">Empréstimo</a>            
         </li>
-        <li>
+        <li class="active">
             <a href="osso.php">Osso</a>
         </li>
         <li>
@@ -70,7 +90,7 @@
 <div id="content" class="content-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2>Dashboard</h2>
+            <h2>Osso</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
                 <input id="prependedInput" class="text-center" type="text" 
@@ -82,23 +102,17 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab1" data-toggle="tab">Realizar Empréstimo</a></li>
-                    <li><a href="#tab2" data-toggle="tab">Listar Empréstimos</a></li>
-                    <li><a href="#tab3" data-toggle="tab">Empréstimos Pendentes</a></li>
+                    <li class="active"><a href="#cadastrar" data-toggle="tab">Cadastrar Osso</a></li>
+                    <li><a href="#listar-ossos" data-toggle="tab">Listar Ossos</a></li>                    
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
-                        <div class="btn-group pull-right mrg-btm10" data-toggle="buttons-radio">
-                            <button class="btn active">Day</button>
-                            <button class="btn">Month</button>
-                            <button class="btn">Year</button>
-                        </div>
+                    <div class="tab-pane active" id="cadastrar">
+                        <form id="form-osso" class="form-horizontal" method="post" action="osso.php">
+                            <?php $viewOsso->printForm(); ?>
+                        </form>
                     </div>
-                    <div class="tab-pane" id="tab2">
+                    <div class="tab-pane" id="listar-ossos">
                         <p>Section 2</p>
-                    </div>
-                    <div class="tab-pane" id="tab3">
-                        <p>Section 3</p>
                     </div>
                 </div>
             </div>
@@ -106,3 +120,16 @@
     </div>
 </div>
 <?php include_once 'application/view/footer.view.php'; ?>
+
+<?php 
+    if (@$_POST['source'] == "cadastrar") {
+        print_r("entrou no if");
+        echo "<br/>";
+        $osso = new Osso();
+        $osso->setNome(@$_POST['nome']);
+        $osso->setQuantidade(@$_POST['quantidade']);
+        $osso->setCodigo(@$_POST['codigo']);        
+        $ossoController = new ControllerOsso();   
+        $ossoController->salvar($osso);
+    } 
+?>

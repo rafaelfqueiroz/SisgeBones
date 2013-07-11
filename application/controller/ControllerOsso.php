@@ -8,7 +8,7 @@
 class ControllerOsso extends CrudController {
     
     public function __construct() {
-        $persistence = new OssoPersistence();
+        $this->persistencia = new OssoPersistence();    
     }
 }
 

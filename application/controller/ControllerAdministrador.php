@@ -13,7 +13,7 @@
 class ControllerAdministrador {
     
     public function __construct() {
-        $persistence = new AdministradorPersistence();
+        $persistencia = new AdministradorPersistence();
     }
 }
 

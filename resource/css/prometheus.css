@@ -146,7 +146,7 @@ header .breadcrumb li.home a {
     width: 12px;
     height: 14px;
     vertical-align: -3px;
-    background: url('../img/icon-home.gif') no-repeat;
+    background: url('http://wbpreview.com/previews/WB01587L5/img/icon-home.gif') no-repeat;
 }
 
 header .breadcrumb > li > .divider {
@@ -156,7 +156,7 @@ header .breadcrumb > li > .divider {
     margin: 0 6px;
     padding: 0;
     vertical-align: -2px;
-    background: url('../img/divider.gif') no-repeat;
+    background: url('http://wbpreview.com/previews/WB01587L5/img/divider.gif') no-repeat;
 }
 
 /* profile bar */
@@ -188,7 +188,7 @@ header .breadcrumb > li > .divider {
 
 .profileBar .mail {
     width: 60px;
-    background: url('../img/icon-mail.gif') no-repeat center;
+    background: url('http://wbpreview.com/previews/WB01587L5/img/icon-mail.gif') no-repeat center;
 }
 
 .profileBar .mail .attention {
@@ -212,7 +212,7 @@ header .breadcrumb > li > .divider {
 
 .profileBar .calendar {
     width: 60px;
-    background: url('../img/icon-calendar.gif') no-repeat center;
+    background: url('http://wbpreview.com/previews/WB01587L5/img/icon-calendar.gif') no-repeat center;
 }
 
 .profileBar .notify {
@@ -315,7 +315,7 @@ aside .form-search .input-prepend .btn {
     width: 30px;
     height: 30px;
     margin-left: 25px;
-    background: url('../img/icon-search.png') no-repeat 10px 9px;
+    background: url('http://wbpreview.com/previews/WB01587L5/img/icon-search.png') no-repeat 10px 9px;
     border: none;
     -webkit-box-shadow: none;
         -moz-box-shadow: none;

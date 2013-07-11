@@ -2,16 +2,26 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="resource/css/bootstrap-responsive-fluid.css">
-        <link rel="stylesheet" href="resource/css/bootstrap-responsive.css">
         <link rel="stylesheet" href="resource/css/bootstrap.css">
-        <link rel="stylesheet" href="resource/css/menu.css">        
-        <link rel="stylesheet" href="resource/css/sisgebones.css">
+        <link rel="stylesheet" href="resource/css/bootstrap-responsive.css">
+        <link rel="stylesheet" href="resource/css/bootstrap-responsive-fluid.css">
         
-        <script src="resource/js/jquery-2.0.2.min.js"></script>
-<!--        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>-->
-        <script src="resource/js/jquery-latest.js"></script>
-        <script src="resource/js/bootstrap.min.js"></script>
+        <script src="resource/js/template/modernizr.js"></script>
+        
+        <link rel="stylesheet" href="resource/css/prometheus.css"> 
+        <link rel="stylesheet" href="resource/css/menu.css">
+        <link rel="stylesheet" href="resource/css/preview.css">
+        
+        <link rel="stylesheet" href="resource/css/DT_bootstrap.css">
+                
+        <script src="resource/js/jquery/jquery-latest.js"></script>
+        <script src="resource/js/template/menu.js"></script>
+        <script src="resource/js/bootstrap/bootstrap.min.js"></script>
+        <script src="resource/js/jquery/jquery.dataTables.js"></script>
+        <script src="resource/js/bootstrap/DT_bootstrap.js"></script>
+        <script src="resource/js//jquery/jquery-validate.min.js"></script>
+        <script src="resource/js/jquery/jquery.mask.min.js"></script>
+        
         <title>SisGeBones</title>
     </head>
      <body>

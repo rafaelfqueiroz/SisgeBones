@@ -10,6 +10,8 @@
  *
  * @author RAFAEL
  */
+include_once 'application/persistence/implementacoes/Conexao.php';
+
 abstract class AbstractPersistence implements Dao{
     
     #@region: Atributos
@@ -28,7 +30,7 @@ abstract class AbstractPersistence implements Dao{
     #@region: Funções auxiliares
     
     protected function abrirConexao() {
-       $this->conexao = new Connection();
+       $this->conexao = new Conexao();
     }
     
     protected function fecharConexao() {
@@ -36,6 +38,9 @@ abstract class AbstractPersistence implements Dao{
     }
     
     protected function criarComando($query) {
+        print_r($query);
+        echo "<br/><br/>";
+        var_dump($query);
         $this->conexao->command = $query;
     }
     
@@ -83,7 +88,7 @@ abstract class AbstractPersistence implements Dao{
 
     public function salvar($entidade) {
         $this->abrirConexao();
-        $this->criarComando("INSERT INTO {$this->conseguirNomeDaTabela()} ({$this->listarColunas(false)}) VALUES ({$this->listValues($entidade)})");
+        $this->criarComando("INSERT INTO {$this->conseguirNomeDaTabela()} ({$this->listarColunas(false)}) VALUES ({$this->listarValores($entidade)})");
         $this->executarComando();
         $this->fecharConexao();
         return $this->resultado;

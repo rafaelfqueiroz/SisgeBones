@@ -5,7 +5,7 @@
  *
  * @author RAFAEL
  */
-class AdministradorPersistence extends AbstractPersistence implements Administrador {
+class AdministradorPersistence extends AbstractPersistence implements AdministradorDao {
 
     protected function conseguirNomeDaTabela() {
         return "Administrador";

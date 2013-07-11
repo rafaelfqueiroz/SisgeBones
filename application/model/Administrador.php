@@ -14,8 +14,7 @@ class Administrador extends AbstractEntity {
     private $nome;
     private $matricula;
     private $email;
-    private $login;
-    private $senha;
+    private $usuario;
     
     public function Administrador() {}
 }

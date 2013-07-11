@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-class Osso extends Dao{
+interface OssoDao extends Dao{
 }
 
 ?>

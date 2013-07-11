@@ -16,8 +16,7 @@ class Professor extends AbstractEntity{
     private $matricula;
     private $email;
     private $rg;
-    private $login;
-    private $senha;
+    private $usuario;
     
     public function Professor() {}
 }

@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-class EmprestimoPersistence extends AbstractPersistence implements Emprestimo{
+class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao{
 
     protected function conseguirNomeDaTabela() {
         return "Emprestimo";

@@ -16,16 +16,17 @@ abstract class CrudController implements Controller {
     
     public function atualizar($entidade) {
         //lembrar de inserir código para escapagem para evitar sql injection
-        $persistencia->atualizar($entidade);
+        $this->persistencia->atualizar($entidade);
     }
     public function listar() {
-        $persiscente->listar();
+        $this->persistencia->listar();
     }
     public function remover($entidade) {
-        $persistence->remover($entidade);
+        $this->persistencia->remover($entidade);
     }
     public function salvar($entidade) {
-        $persistence->salvar($entidade);
+        $this->persistencia->salvar($entidade);
+        
     }
 }
 

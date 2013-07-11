@@ -12,11 +12,13 @@
  */
 abstract class AbstractEntity {
     protected $id;
-    public function __get($var) {
-        return $this->$var;
+    
+    public function getId() {
+        return $this->id;
     }
-    public function __set($var,$value) {
-        $this->$var = $value;
+    
+    public function setId($id) {
+        $this->id = $id;
     }
 }
 
