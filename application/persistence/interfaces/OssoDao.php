@@ -11,6 +11,7 @@
  * @author RAFAEL
  */
 interface OssoDao extends Dao{
+    function encontrarPorCodigo($codigo);
 }
 
 ?>

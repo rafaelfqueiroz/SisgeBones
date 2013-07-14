@@ -19,13 +19,13 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     protected function dadosParaModel() {
         while ($row = mysql_fetch_array($this->resultado)) {
             $model = new Aluno();
-            $model->id = $row["id"];
-            $model->nome = $row["nome"];
-            $model->matricula = $row["matricula"];
-            $model->email = $row["email"];
-            $model->senha = $row["senha"];
-            $model->curso = $row["curso"];
-            $model->eMonitor = $row["monitor"];
+            $model->setId($row["id"]);
+            $model->setNome($row["nome"]);
+            $model->setMatricula($row["matricula"]);
+            $model->setCurso($row["curso"]);
+            $model->setEmail($row["email"]);            
+            $model->setEMonitor($row["eMonitor"]);
+            $model->setUsuario($row["idUsuario"]);
             $this->lista[] = $model;
         }
     }
@@ -36,31 +36,30 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
         }
         $columns[] = "nome";
         $columns[] = "matricula";
-        $columns[] = "email";
-        $columns[] = "senha";
         $columns[] = "curso";
-        $columns[] = "monitor";
+        $columns[] = "email";
+        $columns[] = "eMonitor";
+        $columns[] = "idUsuario";        
         return implode(', ', $columns);
     }
 
     protected function listarColunasComValores($model) {
-        $columns[] = "nome = '$model->nome'";
-        $columns[] = "matricula = '$model->matricula'";
-        $columns[] = "email = '$model->email'";
-        $columns[] = "senha = '$model->senha'";
-        $columns[] = "curso = '$model->curso'";
-        $columns[] = "monitor = '$model->eMonitor'";
+        $columns[] = "nome = '{$model->getNome()}'";
+        $columns[] = "matricula = '{$model->getMatricula()}'";
+        $columns[] = "curso = '{$model->getCurso()}'";
+        $columns[] = "email = '{$model->getEmail()}'";        
+        $columns[] = "eMonitor = '{$model->getEMonitor()}'";
+        $columns[] = "idUsuario = '{$model->getUsuario()}'";
         return implode(', ', $columns);
     }
 
     protected function listarValores($model) {
-        $values[] = "'$model->id'";
-        $values[] = "'$model->nome'";
-        $values[] = "'$model->matricula'";
-        $values[] = "'$model->email'";
-        $values[] = "'$model->senha'";
-        $values[] = "'$model->curso'";
-        $values[] = "'$model->monitor'";
+        $values[] = "'{$model->getNome()}'";
+        $values[] = "'{$model->getMatricula()}'";
+        $values[] = "'{$model->getCurso()}'";
+        $values[] = "'{$model->getEmail()}'";        
+        $values[] = "'{$model->getEMonitor()}'";
+        $values[] = "'{$model->getUsuario()}'";
         return implode(', ', $values);
     }
 }

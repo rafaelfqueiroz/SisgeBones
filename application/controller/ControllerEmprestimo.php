@@ -6,7 +6,7 @@
  */
 class ControllerEmprestimo extends CrudController{
     public function __construct() {
-        $persistencia = new EmprestimoPersistence();
+        $this->persistencia = new EmprestimoPersistence();
     }
 }
 

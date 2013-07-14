@@ -22,9 +22,9 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
             $model->setId($row["id"]);
             $model->setNome($row["nome"]);
             $model->setQuantidade($row["quantidade"]);
-            $model->setEmail($row["codigo"]);
+            $model->setCodigo($row["codigo"]);
             $this->lista[] = $model;
-        }
+        }        
     }
 
     protected function listarColunas($addpk) {
@@ -38,9 +38,9 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
     }
 
     protected function listarColunasComValores($model) {
-        $columns[] = "nome = '$model->getNome()'";
-        $columns[] = "matricula = '$model->getQuantidade()'";
-        $columns[] = "email = '$model->getCodigo()'";
+        $columns[] = "nome = '{$model->getNome()}'";
+        $columns[] = "quantidade = '{$model->getQuantidade()}'";
+        $columns[] = "codigo = '{$model->getCodigo()}'";
         return implode(', ', $columns);
     }
 
@@ -49,6 +49,17 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
         $values[] = "'{$model->getQuantidade()}'";
         $values[] = "'{$model->getCodigo()}'";
         return implode(', ', $values);
+    }
+    
+    public function encontrarPorCodigo($codigo) {
+        $this->abrirConexao();
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE codigo = '{$codigo}'");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
     }
 }
 

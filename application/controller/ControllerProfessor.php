@@ -7,7 +7,7 @@
 class ControllerProfessor extends CrudController {
     
     public function __construct() {
-        $persistencia = new ProfessorPersistence();
+        $this->persistencia = new ProfessorPersistence();
     }
 }
 ?>

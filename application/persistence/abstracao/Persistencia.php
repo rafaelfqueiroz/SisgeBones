@@ -10,7 +10,7 @@
  *
  * @author RAFAEL
  */
-include_once 'application/persistence/implementacoes/Conexao.php';
+include_once '../../application/persistence/implementacoes/Conexao.php';
 
 abstract class AbstractPersistence implements Dao{
     
@@ -38,19 +38,16 @@ abstract class AbstractPersistence implements Dao{
     }
     
     protected function criarComando($query) {
-        print_r($query);
-        echo "<br/><br/>";
-        var_dump($query);
         $this->conexao->command = $query;
     }
     
-    protected function executarComando() {
+    protected function executarComando() {        
         $this->resultado = mysql_query($this->conexao->command);
     }
 
     public function encontrarPorId($entidade) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE id = {$entidade->id}");
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE id = {$entidade->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -72,7 +69,7 @@ abstract class AbstractPersistence implements Dao{
     
     public function atualizar($entidade) {
         $this->abrirConexao();
-        $this->criarComando("UPDATE {$this->conseguirNomeDaTabela()} SET {$this->listarColunasComValores($entidade)}) WHERE id = {$entidade->id}");
+        $this->criarComando("UPDATE {$this->conseguirNomeDaTabela()} SET {$this->listarColunasComValores($entidade)} WHERE id = {$entidade->getId()}");
         $this->executarComando();
         $this->fecharConexao();
         return $this->resultado;
@@ -80,13 +77,13 @@ abstract class AbstractPersistence implements Dao{
 
     public function remover($entidade) {
         $this->abrirConexao();
-        $this->criarComando("DELETE FROM {$this->conseguirNomeDaTabela()} WHERE id = '{$entidade->id}'");
+        $this->criarComando("DELETE FROM {$this->conseguirNomeDaTabela()} WHERE id = '{$entidade->getId()}'");
         $this->executarComando();
         $this->fecharConexao();
         return $this->resultado; 
     }
 
-    public function salvar($entidade) {
+    public function salvar($entidade) {                
         $this->abrirConexao();
         $this->criarComando("INSERT INTO {$this->conseguirNomeDaTabela()} ({$this->listarColunas(false)}) VALUES ({$this->listarValores($entidade)})");
         $this->executarComando();

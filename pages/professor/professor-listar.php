@@ -1,5 +1,22 @@
 <?php 
-    include_once 'application/view/header.view.php';
+    include_once '../../application/view/header.view.php';
+    include_once '../../application/config.php';
+    
+    include_once '../../application/controller/Controller.php';
+    include_once '../../application/controller/CrudController.php';
+    include_once '../../application/model/AbstractEntity.php';
+    include_once '../../application/view/AbstractView.php';
+        
+    include_once '../../application/persistence/abstracao/Dao.php';
+    include_once '../../application/persistence/abstracao/Persistencia.php';
+    include_once '../../application/persistence/interfaces/ProfessorDao.php';
+    
+    include_once '../../application/model/Professor.php';
+    include_once '../../application/controller/ControllerProfessor.php';    
+    include_once '../../application/persistence/implementacoes/PersistenceProfessor.php';
+    include_once '../../application/view/ViewProfessor.php';
+    
+    $viewProfessor = new ViewProfessor();
 ?>
 
 <header>
@@ -15,11 +32,12 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="index.php"></a><span class="divider"></span></li>
+                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                                                          
+                    <li class="active">Página de Professores</li>
                 </ul>
                 
                 <ul class="profileBar">
-                    <li class="user visible-desktop"><img src="resource/img/user.jpg" alt=""></li>
+                    <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
                     <li class="profile">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rafael<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -46,23 +64,23 @@
     </form>
     
     <ul class="sideMenu">
+        <li>
+            <a href="../home/index.php">Dashboard</a>
+        </li>
+        <li>
+            <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
+        </li>
+        <li>
+            <a href="../osso/osso-cadastrar-novo.php">Osso</a>
+        </li>
         <li class="active">
-            <a href="index.php">Dashboard</a>
+            <a href="professor-listar.php">Professor</a>
         </li>
         <li>
-            <a href="emprestimo.php">Empréstimo</a>            
+            <a href="../aluno/aluno-cadastrar.php">Aluno</a>
         </li>
         <li>
-            <a href="osso.php">Osso</a>
-        </li>
-        <li>
-            <a href="professor.php">Professor</a>
-        </li>
-        <li>
-            <a href="aluno.php">Aluno</a>
-        </li>
-        <li>
-            <a href="administrador.php">Administrador</a>
+            <a href="../administrador/administrador-cadastrar.php">Administrador</a>
         </li>
     </ul>
 </aside>
@@ -70,7 +88,7 @@
 <div id="content" class="content-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2>Dashboard</h2>
+            <h2>Professor</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
                 <input id="prependedInput" class="text-center" type="text" 
@@ -82,27 +100,17 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab1" data-toggle="tab">Realizar Empréstimo</a></li>
-                    <li><a href="#tab2" data-toggle="tab">Listar Empréstimos</a></li>
-                    <li><a href="#tab3" data-toggle="tab">Empréstimos Pendentes</a></li>
+                    <li><a href="professor-cadastrar.php" data-toggle="tab">Cadastrar Professor</a></li>
+                    <li class="active"><a href="professor-listar.php" data-toggle="tab">Listar Professores</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
-                        <div class="btn-group pull-right mrg-btm10" data-toggle="buttons-radio">
-                            <button class="btn active">Day</button>
-                            <button class="btn">Month</button>
-                            <button class="btn">Year</button>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="tab2">
-                        <p>Section 2</p>
-                    </div>
-                    <div class="tab-pane" id="tab3">
-                        <p>Section 3</p>
+                    <div class="tab-pane active" id="listar">
+                        <?php $viewProfessor->printListAsTable(); ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<?php include_once 'application/view/footer.view.php'; ?>
+<?php include_once '../../application/view/footer.view.php'; ?>
+

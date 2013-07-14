@@ -130,9 +130,9 @@
         $emprestimo->dataDevolucao = $_POST['dataDevolucao'];
         $emprestimo->dataDevolucao = $_POST['dataDevolucao'];
         $osso = new ControllerOsso();
-        $emprestimo->matricula = $_POST['matricula'];
+        $emprestimo->codigo = $_POST['codigo'];
         $emprestimo->administrador = $_POST['nomeAdmin'];
-        
+        explode($campodetexto, ';');
         $emprestimoController = new ControllerEmprestimo();
         $emprestimoController->salvar($emprestimo);
     } 

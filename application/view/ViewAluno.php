@@ -35,7 +35,7 @@
             $view .= "<div class=\"control-group\">";
                 $view .= "<label class=\"control-label\" for=\"inputLogin\">Login</label>";
                 $view .= "<div class=\"controls\">";
-                    $view .= "<input type=\"email\" id=\"inputLogin\" name=\"login\" placeholder=\"Login do aluno\" required>";
+                    $view .= "<input type=\"text\" id=\"inputLogin\" name=\"login\" placeholder=\"Login do aluno\" required>";
                 $view .= "</div>";
             $view .= "</div>";
             $view .= "<div class=\"control-group\">";
@@ -51,7 +51,8 @@
                 $view .= "</label>";
             $view .= "</div>";
             $view .= "</div>";
-            $view .= "<button type=\"submit\" class=\"btn btn-success\">Cadastrar</button>";
+            $view .= "<input type=\"hidden\" name=\"source\" value=\"cadastrar\">";
+            $view .= "<input type=\"submit\" class=\"btn btn-success\" value=\"Cadastrar\" >";
             echo $view;
         }
         

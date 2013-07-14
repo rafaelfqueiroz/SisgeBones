@@ -7,7 +7,7 @@
 class ControllerAluno extends CrudController{
     
     public function __construct() {
-        $persistencia = new AlunoPersistence();
+        $this->persistencia = new AlunoPersistence();
     }
 }
 ?>

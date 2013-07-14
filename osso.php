@@ -17,7 +17,31 @@
     include_once 'application/view/ViewOsso.php';
     
     $viewOsso = new ViewOsso();
+    
+    if (@$_POST['osso-novo'] == "cadastrar") {
+        $osso = new Osso();
+        $osso->setNome(@$_POST['nome']);
+        $osso->setQuantidade(@$_POST['quantidade']);
+        $osso->setCodigo(@$_POST['codigo']);   
+        $ossoController = new ControllerOsso();  
+        $ossoController->salvar($osso);
+        header('location:' . $_SERVER['PHP_SELF']);
+    } else if (@$_POST['osso-existente'] == "inserir") {
+        $codigoOsso = @$_POST['codigoOsso'];
+        $quantidadeOsso = @$_POST['quantidadeOsso'];
+        $ossoController = new ControllerOsso();        
+        $osso = $ossoController->encontrarPorCodigo($codigoOsso);
+        $quantidadeOsso += $osso->getQuantidade();
+        $osso->setQuantidade($quantidadeOsso);
+        $ossoController->atualizar($osso);
+    }
 ?>
+
+<style rel="stylesheet" type="text/css">
+    .row {
+        margin-left: 0px;
+    }
+</style>
 
 <script src="resource/js/sisgebones/scriptValidateOsso.js"></script>
 
@@ -102,17 +126,23 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#cadastrar" data-toggle="tab">Cadastrar Osso</a></li>
-                    <li><a href="#listar-ossos" data-toggle="tab">Listar Ossos</a></li>                    
+                    <li ><a href="#cadastrar-novo-osso" data-toggle="tab">Cadastrar Novo Osso</a></li>
+                    <li><a href="#cadastrar-osso-existente" data-toggle="tab">Cadastrar Osso Existente</a></li>
+                    <li class="active"><a href="#listar-ossos" data-toggle="tab">Listar Ossos</a></li>                
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="cadastrar">
+                    <div class="tab-pane " id="cadastrar-novo-osso">
                         <form id="form-osso" class="form-horizontal" method="post" action="osso.php">
                             <?php $viewOsso->printForm(); ?>
                         </form>
                     </div>
-                    <div class="tab-pane" id="listar-ossos">
-                        <p>Section 2</p>
+                    <div class="tab-pane" id="cadastrar-osso-existente">
+                        <form id="form-osso-existente" class="form-horizontal" method="post" action="osso.php">
+                            <?php $viewOsso->printFormOsso(); ?>
+                        </form>
+                    </div>
+                    <div class="tab-pane active" id="listar-ossos">
+                        <?php $viewOsso->printListAsTable(); ?>
                     </div>
                 </div>
             </div>
@@ -120,16 +150,3 @@
     </div>
 </div>
 <?php include_once 'application/view/footer.view.php'; ?>
-
-<?php 
-    if (@$_POST['source'] == "cadastrar") {
-        print_r("entrou no if");
-        echo "<br/>";
-        $osso = new Osso();
-        $osso->setNome(@$_POST['nome']);
-        $osso->setQuantidade(@$_POST['quantidade']);
-        $osso->setCodigo(@$_POST['codigo']);        
-        $ossoController = new ControllerOsso();   
-        $ossoController->salvar($osso);
-    } 
-?>
