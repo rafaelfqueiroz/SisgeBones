@@ -21,6 +21,10 @@ abstract class CrudController implements Controller {
     public function listar() {
         return $this->persistencia->listar();
     }
+    
+    public function listarComoUsuario() {
+        return $this->persistencia->listarComoUsuario();
+    }
     public function remover($entidade) {
         $this->persistencia->remover($entidade);
     }

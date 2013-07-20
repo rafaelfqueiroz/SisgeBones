@@ -1,6 +1,6 @@
 <?php 
-    include_once '../../application/view/header.view.php';
     include_once '../../application/config.php';
+    
     
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
@@ -12,6 +12,7 @@
     include_once '../../application/persistence/interfaces/AlunoDao.php';
     include_once '../../application/persistence/interfaces/UsuarioDao.php';
     
+    include_once '../../application/model/Administrador.php';
     include_once '../../application/model/Aluno.php';
     include_once '../../application/controller/ControllerAluno.php';
     include_once '../../application/persistence/implementacoes/PersistenceAluno.php';
@@ -20,33 +21,47 @@
     include_once '../../application/model/Usuario.php';
     include_once '../../application/controller/ControllerUsuario.php';
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+    include_once '../../application/utils/PermissionValidator.php';
+    session_start();
     
-    $viewAluno = new ViewAluno();
-    
-    if (@$_POST['source'] == "cadastrar") {        
-        $aluno = new Aluno();
-        $aluno->setNome($_POST['nome']);
-        $aluno->setMatricula($_POST['matricula']);
-        $aluno->setCurso($_POST['curso']);
-        $aluno->setEmail($_POST['email']);
-        $aluno->setEMonitor(true);
-        
-        $usuario = new Usuario();
-        $usuario->setLogin($_POST['login']);
-        $usuario->setSenha($_POST['senha']);
-        $usuario->setTipo(4);
-        
-        $usuarioController = new ControllerUsuario();
-        $usuarioController->salvar($usuario);
-        $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
-        
-//        echo "<script type='text/javascript'> alert('"+ var_dump($responseDB) +"');</script>";
-        
-        $aluno->setUsuario($responseDB->getId());        
-        $alunoController = new ControllerAluno();
-        $alunoController->salvar($aluno);
-        header('location:' . $_SERVER['PHP_SELF']);
-    }
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/login.php");
+        exit();
+    else :
+        if (PermissionValidator::isAdministrador()) :            
+            include_once '../../application/view/header.view.php';
+            $viewAluno = new ViewAluno();
+
+            if (@$_POST['source'] == "cadastrar") {        
+                $aluno = new Aluno();
+                $aluno->setNome($_POST['nome']);
+                $aluno->setMatricula($_POST['matricula']);
+                $aluno->setCurso($_POST['curso']);
+                $aluno->setEmail($_POST['email']);
+                $aluno->setAtivo(true);
+
+                if(isset($_POST["eMonitor"])) {
+                    $aluno->setEMonitor(true);
+                } else {
+                    $aluno->setEMonitor(false);
+                }
+
+                $aluno->setEMonitor(true);
+
+                $usuario = new Usuario();
+                $usuario->setLogin($_POST['login']);
+                $usuario->setSenha($_POST['senha']);
+                $usuario->setTipo(3);
+
+                $usuarioController = new ControllerUsuario();
+                $usuarioController->salvar($usuario);
+                $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
+
+                $aluno->setUsuario($responseDB);        
+                $alunoController = new ControllerAluno();
+                $alunoController->salvar($aluno);
+                header('location:' . $_SERVER['PHP_SELF']);
+            }
 ?>
 <style rel="stylesheet" type="text/css">
     .row {
@@ -80,7 +95,7 @@
                             <li><a tabindex="-1" href="#">Something else here</a></li>                            
                         </ul>
                     </li>
-                    <li class="notify"><a href="#"><span>2</span></a></li>
+                    <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
                     <li class="mail"><a href="#"></a><span class="attention">!</span></li>
                 </ul>                               
@@ -101,21 +116,31 @@
         <li>
             <a href="../home/index.php">Dashboard</a>
         </li>
-        <li>
-            <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
-        </li>
-        <li>
-            <a href="../osso/osso-cadastrar-novo.php">Osso</a>
-        </li>
-        <li>
-            <a href="../professor/professor-cadastrar.php">Professor</a>
-        </li>
-        <li class="active">
-            <a href="aluno-cadastrar.php">Aluno</a>
-        </li>
-        <li>
-            <a href="../administrador/administrador-cadastrar.php">Administrador</a>
-        </li>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../osso/osso-cadastrar-novo.php">Osso</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../professor/professor-cadastrar.php">Professor</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li class="active">
+                <a href="aluno-cadastrar.php">Aluno</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../administrador/administrador-cadastrar.php">Administrador</a>
+            </li>
+        <?php endif; ?>
     </ul>
 </aside>
 
@@ -134,7 +159,12 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="aluno-cadastrar.php" data-toggle="tab">Cadastrar Aluno</a></li>
+                    <?php if(PermissionValidator::isAdministrador()) : ?>
+                        <li class="active"><a href="aluno-cadastrar.php" data-toggle="tab">Cadastrar Aluno</a></li>
+                    <?php endif; ?>
+                    <?php if(PermissionValidator::isAdministrador()) : ?>
+                        <li><a href="aluno-cadastrar-planilha.php" data-toggle="tab">Cadastrar Planilha de Alunos</a></li>
+                    <?php endif; ?>
                     <li><a href="aluno-listar.php" data-toggle="tab">Listar Alunos</a></li>
                     <li><a href="monitor-listar.php" data-toggle="tab">Listar Monitores</a></li>
                 </ul>
@@ -150,4 +180,11 @@
     </div>
 </div>
 
-<?php include_once '../../application/view/footer.view.php'; ?>
+<?php 
+        include_once '../../application/view/footer.view.php';
+        else :
+            header("location: aluno-listar.php");
+            exit();
+        endif;
+    endif;
+?>

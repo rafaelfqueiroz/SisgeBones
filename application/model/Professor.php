@@ -49,7 +49,7 @@ class Professor extends AbstractEntity{
     }
     
     public function setRg($rg) {
-        $this->email = $rg;
+        $this->rg = $rg;
     }
     
     public function getUsuario() {

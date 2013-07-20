@@ -1,6 +1,6 @@
 <?php 
-    include_once '../../application/view/header.view.php';
     include_once '../../application/config.php';
+    
     
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
@@ -10,13 +10,54 @@
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
     include_once '../../application/persistence/interfaces/AdministradorDao.php';
+    include_once '../../application/persistence/interfaces/UsuarioDao.php';
+    
     
     include_once '../../application/model/Administrador.php';
-    include_once '../../application/controller/ControllerAdministrador.php';    
+    include_once '../../application/controller/ControllerAdministrador.php';
     include_once '../../application/persistence/implementacoes/PersistenceAdministrador.php';
     include_once '../../application/view/ViewAdministrador.php';
     
-    $viewAdministrador = new ViewAdministrador();
+    include_once '../../application/model/Usuario.php';
+    include_once '../../application/controller/ControllerUsuario.php';
+    include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+    include_once '../../application/utils/PermissionValidator.php';
+    
+    session_start();
+    
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/login.php");
+        exit();
+    else :
+        if (PermissionValidator::isAdministrador()) :
+            $admin = unserialize($_SESSION["usuario"]);                        
+            if ($admin->getModerador() == '0') :
+                include_once '../../application/view/header.view.php';      
+                $viewAdministrador = new ViewAdministrador();
+                if (@$_POST['source'] == "cadastrar") {
+                    $administrador = new Administrador();
+                    $administrador->setNome($_POST['nome']);
+                    $administrador->setMatricula($_POST['matricula']);      
+                    $administrador->setEmail($_POST['email']);    
+                    if(isset($_POST["moderador"])) {
+                        $administrador->setModerador(true);
+                    } else {
+                        $administrador->setModerador(false);
+                    }
+                    $usuario = new Usuario();
+                    $usuario->setLogin($_POST['login']);
+                    $usuario->setSenha($_POST['senha']);
+                    $usuario->setTipo(1);
+
+                    $usuarioController = new ControllerUsuario();
+                    $usuarioController->salvar($usuario);
+                    $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
+
+                    $administrador->setUsuario($responseDB);
+                    $adminController = new ControllerAdministrador();
+                    $adminController->salvar($administrador);
+                    header('location:' . $_SERVER['PHP_SELF']);
+                }
 ?>
 
 <header>
@@ -46,7 +87,7 @@
                             <li><a tabindex="-1" href="#">Something else here</a></li>                            
                         </ul>
                     </li>
-                    <li class="notify"><a href="#"><span>2</span></a></li>
+                    <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
                     <li class="mail"><a href="#"></a><span class="attention">!</span></li>
                 </ul>                               
@@ -65,23 +106,23 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="../home/index.php">Dashboard</a>
-        </li>
-        <li>
-            <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
-        </li>
-        <li>
-            <a href="../osso/osso-cadastrar-novo.php">Osso</a>
-        </li>
-        <li>
-            <a href="../professor/professor-cadastrar.php">Professor</a>
-        </li>
-        <li>
-            <a href="../aluno/aluno-cadastrar.php">Aluno</a>
-        </li>
-        <li class="active">
-            <a href="administrador-cadastrar.php">Administrador</a>
-        </li>
+            <a href="index.php">Dashboard</a>
+        </li>        
+            <li>
+                <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
+            </li>                
+            <li>
+                <a href="../osso/osso-cadastrar-novo.php">Osso</a>
+            </li>                            
+            <li>
+                <a href="../professor/professor-cadastrar.php">Professor</a>
+            </li>                    
+            <li>
+                <a href="../aluno/aluno-cadastrar.php">Aluno</a>
+            </li>                
+            <li class="active">
+                <a href="../administrador/administrador-cadastrar.php">Administrador</a>
+            </li>
     </ul>
 </aside>
 
@@ -112,4 +153,15 @@
         </div>
     </div>
 </div>
-<?php include_once '../../application/view/footer.view.php'; ?>
+<?php 
+            include_once '../../application/view/footer.view.php';
+            else :
+                header("location: administrador-listar.php");
+                exit();
+            endif;
+        else :
+            header("location: ../home/index.php");
+            exit();
+        endif;
+    endif;
+?>

@@ -12,6 +12,7 @@
  */
 interface UsuarioDao extends Dao{
     function encontrarPorLogin($login);
+    function encontrarPorLoginESenha($login, $senha);
 }
 
 ?>

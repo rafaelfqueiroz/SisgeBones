@@ -14,7 +14,8 @@ class Administrador extends AbstractEntity {
     private $nome;
     private $matricula;
     private $email;
-    private $usuario;
+    private $moderador;
+    private $usuario;    
     
     public function Administrador() {}
     
@@ -36,6 +37,12 @@ class Administrador extends AbstractEntity {
     } 
     public function setEmail($email) {
         $this->email = $email;
+    }
+    public function getModerador() {
+        return $this->moderador;
+    } 
+    public function setModerador($moderador) {
+        $this->moderador = $moderador;
     }
     public function getUsuario() {
         return $this->usuario;

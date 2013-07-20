@@ -46,7 +46,7 @@
                             <li><a tabindex="-1" href="#">Something else here</a></li>                            
                         </ul>
                     </li>
-                    <li class="notify"><a href="#"><span>2</span></a></li>
+                    <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
                     <li class="mail"><a href="#"></a><span class="attention">!</span></li>
                 </ul>                               

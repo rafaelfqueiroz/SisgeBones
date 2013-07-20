@@ -1,6 +1,7 @@
 <?php 
-    include_once '../../application/view/header.view.php';
+    
     include_once '../../application/config.php';
+    include_once '../../application/utils/PermissionValidator.php';
     
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
@@ -11,23 +12,32 @@
     include_once '../../application/persistence/abstracao/Persistencia.php';
     include_once '../../application/persistence/interfaces/OssoDao.php';
     
+    include_once '../../application/model/Administrador.php';
     include_once '../../application/model/Osso.php';
     include_once '../../application/controller/ControllerOsso.php';    
     include_once '../../application/persistence/implementacoes/PersistenceOsso.php';
     include_once '../../application/view/ViewOsso.php';
     
-    $viewOsso = new ViewOsso();
+    session_start();
     
-    if (@$_POST['osso-existente'] == "inserir") {
-        $codigoOsso = @$_POST['codigoOsso'];
-        $quantidadeOsso = @$_POST['quantidadeOsso'];
-        $ossoController = new ControllerOsso();        
-        $osso = $ossoController->encontrarPorCodigo($codigoOsso);
-        $quantidadeOsso += $osso->getQuantidade();
-        $osso->setQuantidade($quantidadeOsso);
-        $ossoController->atualizar($osso);
-        header('location:' . $_SERVER['PHP_SELF']);
-    }
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/login.php");
+        exit();
+    else :
+        if (PermissionValidator::isAdministrador()) :
+            include_once '../../application/view/header.view.php';
+            $viewOsso = new ViewOsso();
+
+            if (@$_POST['osso-existente'] == "inserir") {
+                $codigoOsso = @$_POST['codigoOsso'];
+                $quantidadeOsso = @$_POST['quantidadeOsso'];
+                $ossoController = new ControllerOsso();        
+                $osso = $ossoController->encontrarPorCodigo($codigoOsso);
+                $quantidadeOsso += $osso->getQuantidade();
+                $osso->setQuantidade($quantidadeOsso);
+                $ossoController->atualizar($osso);
+                header('location:' . $_SERVER['PHP_SELF']);
+            }
 ?>
 
 <style rel="stylesheet" type="text/css">
@@ -65,7 +75,7 @@
                             <li><a tabindex="-1" href="#">Something else here</a></li>                            
                         </ul>
                     </li>
-                    <li class="notify"><a href="#"><span>2</span></a></li>
+                    <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
                     <li class="mail"><a href="#"></a><span class="attention">!</span></li>
                 </ul>                               
@@ -134,4 +144,11 @@
         </div>
     </div>
 </div>
-<?php include_once 'application/view/footer.view.php'; ?>
+<?php 
+        include_once 'application/view/footer.view.php';
+        else :
+            header("location: osso-listar.php");
+            exit();
+        endif;
+    endif;
+?>

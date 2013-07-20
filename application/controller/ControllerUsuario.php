@@ -20,6 +20,15 @@ class ControllerUsuario extends CrudController {
         }        
         return $uniqueValue;
     }
+    
+    public function encontrarPorLoginESenha($login, $senha) {
+        $resultado = $this->persistencia->encontrarporLoginESenha(trim($login), trim($senha));
+        $uniqueValue = NULL;
+        if (sizeof($resultado) == 1) {            
+            $uniqueValue = $resultado[0];
+        }        
+        return $uniqueValue;
+    }
 }
 
 ?>

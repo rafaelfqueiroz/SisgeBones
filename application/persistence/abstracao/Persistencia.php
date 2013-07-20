@@ -67,6 +67,18 @@ abstract class AbstractPersistence implements Dao{
         return $this->lista;
     }
     
+    public function listarComoUsuario() {
+        $this->abrirConexao();
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
+        INNER JOIN Usuario AS u ON t.idUsuario = u.id");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
+    }
+    
     public function atualizar($entidade) {
         $this->abrirConexao();
         $this->criarComando("UPDATE {$this->conseguirNomeDaTabela()} SET {$this->listarColunasComValores($entidade)} WHERE id = {$entidade->getId()}");
@@ -77,7 +89,7 @@ abstract class AbstractPersistence implements Dao{
 
     public function remover($entidade) {
         $this->abrirConexao();
-        $this->criarComando("DELETE FROM {$this->conseguirNomeDaTabela()} WHERE id = '{$entidade->getId()}'");
+        $this->criarComando("DELETE FROM {$this->conseguirNomeDaTabela()} WHERE id = {$entidade->getId()}");
         $this->executarComando();
         $this->fecharConexao();
         return $this->resultado; 

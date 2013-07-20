@@ -1,5 +1,17 @@
 <?php 
-    include_once '../../application/view/header.view.php';
+    include_once '../../application/model/AbstractEntity.php';
+    include_once '../../application/model/Aluno.php';
+    include_once '../../application/model/Professor.php';
+    include_once '../../application/model/Administrador.php';
+    
+    include_once '../../application/utils/PermissionValidator.php';
+    
+    session_start();
+
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/login.php");
+    else :        
+        include_once '../../application/view/header.view.php';        
 ?>
 
 <header>
@@ -19,16 +31,16 @@
                 </ul>
                 
                 <ul class="profileBar">
-                    <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
+                    <li class="user "><img src="../../resource/img/user.jpg" alt=""></li>
                     <li class="profile">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rafael<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                             <li><a tabindex="-1" href="#">Action</a></li>                            
                             <li><a tabindex="-1" href="#">Another action</a></li>                            
-                            <li><a tabindex="-1" href="#">Something else here</a></li>                            
+                            <li><a tabindex="-1" href="#">Logout</a></li>                            
                         </ul>
                     </li>
-                    <li class="notify"><a href="#"><span>2</span></a></li>
+                    <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
                     <li class="mail"><a href="#"></a><span class="attention">!</span></li>
                 </ul>                               
@@ -49,21 +61,47 @@
         <li class="active">
             <a href="index.php">Dashboard</a>
         </li>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
+            </li>
+        <?php else : ?>
         <li>
-            <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
-        </li>
-        <li>
-            <a href="../osso/osso-cadastrar-novo.php">Osso</a>
-        </li>
-        <li>
-            <a href="../professor/professor-cadastrar.php">Professor</a>
-        </li>
-        <li>
-            <a href="../aluno/aluno-cadastrar.php">Aluno</a>
-        </li>
-        <li>
-            <a href="../administrador/administrador.php">Administrador</a>
-        </li>
+            <a href="../emprestimo/emprestimo-listar.php">Empréstimo</a>            
+        </li>        
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../osso/osso-cadastrar-novo.php">Osso</a>
+            </li>
+        <?php else : ?>
+            <li>
+                <a href="../osso/osso-listar.php">Osso</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../professor/professor-cadastrar.php">Professor</a>
+            </li>
+        <?php else : ?>
+            <li>
+                <a href="../professor/professor-listar.php">Professor</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../aluno/aluno-cadastrar.php">Aluno</a>
+            </li>
+        <?php else : ?>
+            <li>
+                <a href="../aluno/aluno-listar.php">Aluno</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../administrador/administrador-cadastrar.php">Administrador</a>
+            </li>
+        <?php endif; ?>
     </ul>
 </aside>
 
@@ -105,4 +143,7 @@
         </div>
     </div>
 </div>
-<?php include_once 'application/view/footer.view.php'; ?>
+<?php 
+    include_once 'application/view/footer.view.php';
+    endif;
+?>

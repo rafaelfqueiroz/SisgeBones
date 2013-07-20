@@ -10,10 +10,20 @@
  *
  * @author RAFAEL
  */
-class ControllerAdministrador {
+class ControllerAdministrador extends CrudController {
     
     public function __construct() {
-        $persistencia = new AdministradorPersistence();
+        $this->persistencia = new AdministradorPersistence();
+    }
+    
+    public function encontrarAdministradorPorIdUsuario($idUsuario) {
+       $resultado = $this->persistencia->encontrarAdministradorPorIdUsuario($idUsuario);       
+        
+        $uniqueValue = NULL;
+        if (sizeof($resultado) == 1) {            
+            $uniqueValue = $resultado[0];
+        }        
+        return $uniqueValue;
     }
 }
 

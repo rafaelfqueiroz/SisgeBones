@@ -8,10 +8,9 @@ class Usuario extends AbstractEntity {
     
     /*
     tipos de usuario:
-        administrador = 1;
-        moderador = 2;
-        professor = 3;
-        aluno = 4;
+        administrador = 1; { moderador = true }
+        professor = 2;
+        aluno = 3 { monitor = true }
     */
     public function Usuario() { }
     

@@ -1,6 +1,7 @@
 <?php 
-    include_once '../../application/view/header.view.php';
+    
     include_once '../../application/config.php';
+    include_once '../../application/utils/PermissionValidator.php';
     
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
@@ -11,14 +12,26 @@
     include_once '../../application/persistence/abstracao/Persistencia.php';
     include_once '../../application/persistence/interfaces/EmprestimoDao.php';
     
+    include_once '../../application/model/Administrador.php';
     include_once '../../application/model/Emprestimo.php';
     include_once '../../application/controller/ControllerEmprestimo.php';    
     include_once '../../application/persistence/implementacoes/PersistenceEmprestimo.php';
     include_once '../../application/view/ViewEmprestimo.php';
     
-    $viewEmprestimo = new ViewEmprestimo();
+    session_start();
+    
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/login.php");
+        exit();
+    else :
+        include_once '../../application/view/header.view.php';
+        $viewEmprestimo = new ViewEmprestimo();
 ?>
-
+<style rel="stylesheet" type="text/css">
+    .row {
+        margin-left: 0px;
+    }
+</style>
 <header>
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
@@ -46,7 +59,7 @@
                             <li><a tabindex="-1" href="#">Something else here</a></li>                            
                         </ul>
                     </li>
-                    <li class="notify"><a href="#"><span>2</span></a></li>
+                    <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
                     <li class="mail"><a href="#"></a><span class="attention">!</span></li>
                 </ul>                               
@@ -65,23 +78,43 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="index.php">Dashboard</a>
+            <a href="../home/index.php">Dashboard</a>
         </li>
         <li class="active">
             <a href="../emprestimo/emprestimo-listar.php">Empréstimo</a>            
         </li>
-        <li>
-            <a href="../osso/osso-cadastrar-novo.php">Osso</a>
-        </li>
-        <li>
-            <a href="../professor/professor-cadastrar.php">Professor</a>
-        </li>
-        <li>
-            <a href="../aluno/aluno-cadastrar.php">Aluno</a>
-        </li>
-        <li>
-            <a href="../administrador/administrador-cadastrar.php">Administrador</a>
-        </li>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../osso/osso-cadastrar-novo.php">Osso</a>
+            </li>
+        <?php else : ?>
+            <li>
+                <a href="../osso/osso-listar.php">Osso</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../professor/professor-cadastrar.php">Professor</a>
+            </li>
+        <?php else : ?>
+            <li>
+                <a href="../professor/professor-listar.php">Professor</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../aluno/aluno-cadastrar.php">Aluno</a>
+            </li>
+        <?php else : ?>
+            <li>
+                <a href="../aluno/aluno-listar.php">Aluno</a>
+            </li>
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../administrador/administrador-cadastrar.php">Administrador</a>
+            </li>
+        <?php endif; ?>
     </ul>
 </aside>
 
@@ -100,9 +133,13 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li><a href="emprestimo-registrar.php" data-toggle="tab">Realizar Empréstimo</a></li>
+                    <?php if(PermissionValidator::isAdministrador()) : ?>
+                        <li><a href="emprestimo-registrar.php" data-toggle="tab">Realizar Empréstimo</a></li>
+                    <?php endif; ?>
                     <li class="active"><a href="emprestimo-listar.php" data-toggle="tab">Listar Empréstimos</a></li>
-                    <li><a href="emprestimo-listar-pendentes.php" data-toggle="tab">Empréstimos Pendentes</a></li>
+                    <?php if(PermissionValidator::isAdministrador()) : ?>
+                        <li><a href="emprestimo-listar-pendentes.php" data-toggle="tab">Empréstimos Pendentes</a></li>
+                    <?php endif; ?>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="realizar">                        
@@ -113,4 +150,7 @@
         </div>
     </div>
 </div>
-<?php include_once '../../application/view/footer.view.php'; ?>
+<?php 
+    include_once '../../application/view/footer.view.php';
+    endif;
+?>

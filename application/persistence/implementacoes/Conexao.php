@@ -32,7 +32,7 @@ class Conexao {
         $this->dbselected = mysql_select_db(DB_NAME, $this->link) or die ('O banco de dados não existe. Execute o script.');
     }
     
-    public function __destruct() {
+    public function __destruct() {        
         mysql_close($this->link);
     }
 }

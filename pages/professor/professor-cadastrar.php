@@ -1,6 +1,7 @@
 <?php 
-    include_once '../../application/view/header.view.php';
+    
     include_once '../../application/config.php';
+    include_once '../../application/utils/PermissionValidator.php';
     
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
@@ -10,13 +11,50 @@
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
     include_once '../../application/persistence/interfaces/ProfessorDao.php';
+    include_once '../../application/persistence/interfaces/UsuarioDao.php';
     
+    include_once '../../application/model/Administrador.php';
     include_once '../../application/model/Professor.php';
     include_once '../../application/controller/ControllerProfessor.php';    
     include_once '../../application/persistence/implementacoes/PersistenceProfessor.php';
     include_once '../../application/view/ViewProfessor.php';
     
-    $viewProfessor = new ViewProfessor();
+    include_once '../../application/model/Usuario.php';
+    include_once '../../application/controller/ControllerUsuario.php';
+    include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+    
+    session_start();
+    
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/login.php");
+        exit();
+    else :
+        if (PermissionValidator::isAdministrador()) :
+            include_once '../../application/view/header.view.php';
+            $viewProfessor = new ViewProfessor();
+
+            if (@$_POST['source'] == "cadastrar") {
+                $professor = new Professor();
+                $professor->setNome($_POST['nome']);
+                $professor->setMatricula($_POST['matricula']);
+                $professor->setEmail($_POST['email']);
+                $professor->setRg($_POST['rg']);
+
+                $usuario = new Usuario();
+                $usuario->setLogin($_POST['login']);
+                $usuario->setSenha($_POST['senha']);
+                $usuario->setTipo(2);
+
+                $usuarioController = new ControllerUsuario();
+                $usuarioController->salvar($usuario);
+                $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
+
+                $professor->setUsuario($responseDB);
+                $professorController = new ControllerProfessor();
+                var_dump($professor);
+                echo "<br/>";echo "<br/>";        
+                $professorController->salvar($professor);        
+            }
 ?>
 
 <header>
@@ -46,7 +84,7 @@
                             <li><a tabindex="-1" href="#">Something else here</a></li>                            
                         </ul>
                     </li>
-                    <li class="notify"><a href="#"><span>2</span></a></li>
+                    <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
                     <li class="mail"><a href="#"></a><span class="attention">!</span></li>
                 </ul>                               
@@ -114,24 +152,12 @@
         </div>
     </div>
 </div>
-<?php include_once '../../application/view/footer.view.php'; ?>
-
 <?php 
-    if (@$_POST['source'] == "cadastrar") {
-        $professor = new Professor();
-        $professor->nome = $_POST['nome'];
-        $professor->matricula = $_POST['matricula'];
-        $professor->email = $_POST['email'];
-        $professor->rg = $_POST['rg'];
-        $usuario = new Usuario();
-        $usuario->login = $_POST['login'];        
-        $usuario->senha = $_POST['senha'];
-        $usuario->tipo = 3;
-        
-        $professor->usuario = $usuario;
-        
-        $professorController = new ControllerProfessor();
-        $professorController->salvar($professor);
-    } 
+        include_once '../../application/view/footer.view.php';
+        else :
+            header("location: professor-listar.php");
+            exit();
+        endif;
+    endif;
 ?>
 

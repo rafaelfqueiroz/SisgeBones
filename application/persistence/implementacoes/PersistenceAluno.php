@@ -25,7 +25,15 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
             $model->setCurso($row["curso"]);
             $model->setEmail($row["email"]);            
             $model->setEMonitor($row["eMonitor"]);
-            $model->setUsuario($row["idUsuario"]);
+            $model->setAtivo($row["ativo"]);
+            
+            $usuario = new Usuario();
+            $usuario->setId($row["idUsuario"]);
+            $usuario->setLogin($row["login"]);
+            $usuario->setSenha($row["senha"]);
+            $usuario->setTipo($row["tipo"]);
+            
+            $model->setUsuario($usuario);
             $this->lista[] = $model;
         }
     }
@@ -39,6 +47,7 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
         $columns[] = "curso";
         $columns[] = "email";
         $columns[] = "eMonitor";
+        $columns[] = "ativo";
         $columns[] = "idUsuario";        
         return implode(', ', $columns);
     }
@@ -49,7 +58,8 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
         $columns[] = "curso = '{$model->getCurso()}'";
         $columns[] = "email = '{$model->getEmail()}'";        
         $columns[] = "eMonitor = '{$model->getEMonitor()}'";
-        $columns[] = "idUsuario = '{$model->getUsuario()}'";
+        $columns[] = "ativo = '{$model->getAtivo()}'";
+        $columns[] = "idUsuario = '{$model->getUsuario()->getId()}'";
         return implode(', ', $columns);
     }
 
@@ -59,8 +69,21 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
         $values[] = "'{$model->getCurso()}'";
         $values[] = "'{$model->getEmail()}'";        
         $values[] = "'{$model->getEMonitor()}'";
-        $values[] = "'{$model->getUsuario()}'";
+        $values[] = "'{$model->getAtivo()}'";
+        $values[] = "'{$model->getUsuario()->getId()}'";
         return implode(', ', $values);
+    }
+    
+    public function encontrarAlunoPorIdUsuario($idUsuario) {
+        $this->abrirConexao();
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
+        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE idUsuario = {$idUsuario}");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
     }
 }
 

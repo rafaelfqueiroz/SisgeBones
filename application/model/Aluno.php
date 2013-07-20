@@ -18,6 +18,7 @@ class Aluno extends AbstractEntity {
     private $email;
     private $eMonitor;
     private $usuario;
+    private $ativo;
     
     public function Aluno() {}
     
@@ -62,6 +63,13 @@ class Aluno extends AbstractEntity {
     } 
     public function setUsuario($usuario) {
         $this->usuario = $usuario;
+    }
+    
+    public function getAtivo() {
+        return $this->ativo;
+    } 
+    public function setAtivo($ativo) {
+        $this->ativo = $ativo;
     }
 }
 

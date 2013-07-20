@@ -61,6 +61,18 @@ class UsuarioPersistence extends AbstractPersistence implements UsuarioDao {
         $this->fecharConexao();
         return $this->lista;
     }
+
+    public function encontrarPorLoginESenha($login, $senha) {
+        $this->abrirConexao();
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} 
+        WHERE login = '{$login}' and senha = '{$senha}'");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
+    }
 }
 
 ?>

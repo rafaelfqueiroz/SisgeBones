@@ -1,6 +1,7 @@
 <?php 
-    include_once '../../application/view/header.view.php';
+    
     include_once '../../application/config.php';
+    include_once '../../application/utils/PermissionValidator.php';
     
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
@@ -10,15 +11,32 @@
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
     include_once '../../application/persistence/interfaces/AdministradorDao.php';
+    include_once '../../application/persistence/interfaces/UsuarioDao.php';
     
-    include_once '../../application/model/Administrador.php';
+    include_once '../../application/model/Administrador.php';    
     include_once '../../application/controller/ControllerAdministrador.php';    
     include_once '../../application/persistence/implementacoes/PersistenceAdministrador.php';
     include_once '../../application/view/ViewAdministrador.php';
     
-    $viewAdministrador = new ViewAdministrador();
+    include_once '../../application/model/Usuario.php';
+    include_once '../../application/controller/ControllerUsuario.php';
+    include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+    
+    session_start();
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/login.php");
+        exit();
+    else :
+        if (PermissionValidator::isAdministrador()) :
+            include_once '../../application/view/header.view.php';
+            $viewAdministrador = new ViewAdministrador();
+            $admin = unserialize($_SESSION["usuario"]);
 ?>
-
+<style rel="stylesheet" type="text/css">
+    .row {
+        margin-left: 0px;
+    }
+</style>
 <header>
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
@@ -46,7 +64,7 @@
                             <li><a tabindex="-1" href="#">Something else here</a></li>                            
                         </ul>
                     </li>
-                    <li class="notify"><a href="#"><span>2</span></a></li>
+                    <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
                     <li class="mail"><a href="#"></a><span class="attention">!</span></li>
                 </ul>                               
@@ -100,14 +118,23 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li><a href="administrador-cadastrar.php" data-toggle="tab">Cadastrar Administrador</a></li>
+                    <?php if ($admin->getModerador() == '0') : ?>
+                        <li><a href="administrador-cadastrar.php" data-toggle="tab">Cadastrar Administrador</a></li>
+                    <?php endif; ?>
                     <li class="active"><a href="administrador-listar.php" data-toggle="tab">Listar Administrador</a></li>
                 </ul>
                 <div class="tab-content">
-                    <a href="emprestimo.php" data-toggle="tab">Cadastrar Administrador</a>
+                    <?php $viewAdministrador->printListAsTable(); ?>
                 </div>
             </div>            
         </div>
     </div>
 </div>
-<?php include_once '../../application/view/footer.view.php'; ?>
+<?php 
+            include_once '../../application/view/footer.view.php';
+            else :
+                header("location: ../home/index.php");
+                exit();
+        endif;
+    endif;
+?>

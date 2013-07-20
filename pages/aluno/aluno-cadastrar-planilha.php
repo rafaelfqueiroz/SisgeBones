@@ -10,16 +10,21 @@
         
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
-    include_once '../../application/persistence/interfaces/EmprestimoDao.php';
+    include_once '../../application/persistence/interfaces/AlunoDao.php';
+    include_once '../../application/persistence/interfaces/UsuarioDao.php';
     
-    include_once '../../application/model/Administrador.php';
-    include_once '../../application/model/Emprestimo.php';
-    include_once '../../application/controller/ControllerEmprestimo.php';    
-    include_once '../../application/persistence/implementacoes/PersistenceEmprestimo.php';
-    include_once '../../application/view/ViewEmprestimo.php';
+    include_once '../../application/model/Administrador.php';    
+    include_once '../../application/model/Aluno.php';
+    include_once '../../application/controller/ControllerAluno.php';
+    include_once '../../application/persistence/implementacoes/PersistenceAluno.php';
+    include_once '../../application/view/ViewAluno.php';
+        
+    include_once '../../application/model/Usuario.php';
+    include_once '../../application/controller/ControllerUsuario.php';
+    include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+//    require_once '../../application/excel_reader2.php';
     
-    
-     session_start();
+    session_start();
     
     if (empty($_SESSION["usuario"])):
         header("location: ../login/login.php");
@@ -27,7 +32,32 @@
     else :
         if (PermissionValidator::isAdministrador()) :
             include_once '../../application/view/header.view.php';
-            $viewEmprestimo = new ViewEmprestimo();
+            $viewAluno = new ViewAluno();
+
+            if (@$_POST['source'] == "cadastrarPlanilha") {
+//                 && $_FILES["planilha"]["tmp_name"] != NULL
+//                $reader = new Spreadsheet_Excel_Reader($_FILES["planilha"]["tmp_name"],false);
+                $aluno = new Aluno();
+                $aluno->setNome($_POST['nome']);
+                $aluno->setMatricula($_POST['matricula']);
+                $aluno->setCurso($_POST['curso']);
+                $aluno->setEmail($_POST['email']);
+                $aluno->setEMonitor(true);
+
+                $usuario = new Usuario();
+                $usuario->setLogin($_POST['login']);
+                $usuario->setSenha($_POST['senha']);
+                $usuario->setTipo(4);
+
+                $usuarioController = new ControllerUsuario();
+                $usuarioController->salvar($usuario);
+                $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
+
+                $aluno->setUsuario($responseDB->getId());        
+                $alunoController = new ControllerAluno();
+                $alunoController->salvar($aluno);
+                header('location:' . $_SERVER['PHP_SELF']);
+            }
 ?>
 <style rel="stylesheet" type="text/css">
     .row {
@@ -47,8 +77,8 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                   
-                    <li class="active">Página de empréstimos</li>
+                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>              
+                    <li class="active">Página de alunos</li>
                 </ul>
                 
                 <ul class="profileBar">
@@ -82,8 +112,8 @@
         <li>
             <a href="../home/index.php">Dashboard</a>
         </li>
-        <li class="active">
-            <a href="../emprestimo/emprestimo-listar-pendentes.php">Empréstimo</a>            
+        <li>
+            <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
         </li>
         <li>
             <a href="../osso/osso-cadastrar-novo.php">Osso</a>
@@ -91,19 +121,19 @@
         <li>
             <a href="../professor/professor-cadastrar.php">Professor</a>
         </li>
-        <li>
-            <a href="../aluno/aluno-cadastrar.php">Aluno</a>
-        </li>        
+        <li class="active">
+            <a href="aluno-cadastrar-planilha.php">Aluno</a>
+        </li>
         <li>
             <a href="../administrador/administrador-cadastrar.php">Administrador</a>
-        </li>        
+        </li>
     </ul>
 </aside>
 
 <div id="content" class="content-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2>Empréstimo</h2>
+            <h2>Aluno</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
                 <input id="prependedInput" class="text-center" type="text" 
@@ -114,24 +144,28 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="tabbable widget">
-                <ul class="nav nav-tabs">                    
-                    <li><a href="emprestimo-registrar.php" data-toggle="tab">Realizar Empréstimo</a></li>                    
-                    <li><a href="emprestimo-listar.php" data-toggle="tab">Listar Empréstimos</a></li>                    
-                    <li class="active"><a href="emprestimo-listar-pendentes.php" data-toggle="tab">Empréstimos Pendentes</a></li>                    
+                <ul class="nav nav-tabs">
+                    <li><a href="aluno-cadastrar.php" data-toggle="tab">Cadastrar Aluno</a></li>
+                    <li class="active"><a href="aluno-cadastrar-planilha.php" data-toggle="tab">Cadastrar Planilha de Alunos</a></li>  
+                    <li><a href="aluno-listar.php" data-toggle="tab">Listar Alunos</a></li>
+                    <li><a href="monitor-listar.php" data-toggle="tab">Listar Monitores</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="realizar">                        
-                        <?php $viewEmprestimo->printListAsTable(); ?>
-                    </div>                    
+                    <div class="tab-pane active" id="cadastrar">
+                        <form class="form-horizontal" method="post" action="aluno-cadastrar-planilha.php" enctype="multipart/form-data">
+                            <?php $viewAluno->printFormPlanilha(); ?>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <?php 
-        include_once '../../application/view/footer.view.php';
+            include_once '../../application/view/footer.view.php';
         else :
-            header("location: emprestimo-listar.php");
+            header("location: aluno-listar.php");
             exit();
         endif;
     endif;

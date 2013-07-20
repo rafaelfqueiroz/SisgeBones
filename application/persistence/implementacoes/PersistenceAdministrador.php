@@ -14,11 +14,19 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
     protected function dadosParaModel() {
         while ($row = mysql_fetch_array($this->resultado)) {
             $model = new Administrador();
-            $model->id = $row["id"];
-            $model->nome = $row["nome"];
-            $model->matricula = $row["matricula"];
-            $model->email = $row["email"];
-            $model->senha = $row["senha"];
+            $model->setId($row["id"]);
+            $model->setNome($row["nome"]);
+            $model->setMatricula($row["matricula"]);
+            $model->setEmail($row["email"]);
+            $model->setModerador($row["moderador"]);
+            
+            $usuario = new Usuario();
+            $usuario->setId($row["idUsuario"]);
+            $usuario->setLogin($row["login"]);
+            $usuario->setSenha($row["senha"]);
+            $usuario->setTipo($row["tipo"]);
+            
+            $model->setUsuario($usuario);
             $this->lista[] = $model;
         }
     }
@@ -30,25 +38,39 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
         $columns[] = "nome";
         $columns[] = "matricula";
         $columns[] = "email";
-        $columns[] = "senha";
+        $columns[] = "moderador";
+        $columns[] = "idUsuario";
         return implode(', ', $columns);
     }
 
     protected function listarColunasComValores($model) {
-        $columns[] = "nome = '$model->nome'";
-        $columns[] = "matricula = '$model->matricula'";
-        $columns[] = "email = '$model->email'";
-        $columns[] = "senha = '$model->senha'";
+        $columns[] = "nome = '{$model->getNome()}'";
+        $columns[] = "matricula = '{$model->getMatricula()}'";
+        $columns[] = "email = '{$model->getEmail()}'";
+        $columns[] = "moderador = '{$model->getModerador()}'";
+        $columns[] = "idUsuario = '{$model->getUsuario()->getId()}'";
         return implode(', ', $columns);
     }
 
     protected function listarValores($model) {
-        $values[] = "'$model->id'";
-        $values[] = "'$model->nome'";
-        $values[] = "'$model->matricula'";
-        $values[] = "'$model->email'";
-        $values[] = "'$model->senha'";        
+        $values[] = "'{$model->getNome()}'";
+        $values[] = "'{$model->getMatricula()}'";
+        $values[] = "'{$model->getEmail()}'";
+        $values[] = "'{$model->getModerador()}'";
+        $values[] = "'{$model->getUsuario()->getId()}'";
         return implode(', ', $values);
+    }
+    
+    public function encontrarAdministradorPorIdUsuario($idUsuario) {
+        $this->abrirConexao();
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
+        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE idUsuario = {$idUsuario}");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
     }
 }
 

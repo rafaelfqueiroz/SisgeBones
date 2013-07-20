@@ -11,7 +11,7 @@
  * @author RAFAEL
  */
 interface AdministradorDao extends Dao {
-    //put your code here
+    function encontrarAdministradorPorIdUsuario($idUsuario);
 }
 
 ?>
