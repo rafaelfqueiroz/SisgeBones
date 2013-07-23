@@ -37,7 +37,7 @@ abstract class AbstractPersistence implements Dao{
         $this->conexao = null;
     }
     
-    protected function criarComando($query) {
+    protected function criarComando($query) {        
         $this->conexao->command = $query;
     }
     
@@ -45,7 +45,7 @@ abstract class AbstractPersistence implements Dao{
         $this->resultado = mysql_query($this->conexao->command);
     }
 
-    public function encontrarPorId($entidade) {
+    public function encontrarPorId($entidade) {        
         $this->abrirConexao();
         $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE id = {$entidade->getId()}");
         $this->executarComando();
@@ -65,24 +65,12 @@ abstract class AbstractPersistence implements Dao{
         }
         $this->fecharConexao();
         return $this->lista;
-    }
-    
-    public function listarComoUsuario() {
-        $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id");
-        $this->executarComando();
-        if (gettype($this->resultado) != "boolean") {
-            $this->dadosParaModel();
-        }
-        $this->fecharConexao();
-        return $this->lista;
-    }
+    }    
     
     public function atualizar($entidade) {
         $this->abrirConexao();
         $this->criarComando("UPDATE {$this->conseguirNomeDaTabela()} SET {$this->listarColunasComValores($entidade)} WHERE id = {$entidade->getId()}");
-        $this->executarComando();
+        $this->executarComando();        
         $this->fecharConexao();
         return $this->resultado;
     }
@@ -95,7 +83,7 @@ abstract class AbstractPersistence implements Dao{
         return $this->resultado; 
     }
 
-    public function salvar($entidade) {                
+    public function salvar($entidade) {               
         $this->abrirConexao();
         $this->criarComando("INSERT INTO {$this->conseguirNomeDaTabela()} ({$this->listarColunas(false)}) VALUES ({$this->listarValores($entidade)})");
         $this->executarComando();

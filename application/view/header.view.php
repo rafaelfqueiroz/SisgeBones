@@ -15,7 +15,7 @@
         
         <link rel="stylesheet" href="../../resource/css/DT_bootstrap.css">
                 
-        <script src="../../resource/js/jquery/jquery-latest.js"></script>        
+        <script src="../../resource/js/jquery/jquery-latest.js"></script>    
         <script src="../../resource/js/template/menu.js"></script>
 <!--        <script src="../../resource/js/bootstrap/bootstrap.min.js"></script>-->
         <script src="../../resource/js/jquery/jquery.dataTables.js"></script>

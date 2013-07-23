@@ -31,6 +31,14 @@ abstract class CrudController implements Controller {
     public function salvar($entidade) {
         $this->persistencia->salvar($entidade);              
     }
+    public function encontrarPorId($entidade) {
+        $resultado = $this->persistencia->encontrarPorId($entidade);
+        $uniqueValue = NULL;
+        if (sizeof($resultado) == 1) {            
+            $uniqueValue = $resultado[0];
+        }        
+        return $uniqueValue;        
+    }
 }
 
 ?>

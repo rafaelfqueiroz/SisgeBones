@@ -9,11 +9,23 @@
             $this->emprestimoController = new ControllerEmprestimo();
         }
         public function printForm() {
+            $ossoController = new ControllerOsso();
+            $ossos = $ossoController->listar();
             $view = "<div class=\"control-group\">";
                 $view .= "<label class=\"control-label\" for=\"inputNome\">Nome emprestante</label>";
                 $view .= "<div class=\"controls\">";
                     $view .= "<input type=\"text\" id=\"inputNome\" name=\"nome\" placeholder=\"Nome do emprestante\" required>";
                 $view .= "</div>";
+            $view .= "</div>";
+            $view .= "<div class=\"control-group\">";
+                $view .= "<label class=\"control-label\" for=\"inputNome\">Nome emprestante</label>";
+                $view .= "<div class=\"controls\">";
+                    $view .= "<select class=\"select2\" name=\"bones[]\" multiple=\"multiple\" style=\"width:400px;\">";
+                            foreach ($ossos as $osso) {
+                                $view .= "<option value=\"{$osso->getId()}\">{$osso->getCodigo()}</option>";
+                            }
+                            $view .= "</select>";
+                    $view .= "</div>";
             $view .= "</div>";
             $view .= "<div class=\"control-group\">";
                 $view .= "<label class=\"control-label\" for=\"inputCodigo\">Código</label>";

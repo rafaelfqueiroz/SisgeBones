@@ -11,6 +11,7 @@
  * @author RAFAEL
  */
 interface ProfessorDao extends Dao{
+    function listarComoUsuario();
 }
 
 ?>

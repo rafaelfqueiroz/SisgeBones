@@ -1,45 +1,52 @@
 <?php 
-    include_once '../../application/view/header.view.php';
     include_once '../../application/config.php';
+    include_once '../../application/utils/PermissionValidator.php';
     
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
     include_once '../../application/model/AbstractEntity.php';
     include_once '../../application/view/AbstractView.php';
-        
+            
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
-    include_once '../../application/persistence/interfaces/EmprestimoDao.php';
     include_once '../../application/persistence/interfaces/OssoDao.php';
     
-    include_once '../../application/model/Emprestimo.php';
-    include_once '../../application/controller/ControllerEmprestimo.php';    
-    include_once '../../application/persistence/implementacoes/PersistenceEmprestimo.php';
-    include_once '../../application/view/ViewEmprestimo.php';
-    
+    include_once '../../application/model/Administrador.php';
     include_once '../../application/model/Osso.php';
     include_once '../../application/controller/ControllerOsso.php';    
     include_once '../../application/persistence/implementacoes/PersistenceOsso.php';
+    include_once '../../application/view/ViewOsso.php';
     
-    $viewEmprestimo = new ViewEmprestimo();    
+    session_start();
     
-    if (@$_POST['source'] == "cadastrar") {
-        $emprestimo = new Emprestimo();
-        $emprestimo->setDataEmprestimo(date('Y-m-d-H:i:s'));
-        $emprestimo->setDataEmprestimo(NULL);
-        $osso = new ControllerOsso();
-        $emprestimo->codigo = $_POST['codigo'];
-        $emprestimo->administrador = $_POST['nomeAdmin'];
-        explode($campodetexto, ';');
-        $emprestimoController = new ControllerEmprestimo();
-        $emprestimoController->salvar($emprestimo);
-    } 
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/login.php");
+        exit();
+    else :
+        if (PermissionValidator::isAdministrador()) :
+            include_once '../../application/view/header.view.php';
+            $viewOsso = new ViewOsso();
+
+            if (@$_POST['osso-novo'] == "editar") {
+                $osso = new Osso();
+                $osso->setId(@$_POST['id']);
+                $osso->setNome(@$_POST['nome']);
+                $osso->setQuantidade(@$_POST['quantidade']);
+                $osso->setCodigo(@$_POST['codigo']);   
+                $ossoController = new ControllerOsso();  
+                $ossoController->atualizar($osso);
+                header('location: osso-listar.php');
+                exit();
+            }
 ?>
-<link rel="stylesheet" href="../../resource/css/select2.css">
-<script src="../../resource/js/jquery/select2.min.js"></script>
-<script>
-      $(function(){jQuery('.select2').select2({placeholder:"Escolha uma opção"});});
-</script>
+
+<style rel="stylesheet" type="text/css">
+    .row {
+        margin-left: 0px;
+    }
+</style>
+
+<script src="../../resource/js/sisgebones/scriptValidateOsso.js"></script>
 
 <header>
     <div class="navbar navbar-inverse">
@@ -54,8 +61,8 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                   
-                    <li class="active">Página de empréstimos</li>
+                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                  
+                    <li class="active">Página de Ossos</li>
                 </ul>
                 
                 <ul class="profileBar">
@@ -87,13 +94,13 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="index.php">Dashboard</a>
-        </li>
-        <li class="active">
-            <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
+            <a href="../home/index.php">Dashboard</a>
         </li>
         <li>
-            <a href="../osso/osso-cadastrar-novo.php">Osso</a>
+            <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
+        </li>
+        <li class="active">
+            <a href="osso-cadastrar.php">Osso</a>
         </li>
         <li>
             <a href="../professor/professor-cadastrar.php">Professor</a>
@@ -110,7 +117,7 @@
 <div id="content" class="content-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2>Empréstimo</h2>
+            <h2>Osso</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
                 <input id="prependedInput" class="text-center" type="text" 
@@ -122,19 +129,26 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="emprestimo-registrar.php" data-toggle="tab">Realizar Empréstimo</a></li>
-                    <li><a href="emprestimo-listar.php" data-toggle="tab">Listar Empréstimos</a></li>
-                    <li><a href="emprestimo-listar-pendentes.php" data-toggle="tab">Empréstimos Pendentes</a></li>
+                    <li class="active"><a href="osso-cadastrar-novo.php" data-toggle="tab">Cadastrar Novo Osso</a></li>
+                    <li><a href="osso-cadastrar-existente.php" data-toggle="tab">Cadastrar Osso Existente</a></li>
+                    <li><a href="osso-listar.php" data-toggle="tab">Listar Ossos</a></li>                
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="realizar">
-                        <form class="form-horizontal" method="post" action="emprestimo-registrar.php">
-                            <?php $viewEmprestimo->printForm(); ?>
+                    <div class="tab-pane active" id="cadastrar-novo-osso">
+                        <form id="form-osso" class="form-horizontal" method="post" action="osso-editar.php">
+                            <?php $viewOsso->printEditForm($_GET["id"]); ?>
                         </form>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<?php include_once '../../application/view/footer.view.php'; ?>
+<?php 
+        include_once '../../application/view/footer.view.php';
+        else :
+            header("location: osso-listar.php");
+            exit();
+        endif;
+    endif;
+?>

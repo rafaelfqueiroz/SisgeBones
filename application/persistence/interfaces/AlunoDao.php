@@ -11,7 +11,7 @@
  * @author RAFAEL
  */
 interface AlunoDao extends Dao{
-    
+    function listarComoUsuario();
 }
 
 ?>

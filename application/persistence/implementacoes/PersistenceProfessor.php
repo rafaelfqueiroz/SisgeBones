@@ -75,6 +75,32 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
         $this->fecharConexao();
         return $this->lista;
     }
+    
+    public function listarComoUsuario() {
+        $this->abrirConexao();
+        $this->criarComando("SELECT t.id, t.nome, t.matricula, t.email, t.rg, t.idUsuario,
+                u.login, u.senha, u.tipo FROM {$this->conseguirNomeDaTabela()} AS t 
+        INNER JOIN Usuario AS u ON t.idUsuario = u.id");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
+    }
+    
+    public function encontrarPorId($entidade) {
+        $this->abrirConexao();
+        $this->criarComando("SELECT t.id, t.nome, t.matricula, t.email, t.rg, t.idUsuario,
+                u.login, u.senha, u.tipo FROM {$this->conseguirNomeDaTabela()} AS t 
+        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE t.id = {$entidade->getId()}");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
+    }
 }
 
 ?>

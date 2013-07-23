@@ -1,7 +1,5 @@
 <?php 
-    
     include_once '../../application/config.php';
-    include_once '../../application/utils/PermissionValidator.php';
     
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
@@ -10,18 +8,19 @@
         
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
-    include_once '../../application/persistence/interfaces/ProfessorDao.php';
+    include_once '../../application/persistence/interfaces/AdministradorDao.php';
     include_once '../../application/persistence/interfaces/UsuarioDao.php';
     
+    
     include_once '../../application/model/Administrador.php';
-    include_once '../../application/model/Professor.php';
-    include_once '../../application/controller/ControllerProfessor.php';    
-    include_once '../../application/persistence/implementacoes/PersistenceProfessor.php';
-    include_once '../../application/view/ViewProfessor.php';
+    include_once '../../application/controller/ControllerAdministrador.php';
+    include_once '../../application/persistence/implementacoes/PersistenceAdministrador.php';
+    include_once '../../application/view/ViewAdministrador.php';
     
     include_once '../../application/model/Usuario.php';
     include_once '../../application/controller/ControllerUsuario.php';
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+    include_once '../../application/utils/PermissionValidator.php';
     
     session_start();
     
@@ -30,32 +29,37 @@
         exit();
     else :
         if (PermissionValidator::isAdministrador()) :
-            include_once '../../application/view/header.view.php';
-            $viewProfessor = new ViewProfessor();
+            $admin = unserialize($_SESSION["usuario"]);
+            if ($admin->getModerador() == '0') :
+                include_once '../../application/view/header.view.php';   
+                $viewAdministrador = new ViewAdministrador();
+                if (@$_POST['source'] == "editar") {
+                    $administrador = new Administrador();
+                    $administrador->setId($_POST['id']);
+                    $administrador->setNome($_POST['nome']);
+                    $administrador->setMatricula($_POST['matricula']);  
+                    $administrador->setEmail($_POST['email']);
+                    if(isset($_POST['moderador'])) {
+                        $administrador->setModerador(true);
+                    } else {
+                        $administrador->setModerador(false);
+                    }
+                    $usuario = new Usuario();
+                    $usuario->setId($_POST['idUsuario']);
+                    $usuario->setLogin($_POST['login']);
+                    $usuario->setSenha($_POST['senha']);
+                    $usuario->setTipo(1);
 
-            if (@$_POST['source'] == "cadastrar") {
-                $professor = new Professor();
-                $professor->setNome($_POST['nome']);
-                $professor->setMatricula($_POST['matricula']);
-                $professor->setEmail($_POST['email']);
-                $professor->setRg($_POST['rg']);
+                    $usuarioController = new ControllerUsuario();
+                    $usuarioController->atualizar($usuario);
 
-                $usuario = new Usuario();
-                $usuario->setLogin($_POST['login']);
-                $usuario->setSenha($_POST['senha']);
-                $usuario->setTipo(2);
-
-                $usuarioController = new ControllerUsuario();
-                $usuarioController->salvar($usuario);
-                $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
-
-                $professor->setUsuario($responseDB);
-                $professorController = new ControllerProfessor();     
-                $professorController->salvar($professor);        
-            }
+                    $administrador->setUsuario($usuario);
+                    $adminController = new ControllerAdministrador();
+                    $adminController->atualizar($administrador);                    
+                    header('location: administrador-listar.php');
+                    exit();
+                }
 ?>
-
-<script src="../../resource/js/sisgebones/scriptValidateProfessor.js"></script>
 
 <header>
     <div class="navbar navbar-inverse">
@@ -70,8 +74,8 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                                                          
-                    <li class="active">Página de Professores</li>
+                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                
+                    <li class="active">Página de administradores</li>
                 </ul>
                 
                 <ul class="profileBar">
@@ -103,30 +107,30 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="../home/index.php">Dashboard</a>
-        </li>
-        <li>
-            <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
-        </li>
-        <li>
-            <a href="../osso/osso-cadastrar-novo.php">Osso</a>
-        </li>
-        <li class="active">
-            <a href="../professor/professor-cadastrar.php">Professor</a>
-        </li>
-        <li>
-            <a href="../aluno/aluno-cadastrar.php">Aluno</a>
-        </li>
-        <li>
-            <a href="../administrador/administrador-cadastrar.php">Administrador</a>
-        </li>
+            <a href="index.php">Dashboard</a>
+        </li>        
+            <li>
+                <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
+            </li>                
+            <li>
+                <a href="../osso/osso-cadastrar-novo.php">Osso</a>
+            </li>                            
+            <li>
+                <a href="../professor/professor-cadastrar.php">Professor</a>
+            </li>                    
+            <li>
+                <a href="../aluno/aluno-cadastrar.php">Aluno</a>
+            </li>                
+            <li class="active">
+                <a href="../administrador/administrador-cadastrar.php">Administrador</a>
+            </li>
     </ul>
 </aside>
 
 <div id="content" class="content-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2>Professor</h2>
+            <h2>Administrador</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
                 <input id="prependedInput" class="text-center" type="text" 
@@ -138,26 +142,27 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="professor-cadastrar.php" data-toggle="tab">Cadastrar Professor</a></li>
-                    <li><a href="professor-listar.php" data-toggle="tab">Listar Professores</a></li>
+                    <li class="active"><a href="administrador-cadastrar.php" data-toggle="tab">Cadastrar Administrador</a></li>
+                    <li><a href="administrador-listar.php" data-toggle="tab">Listar Administrador</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="cadastrar">
-                       <form class="form-horizontal" method="post" action="professor-cadastrar.php">
-                            <?php $viewProfessor->printForm(); ?>
-                        </form>
-                    </div>
+                    <form class="form-horizontal" method="post" action="administrador-editar.php">
+                        <?php $viewAdministrador->printEditForm($_GET["id"]); ?>
+                    </form>
                 </div>
-            </div>
+            </div>            
         </div>
     </div>
 </div>
 <?php 
-        include_once '../../application/view/footer.view.php';
+            include_once '../../application/view/footer.view.php';
+            else :
+                header("location: administrador-listar.php");
+                exit();
+            endif;
         else :
-            header("location: professor-listar.php");
+            header("location: ../home/index.php");
             exit();
         endif;
     endif;
 ?>
-

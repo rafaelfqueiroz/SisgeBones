@@ -12,6 +12,7 @@
  */
 interface AdministradorDao extends Dao {
     function encontrarAdministradorPorIdUsuario($idUsuario);
+    function listarComoUsuario();
 }
 
 ?>

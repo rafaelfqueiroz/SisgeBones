@@ -29,8 +29,8 @@
             $viewOsso = new ViewOsso();
 
             if (@$_POST['osso-existente'] == "inserir") {
-                $codigoOsso = @$_POST['codigoOsso'];
-                $quantidadeOsso = @$_POST['quantidadeOsso'];
+                $codigoOsso = @$_POST['codigo'];
+                $quantidadeOsso = @$_POST['quantidade'];
                 $ossoController = new ControllerOsso();        
                 $osso = $ossoController->encontrarPorCodigo($codigoOsso);
                 $quantidadeOsso += $osso->getQuantidade();

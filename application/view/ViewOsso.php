@@ -6,7 +6,7 @@ class ViewOsso extends AbstractView {
     protected $list;
     
     public function __construct() {
-        $this->ossoController = new ControllerOsso();
+        $this->ossoController = new ControllerOsso();        
     }
     public function printForm() {
         $view = "<div class=\"control-group\">";
@@ -36,13 +36,13 @@ class ViewOsso extends AbstractView {
         $view = "<div class=\"control-group\">";
             $view .= "<label class=\"control-label\" for=\"codigoOsso\">Código</label>";
             $view .= "<div class=\"controls\">";
-                $view .= "<input id=\"codigoOsso\" type=\"text\" name=\"codigoOsso\" placeholder=\"Código do osso existente\" required>";
+                $view .= "<input id=\"inputCodigo\" type=\"text\" name=\"codigo\" placeholder=\"Código do osso existente\" required>";
             $view .= "</div>";
         $view .= "</div>";
         $view .= "<div class=\"control-group\">";
             $view .= "<label class=\"control-label\" for=\"quantidadeOsso\">Quantidade</label>";
             $view .= "<div class=\"controls\">";
-                $view .= "<input id=\"quantidadeOsso\" type=\"number\" name=\"quantidadeOsso\" min=\"1\" max=\"10\" placeholder=\"Quantidade de ossos\">";
+                $view .= "<input id=\"quantidadeOsso\" type=\"number\" name=\"quantidade\" min=\"1\" max=\"10\" placeholder=\"Quantidade de ossos\">";
             $view .= "</div>";
         $view .= "</div>";
         $view .= "<input type=\"hidden\" name=\"osso-existente\" value=\"inserir\">";
@@ -50,6 +50,35 @@ class ViewOsso extends AbstractView {
         
         echo $view;
     }
+    
+    public function printEditForm($id) {        
+        $osso = new Osso();
+        $osso->setId($id);
+        $osso = $this->ossoController->encontrarPorId($osso);
+        $view = "<input type=\"hidden\" id=\"inputId\" name=\"id\" value=\"{$osso->getId()}\" required>";
+        $view .= "<div class=\"control-group\">";
+            $view .= "<label class=\"control-label\" for=\"inputNome\">Nome</label>";
+            $view .= "<div class=\"controls\">";
+                $view .= "<input type=\"text\" id=\"inputNome\" name=\"nome\" placeholder=\"Nome do osso\" value=\"{$osso->getNome()}\" required>";
+            $view .= "</div>";
+        $view .= "</div>";
+        $view .= "<div class=\"control-group\">";
+            $view .= "<label class=\"control-label\" for=\"inputCodigo\">Código</label>";
+            $view .= "<div class=\"controls\">";
+                $view .= "<input type=\"text\" id=\"inputCodigo\" name=\"codigo\" placeholder=\"Código do osso\" value=\"{$osso->getCodigo()}\" required>";
+            $view .= "</div>";
+        $view .= "</div>";
+        $view .= "<div class=\"control-group\">";
+            $view .= "<label class=\"control-label\" for=\"inputQuantidade\">Quantidade</label>";
+            $view .= "<div class=\"controls\">";
+                $view .= "<input type=\"number\" id=\"inputQuantidade\" name=\"quantidade\" placeholder=\"Quantidade do osso\" min=\"0\" max=\"50\" value=\"{$osso->getQuantidade()}\" required>";
+            $view .= "</div>";
+        $view .= "</div>";
+        $view .= "<input type=\"hidden\" name=\"osso-novo\" value=\"editar\" >";
+        $view .= "<input type=\"submit\" value=\"cadastrar\" class=\"btn btn-success\" >";       
+        echo $view;
+    }
+    
     public function printListAsTable() {
         $this->list = $this->ossoController->listar();        
         $view = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table table-striped table-bordered dataTable\" id=\"example\" aria-describedby=\"example_info\">";
@@ -58,6 +87,8 @@ class ViewOsso extends AbstractView {
                         $view .= "<th class=\"sorting_asc\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-sort=\"ascending\" aria-label=\"Rendering engine: activate to sort column descending\" style=\"width: 167px;\">Nome</th>";
                         $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Browser: activate to sort column ascending\" style=\"width: 232px;\">Código</th>";
                         $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\">Quantidade</th>";                        
+                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";                        
+                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";                        
                     $view .= "</tr>";
                 $view .= "</thead>";
                 $view .= "<tbody role=\"alert\" aria-live=\"polite\" aria-relevant=\"all\">";
@@ -73,7 +104,9 @@ class ViewOsso extends AbstractView {
                         }
                             $view .= "<td class=\"sorting_1\">{$osso->getNome()}</td>";
                             $view .= "<td>{$osso->getCodigo()}</td>";
-                            $view .= "<td>{$osso->getQuantidade()}</td>";                        
+                            $view .= "<td>{$osso->getQuantidade()}</td>";                       
+                            $view .= "<td><a href=\"osso-editar.php?id={$osso->getId()}\">Editar</a></td>";                       
+                            $view .= "<td><a href=\"osso-remover.php?id={$osso->getId()}\">Remover</a></td>";                       
                         $view .= "</tr>";
                     } 
                 }
