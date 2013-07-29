@@ -47,9 +47,10 @@ abstract class AbstractPersistence implements Dao{
 
     public function encontrarPorId($entidade) {        
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE id = {$entidade->getId()}");
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE id{$this->conseguirNomeDaTabela()} = {$entidade->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
+            $this->lista = NULL;
             $this->dadosParaModel();
         }
         $this->fecharConexao();
@@ -69,7 +70,7 @@ abstract class AbstractPersistence implements Dao{
     
     public function atualizar($entidade) {
         $this->abrirConexao();
-        $this->criarComando("UPDATE {$this->conseguirNomeDaTabela()} SET {$this->listarColunasComValores($entidade)} WHERE id = {$entidade->getId()}");
+        $this->criarComando("UPDATE {$this->conseguirNomeDaTabela()} SET {$this->listarColunasComValores($entidade)} WHERE id{$this->conseguirNomeDaTabela()} = {$entidade->getId()}");
         $this->executarComando();        
         $this->fecharConexao();
         return $this->resultado;
@@ -77,7 +78,7 @@ abstract class AbstractPersistence implements Dao{
 
     public function remover($entidade) {
         $this->abrirConexao();
-        $this->criarComando("DELETE FROM {$this->conseguirNomeDaTabela()} WHERE id = {$entidade->getId()}");
+        $this->criarComando("DELETE FROM {$this->conseguirNomeDaTabela()} WHERE id{$this->conseguirNomeDaTabela()} = {$entidade->getId()}");
         $this->executarComando();
         $this->fecharConexao();
         return $this->resultado; 

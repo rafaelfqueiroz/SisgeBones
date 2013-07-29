@@ -1,4 +1,5 @@
 <?php
-    session_destroy();
-    header("location: ../login/login.php");
+    session_start();
+    session_destroy();    
+    header("location: ../login/index.php");
 ?>

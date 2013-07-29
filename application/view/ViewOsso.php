@@ -28,7 +28,7 @@ class ViewOsso extends AbstractView {
             $view .= "</div>";
         $view .= "</div>";
         $view .= "<input type=\"hidden\" name=\"osso-novo\" value=\"cadastrar\" >";
-        $view .= "<input type=\"submit\" value=\"cadastrar\" class=\"btn btn-success\" >";       
+        $view .= "<input type=\"submit\" value=\"Cadastrar\" class=\"btn btn-success\" >";       
         echo $view;
     }
     
@@ -75,7 +75,7 @@ class ViewOsso extends AbstractView {
             $view .= "</div>";
         $view .= "</div>";
         $view .= "<input type=\"hidden\" name=\"osso-novo\" value=\"editar\" >";
-        $view .= "<input type=\"submit\" value=\"cadastrar\" class=\"btn btn-success\" >";       
+        $view .= "<input type=\"submit\" value=\"Atualizar\" class=\"btn btn-success\" >";       
         echo $view;
     }
     

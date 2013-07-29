@@ -10,36 +10,119 @@
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
     include_once '../../application/persistence/interfaces/EmprestimoDao.php';
+    include_once '../../application/persistence/interfaces/AdministradorDao.php';
+    include_once '../../application/persistence/interfaces/ProfessorDao.php';
+    include_once '../../application/persistence/interfaces/AlunoDao.php';
+    include_once '../../application/persistence/interfaces/UsuarioDao.php';
     include_once '../../application/persistence/interfaces/OssoDao.php';
+    
+    include_once '../../application/model/Administrador.php';
+    include_once '../../application/controller/ControllerAdministrador.php';
+    include_once '../../application/persistence/implementacoes/PersistenceAdministrador.php';
     
     include_once '../../application/model/Emprestimo.php';
     include_once '../../application/controller/ControllerEmprestimo.php';    
     include_once '../../application/persistence/implementacoes/PersistenceEmprestimo.php';
     include_once '../../application/view/ViewEmprestimo.php';
     
+    include_once '../../application/model/Professor.php';
+    include_once '../../application/controller/ControllerProfessor.php';    
+    include_once '../../application/persistence/implementacoes/PersistenceProfessor.php';
+    
+    include_once '../../application/model/Aluno.php';
+    include_once '../../application/controller/ControllerAluno.php';
+    include_once '../../application/persistence/implementacoes/PersistenceAluno.php';
+    
     include_once '../../application/model/Osso.php';
     include_once '../../application/controller/ControllerOsso.php';    
     include_once '../../application/persistence/implementacoes/PersistenceOsso.php';
     
-    $viewEmprestimo = new ViewEmprestimo();    
+    include_once '../../application/model/Usuario.php';
+    include_once '../../application/controller/ControllerUsuario.php';
+    include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+    include_once '../../application/utils/PermissionValidator.php';
+    include_once '../../application/utils/DadosSessao.php';
     
-    if (@$_POST['source'] == "cadastrar") {
-        $emprestimo = new Emprestimo();
-        $emprestimo->setDataEmprestimo(date('Y-m-d-H:i:s'));
-        $emprestimo->setDataEmprestimo(NULL);
-        $osso = new ControllerOsso();
-        $emprestimo->codigo = $_POST['codigo'];
-        $emprestimo->administrador = $_POST['nomeAdmin'];
-        explode($campodetexto, ';');
-        $emprestimoController = new ControllerEmprestimo();
-        $emprestimoController->salvar($emprestimo);
-    } 
+    session_start();
+    
+    if (empty($_SESSION["usuario"])):
+        header("location: ../login/index.php");
+        exit();
+    else :
+        if (PermissionValidator::isAdministrador()) :
+            $viewEmprestimo = new ViewEmprestimo();       
+            $admin = unserialize($_SESSION["usuario"]);
+            if (@$_POST['source'] == "registrar") {
+                $emprestimo = new Emprestimo();
+                if ($_POST['tipo'] == "3") {
+                    $alunoController = new ControllerAluno();
+                    $aluno = new Aluno();
+                    $aluno->setId($_POST['nome']);
+                    $aluno = $alunoController->encontrarPorId($aluno);
+                    $emprestimo->setUsuario($aluno->getUsuario());
+                } else if ($_POST['tipo'] == "2"){
+                    $professorController = new ControllerProfessor();
+                    $professor = new Professor();
+                    $professor->setId($_POST['nome']);
+                    $professor = $professorController->encontrarPorId($professor);
+                    $emprestimo->setUsuario($professor->getUsuario());
+                }
+                $emprestimo->setDataEmprestimo(date('Y-m-d-H:i:s'));
+                $emprestimo->setDataDevolucao(NULL);
+                $emprestimo->setQuantidade($_POST["quantidade"]);
+                $emprestimo->setAdministrador($admin);      
+                $ossoController = new ControllerOsso();
+                $ossos = array();                
+                
+                foreach ($_POST["bones"] as $idOsso) {
+                    $osso = new Osso();
+                    $osso->setId($idOsso);
+                    $osso = $ossoController->encontrarPorId($osso);                    
+                    array_push($ossos, $osso);
+                }
+                $emprestimo->setOssos($ossos);
+                $emprestimoController = new ControllerEmprestimo();
+                $emprestimoController->salvar($emprestimo);
+            } 
 ?>
-<link rel="stylesheet" href="../../resource/css/select2.css">
 <script src="../../resource/js/jquery/select2.min.js"></script>
+<link rel="stylesheet" href="../../resource/css/select2/select2.css">
 <script>
-      $(function(){jQuery('.select2').select2({placeholder:"Escolha uma opção"});});
+//      $(function(){jQuery('.select2').select2({placeholder:"Escolha uma opção"});});
+        $(function(){jQuery('.select2').select2();});
+        
+      var dataAluno;
+      var dataProfessor;
+      $(document).ready(function() {
+          dataAluno = $.get("EmprestimoAluno.php");
+          dataProfessor = $.get("EmprestimoProfessor.php");
+          $("#s2id_selectUsuario a span.select2-chosen").text("Insira o nome do aluno");
+          $("#radioAluno").bind('click', function(){
+              dataAluno.done(function(data){
+                  $("#selectUsuario").html(data);
+                  $("#inputTipo").val(3);
+                  $("#s2id_selectUsuario a span.select2-chosen").text("Insira o nome do aluno");
+              });
+          });
+          $("#radioProfessor").bind('click', function(){
+              dataProfessor.done(function(data){
+                  $("#selectUsuario").html(data);
+                  $("#inputTipo").val(2);
+                  $("#s2id_selectUsuario a span.select2-chosen").text("Insira o nome do professor");
+              });
+          });
+      });
 </script>
+
+<style type="text/css">
+    .radioEmprestimo {
+        position: absolute;
+    }
+    .labelRadio {
+        display: inline;
+        margin: 0px 20px 5px 17px;
+    }
+</style>
 
 <header>
     <div class="navbar navbar-inverse">
@@ -54,19 +137,14 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                   
+                    <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>                   
                     <li class="active">Página de empréstimos</li>
                 </ul>
                 
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rafael<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a tabindex="-1" href="#">Action</a></li>                            
-                            <li><a tabindex="-1" href="#">Another action</a></li>                            
-                            <li><a tabindex="-1" href="#">Something else here</a></li>                            
-                        </ul>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
@@ -87,7 +165,7 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="index.php">Dashboard</a>
+            <a href="../home/home.php">Início</a>
         </li>
         <li class="active">
             <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
@@ -137,4 +215,11 @@
         </div>
     </div>
 </div>
-<?php include_once '../../application/view/footer.view.php'; ?>
+<?php 
+        include_once '../../application/view/footer.view.php'; 
+        else :
+            header("location: ../home/home.php");
+            exit();
+        endif;
+    endif;
+?>

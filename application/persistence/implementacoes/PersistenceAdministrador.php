@@ -14,41 +14,42 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
     protected function dadosParaModel() {
         while ($row = mysql_fetch_array($this->resultado)) {
             $model = new Administrador();
-            $model->setId($row["id"]);
-            $model->setNome($row["nome"]);
-            $model->setMatricula($row["matricula"]);
-            $model->setEmail($row["email"]);
+            $model->setId($row["idAdministrador"]);
+            $model->setNome($row["nomeAdministrador"]);
+            $model->setMatricula($row["matriculaAdministrador"]);
+            $model->setEmail($row["emailAdministrador"]);
             $model->setModerador($row["moderador"]);
             
             $usuario = new Usuario();
             $usuario->setId($row["idUsuario"]);
-            $usuario->setLogin($row["login"]);
-            $usuario->setSenha($row["senha"]);
-            $usuario->setTipo($row["tipo"]);
+            $usuario->setLogin($row["loginUsuario"]);
+            $usuario->setSenha($row["senhaUsuario"]);
+            $usuario->setTipo($row["tipoUsuario"]);
             
             $model->setUsuario($usuario);
+            
             $this->lista[] = $model;
         }
     }
 
     protected function listarColunas($addpk) {
         if ($addpk) {
-            $columns[] = "id";
+            $columns[] = "idAdministrador";
         }
-        $columns[] = "nome";
-        $columns[] = "matricula";
-        $columns[] = "email";
+        $columns[] = "nomeAdministrador";
+        $columns[] = "matriculaAdministrador";
+        $columns[] = "emailAdministrador";
         $columns[] = "moderador";
-        $columns[] = "idUsuario";
+        $columns[] = "idUsuarioAdministrador";
         return implode(', ', $columns);
     }
 
     protected function listarColunasComValores($model) {
-        $columns[] = "nome = '{$model->getNome()}'";
-        $columns[] = "matricula = '{$model->getMatricula()}'";
-        $columns[] = "email = '{$model->getEmail()}'";
+        $columns[] = "nomeAdministrador = '{$model->getNome()}'";
+        $columns[] = "matriculaAdministrador = '{$model->getMatricula()}'";
+        $columns[] = "emailAdministrador = '{$model->getEmail()}'";
         $columns[] = "moderador = '{$model->getModerador()}'";
-        $columns[] = "idUsuario = '{$model->getUsuario()->getId()}'";
+        $columns[] = "idUsuarioAdministrador = '{$model->getUsuario()->getId()}'";
         return implode(', ', $columns);
     }
 
@@ -63,8 +64,8 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
     
     public function encontrarAdministradorPorIdUsuario($idUsuario) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE idUsuario = {$idUsuario}");
+        $this->criarComando("SELECT * FROM Administrador AS t INNER JOIN Usuario 
+        AS u ON t.idUsuarioAdministrador = u.idUsuario WHERE idUsuarioAdministrador = {$idUsuario}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -75,9 +76,8 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
     
     public function listarComoUsuario() {
         $this->abrirConexao();
-        $this->criarComando("SELECT t.id, t.nome, t.matricula, t.email, t.moderador, t.idUsuario,
-                u.login, u.senha, u.tipo FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id");
+        $this->criarComando("SELECT * FROM Administrador AS t 
+        INNER JOIN Usuario AS u ON t.idUsuarioAdministrador = u.idUsuario");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -88,9 +88,8 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
     
     public function encontrarPorId($entidade) {
         $this->abrirConexao();
-        $this->criarComando("SELECT t.id, t.nome, t.matricula, t.email, t.moderador, t.idUsuario,
-                u.login, u.senha, u.tipo FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE t.id = {$entidade->getId()}");
+        $this->criarComando("SELECT * FROM Administrador AS t INNER JOIN Usuario 
+        AS u ON t.idUsuarioAdministrador = u.idUsuario WHERE t.idAdministrador = {$entidade->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();

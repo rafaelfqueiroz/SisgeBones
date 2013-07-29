@@ -19,19 +19,19 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     protected function dadosParaModel() {
         while ($row = mysql_fetch_array($this->resultado)) {
             $model = new Aluno();
-            $model->setId($row["id"]);
-            $model->setNome($row["nome"]);
-            $model->setMatricula($row["matricula"]);
-            $model->setCurso($row["curso"]);
-            $model->setEmail($row["email"]);            
+            $model->setId($row["idAluno"]);
+            $model->setNome($row["nomeAluno"]);
+            $model->setMatricula($row["matriculaAluno"]);
+            $model->setCurso($row["cursoAluno"]);
+            $model->setEmail($row["emailAluno"]);            
             $model->setEMonitor($row["eMonitor"]);
             $model->setAtivo($row["ativo"]);
             
             $usuario = new Usuario();
             $usuario->setId($row["idUsuario"]);
-            $usuario->setLogin($row["login"]);
-            $usuario->setSenha($row["senha"]);
-            $usuario->setTipo($row["tipo"]);
+            $usuario->setLogin($row["loginUsuario"]);
+            $usuario->setSenha($row["senhaUsuario"]);
+            $usuario->setTipo($row["tipoUsuario"]);
             
             $model->setUsuario($usuario);
             $this->lista[] = $model;
@@ -40,26 +40,26 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
 
     protected function listarColunas($addpk) {
          if ($addpk) {
-            $columns[] = "id";
+            $columns[] = "idAluno";
         }
-        $columns[] = "nome";
-        $columns[] = "matricula";
-        $columns[] = "curso";
-        $columns[] = "email";
+        $columns[] = "nomeAluno";
+        $columns[] = "matriculaAluno";
+        $columns[] = "cursoAluno";
+        $columns[] = "emailAluno";
         $columns[] = "eMonitor";
         $columns[] = "ativo";
-        $columns[] = "idUsuario";        
+        $columns[] = "idUsuarioAluno";        
         return implode(', ', $columns);
     }
 
     protected function listarColunasComValores($model) {
-        $columns[] = "nome = '{$model->getNome()}'";
-        $columns[] = "matricula = '{$model->getMatricula()}'";
-        $columns[] = "curso = '{$model->getCurso()}'";
-        $columns[] = "email = '{$model->getEmail()}'";        
+        $columns[] = "nomeAluno = '{$model->getNome()}'";
+        $columns[] = "matriculaAluno = '{$model->getMatricula()}'";
+        $columns[] = "cursoAluno = '{$model->getCurso()}'";
+        $columns[] = "emailAluno = '{$model->getEmail()}'";        
         $columns[] = "eMonitor = '{$model->getEMonitor()}'";
         $columns[] = "ativo = '{$model->getAtivo()}'";
-        $columns[] = "idUsuario = '{$model->getUsuario()->getId()}'";
+        $columns[] = "idUsuarioAluno = '{$model->getUsuario()->getId()}'";
         return implode(', ', $columns);
     }
 
@@ -76,8 +76,8 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     
     public function encontrarAlunoPorIdUsuario($idUsuario) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE idUsuario = {$idUsuario}");
+        $this->criarComando("SELECT * FROM Aluno AS t INNER JOIN Usuario AS u ON
+        t.idUsuarioAluno = u.idUsuario WHERE idUsuarioAluno = {$idUsuario}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -88,9 +88,8 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     
     public function listarComoUsuario() {
         $this->abrirConexao();
-        $this->criarComando("SELECT t.id, t.nome, t.matricula, t.curso, t.email, t.eMonitor, 
-                t.idUsuario, t.ativo, u.login, u.senha, u.tipo FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id");
+        $this->criarComando("SELECT * FROM Aluno AS t INNER JOIN Usuario AS u ON
+        t.idUsuarioAluno = u.idUsuario");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -101,9 +100,8 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     
     public function encontrarPorId($entidade) {
         $this->abrirConexao();
-        $this->criarComando("SELECT t.id, t.nome, t.matricula, t.curso, t.email, t.eMonitor, 
-                t.idUsuario, t.ativo, u.login, u.senha, u.tipo FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE t.id = {$entidade->getId()}");
+        $this->criarComando("SELECT * FROM Aluno AS t INNER JOIN Usuario AS u ON
+        t.idUsuarioAluno = u.idUsuario WHERE t.idAluno = {$entidade->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();

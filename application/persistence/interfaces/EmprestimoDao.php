@@ -11,6 +11,7 @@
  * @author RAFAEL
  */
 interface EmprestimoDao extends Dao{
+    function listarPendentes();
 }
 
 ?>

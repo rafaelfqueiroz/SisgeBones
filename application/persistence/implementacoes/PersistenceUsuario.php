@@ -19,28 +19,28 @@ class UsuarioPersistence extends AbstractPersistence implements UsuarioDao {
     protected function dadosParaModel() {
         while ($row = mysql_fetch_array($this->resultado)) {
             $model = new Usuario();
-            $model->setId($row["id"]);
-            $model->setLogin($row["login"]);
-            $model->setSenha($row["senha"]);
-            $model->setTipo($row["tipo"]);
+            $model->setId($row["idUsuario"]);
+            $model->setLogin($row["loginUsuario"]);
+            $model->setSenha($row["senhaUsuario"]);
+            $model->setTipo($row["tipoUsuario"]);
             $this->lista[] = $model;
         }        
     }
 
     protected function listarColunas($addpk) {
         if ($addpk) {
-            $columns[] = "id";
+            $columns[] = "idUsuario";
         }
-        $columns[] = "login";
-        $columns[] = "senha";
-        $columns[] = "tipo";
+        $columns[] = "loginUsuario";
+        $columns[] = "senhaUsuario";
+        $columns[] = "tipoUsuario";
         return implode(', ', $columns);
     }
 
     protected function listarColunasComValores($model) {
-        $columns[] = "login = '{$model->getLogin()}'";
-        $columns[] = "senha = '{$model->getSenha()}'";
-        $columns[] = "tipo = '{$model->getTipo()}'";
+        $columns[] = "loginUsuario = '{$model->getLogin()}'";
+        $columns[] = "senhaUsuario = '{$model->getSenha()}'";
+        $columns[] = "tipoUsuario = '{$model->getTipo()}'";
         return implode(', ', $columns);
     }
 
@@ -53,7 +53,7 @@ class UsuarioPersistence extends AbstractPersistence implements UsuarioDao {
 
     public function encontrarPorLogin($login) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE login = '{$login}'");
+        $this->criarComando("SELECT * FROM Usuario WHERE loginUsuario = '{$login}'");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -64,8 +64,8 @@ class UsuarioPersistence extends AbstractPersistence implements UsuarioDao {
 
     public function encontrarPorLoginESenha($login, $senha) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} 
-        WHERE login = '{$login}' and senha = '{$senha}'");
+        $this->criarComando("SELECT * FROM Usuario WHERE loginUsuario = '{$login}'
+        and senhaUsuario = '{$senha}'");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();

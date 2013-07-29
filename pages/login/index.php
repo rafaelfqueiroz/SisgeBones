@@ -38,7 +38,7 @@
             if ($usuario->getTipo() == 1) { //administrador
                 $adminController = new ControllerAdministrador();                
                 $admin = $adminController->encontrarAdministradorPorIdUsuario($usuario->getId());
-                $_SESSION["usuario"] = serialize($admin);                
+                $_SESSION["usuario"] = serialize($admin);       
             } else if ($usuario->getTipo() == 2) { //professor                
                 $professorController = new ControllerProfessor();
                 $professor = $professorController->encontrarProfessorPorIdUsuario($usuario->getId());                
@@ -48,7 +48,7 @@
                 $aluno = $alunoController->encontrarAlunoPorIdUsuario($usuario->getId());
                 $_SESSION["usuario"] = serialize($aluno);
             } 
-            header('location: ../home/index.php');
+            header('location: ../home/home.php');
             die();
         }
     }
@@ -58,7 +58,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Bootstrap Admin</title>
+    <title>Sisgebones</title>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -103,7 +103,7 @@
                 <ul class="nav pull-right">
                     
                 </ul>
-                <a class="brand" href="login.php"><span class="first">Sisge</span> <span class="second">BONES</span></a>
+                <a class="brand" style="float:none;text-align:center;"href="login.php"><span class="second">Sistema de Gerenciamento de Ossos do Departamento de Morfologia</span><span class="second"></span></a>
             </div>
         </div>
     </div>
@@ -116,7 +116,7 @@
         <div class="block">
             <div class="block-heading">Sign In</div>
             <div class="block-body">
-                <form method="post" action="login.php">
+                <form method="post" action="index.php">
                     <label>Login</label>
                     <input type="text" name="login" class="span12">
                     <label>Senha</label>
@@ -128,7 +128,7 @@
                 </form>
             </div>
         </div>
-        <p><a href="reset-password.html">Esqueceu sua senha?</a></p>
+        <p><a href="#">Esqueceu sua senha?</a></p>
     </div>
 </div>
     <script src="../../resource/js/bootstrap/bootstrap.js"></script>

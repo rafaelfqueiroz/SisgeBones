@@ -13,8 +13,10 @@
 class Emprestimo extends AbstractEntity{
     private $dataEmprestimo;
     private $dataDevolucao;
+    private $quantidade;
+    private $status;
+    private $ossos;
     private $usuario;
-    private $osso;
     private $administrador;
     
     public function Emprestimo() {}
@@ -27,28 +29,44 @@ class Emprestimo extends AbstractEntity{
         $this->dataEmprestimo = $dataEmprestimo;
     }
     
-    public function getDataDevolução() {
+    public function getDataDevolucao() {
         return $this->dataDevolucao;
     }
     
-    public function setDataDevolução($dataDevolucao) {
+    public function setDataDevolucao($dataDevolucao) {
         $this->dataDevolucao = $dataDevolucao;
     }
     
+    public function  getQuantidade() {
+        return $this->quantidade;
+    }
+    
+    public function setQuantidade($quantidade) {
+        $this->quantidade = $quantidade;
+    }
+    
+    public function  getStatus() {
+        return $this->status;
+    }
+    
+    public function setStatus($status) {
+        $this->status = $status;
+    }
+    
+    public function  getOssos() {
+        return $this->ossos;
+    }
+    
+    public function setOssos($ossos) {
+        $this->ossos = $ossos;
+    }
+
     public function getUsuario() {
         return $this->usuario;
     }
     
     public function setUsuario($usuario) {
         $this->usuario = $usuario;
-    }
-    
-    public function getOsso() {
-        return $this->osso;
-    }
-    
-    public function setOsso($osso) {
-        $this->osso = $osso;
     }
     
     public function getAdministrador() {

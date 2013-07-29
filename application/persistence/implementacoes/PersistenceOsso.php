@@ -19,28 +19,28 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
     protected function dadosParaModel() {
         while ($row = mysql_fetch_array($this->resultado)) {
             $model = new Osso();
-            $model->setId($row["id"]);
-            $model->setNome($row["nome"]);
-            $model->setQuantidade($row["quantidade"]);
-            $model->setCodigo($row["codigo"]);
+            $model->setId($row["idOsso"]);
+            $model->setNome($row["nomeOsso"]);
+            $model->setQuantidade($row["quantidadeOsso"]);
+            $model->setCodigo($row["codigoOsso"]);
             $this->lista[] = $model;
         }        
     }
 
     protected function listarColunas($addpk) {
         if ($addpk) {
-            $columns[] = "id";
+            $columns[] = "idOsso";
         }
-        $columns[] = "nome";
-        $columns[] = "quantidade";
-        $columns[] = "codigo";
+        $columns[] = "nomeOsso";
+        $columns[] = "quantidadeOsso";
+        $columns[] = "codigoOsso";
         return implode(', ', $columns);
     }
 
     protected function listarColunasComValores($model) {
-        $columns[] = "nome = '{$model->getNome()}'";
-        $columns[] = "quantidade = '{$model->getQuantidade()}'";
-        $columns[] = "codigo = '{$model->getCodigo()}'";
+        $columns[] = "nomeOsso = '{$model->getNome()}'";
+        $columns[] = "quantidadeOsso = '{$model->getQuantidade()}'";
+        $columns[] = "codigoOsso = '{$model->getCodigo()}'";
         return implode(', ', $columns);
     }
 
@@ -53,7 +53,7 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
     
     public function encontrarPorCodigo($codigo) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE codigo = '{$codigo}'");
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} WHERE codigoOsso = '{$codigo}'");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();

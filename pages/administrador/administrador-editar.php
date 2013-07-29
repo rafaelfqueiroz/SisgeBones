@@ -21,19 +21,20 @@
     include_once '../../application/controller/ControllerUsuario.php';
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     include_once '../../application/utils/PermissionValidator.php';
+    include_once '../../application/utils/DadosSessao.php';
     
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/login.php");
+        header("location: ../login/index.php");
         exit();
     else :
         if (PermissionValidator::isAdministrador()) :
             $admin = unserialize($_SESSION["usuario"]);
-            if ($admin->getModerador() == '0') :
+            if ($admin->getModerador() == '0') :                
                 include_once '../../application/view/header.view.php';   
                 $viewAdministrador = new ViewAdministrador();
-                if (@$_POST['source'] == "editar") {
+                if (@$_POST['source'] == "editar") {                    
                     $administrador = new Administrador();
                     $administrador->setId($_POST['id']);
                     $administrador->setNome($_POST['nome']);
@@ -74,19 +75,14 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                
+                    <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>                
                     <li class="active">Página de administradores</li>
                 </ul>
                 
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rafael<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a tabindex="-1" href="#">Action</a></li>                            
-                            <li><a tabindex="-1" href="#">Another action</a></li>                            
-                            <li><a tabindex="-1" href="#">Something else here</a></li>                            
-                        </ul>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
@@ -107,7 +103,7 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="index.php">Dashboard</a>
+            <a href="../home/home.php">Início</a>
         </li>        
             <li>
                 <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
@@ -161,7 +157,7 @@
                 exit();
             endif;
         else :
-            header("location: ../home/index.php");
+            header("location: ../home/home.php");
             exit();
         endif;
     endif;

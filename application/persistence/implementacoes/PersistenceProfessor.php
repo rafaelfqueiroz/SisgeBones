@@ -18,17 +18,17 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     protected function dadosParaModel() {        
         while ($row = mysql_fetch_array($this->resultado)) {
             $model = new Professor();
-            $model->setId($row["id"]);
-            $model->setNome($row["nome"]);
-            $model->setMatricula($row["matricula"]);
-            $model->setEmail($row["email"]);
-            $model->setRg($row["rg"]);
+            $model->setId($row["idProfessor"]);
+            $model->setNome($row["nomeProfessor"]);
+            $model->setMatricula($row["matriculaProfessor"]);
+            $model->setEmail($row["emailProfessor"]);
+            $model->setRg($row["rgProfessor"]);
                         
             $usuario = new Usuario();
             $usuario->setId($row["idUsuario"]);
-            $usuario->setLogin($row["login"]);
-            $usuario->setSenha($row["senha"]);
-            $usuario->setTipo($row["tipo"]);
+            $usuario->setLogin($row["loginUsuario"]);
+            $usuario->setSenha($row["senhaUsuario"]);
+            $usuario->setTipo($row["tipoUsuario"]);
             
             $model->setUsuario($usuario);
             $this->lista[] = $model;
@@ -36,26 +36,24 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     }
     protected function listarColunas($addpk) {
         if ($addpk) {
-            $columns[] = "id";
+            $columns[] = "idProfessor";
         }
-        $columns[] = "nome";
-        $columns[] = "matricula";
-        $columns[] = "email";
-        $columns[] = "rg";
-        $columns[] = "idUsuario";
+        $columns[] = "nomeProfessor";
+        $columns[] = "matriculaProfessor";
+        $columns[] = "emailProfessor";
+        $columns[] = "rgProfessor";
+        $columns[] = "idUsuarioProfessor";
         return implode(', ', $columns);
     }
     protected function listarColunasComValores($model) {
-        $columns[] = "nome = '{$model->getNome()}'";
-        $columns[] = "matricula = '{$model->getMatricula()}'";
-        $columns[] = "email = '{$model->getEmail()}'";
-        $columns[] = "rg = '{$model->getRg()}'";
-        $columns[] = "idUsuario = '{$model->getUsuario()->getId()}'";
+        $columns[] = "nomeProfessor = '{$model->getNome()}'";
+        $columns[] = "matriculaProfessor = '{$model->getMatricula()}'";
+        $columns[] = "emailProfessor = '{$model->getEmail()}'";
+        $columns[] = "rgProfessor = '{$model->getRg()}'";
+        $columns[] = "idUsuarioProfessor = '{$model->getUsuario()->getId()}'";
         return implode(', ', $columns);
     }
     protected function listarValores($model) {
-        var_dump($model);
-        echo "<br/>";echo "<br/>";  
         $values[] = "'{$model->getNome()}'";
         $values[] = "'{$model->getMatricula()}'";
         $values[] = "'{$model->getEmail()}'";
@@ -66,8 +64,8 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     
     public function encontrarProfessorPorIdUsuario($idUsuario) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE idUsuario = {$idUsuario}");
+        $this->criarComando("SELECT * FROM Professor AS t INNER JOIN Usuario AS 
+        u ON t.idUsuarioProfessor = u.idUsuario WHERE idUsuarioProfessor = {$idUsuario}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -78,9 +76,8 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     
     public function listarComoUsuario() {
         $this->abrirConexao();
-        $this->criarComando("SELECT t.id, t.nome, t.matricula, t.email, t.rg, t.idUsuario,
-                u.login, u.senha, u.tipo FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id");
+        $this->criarComando("SELECT * FROM Professor AS t 
+        INNER JOIN Usuario AS u ON t.idUsuarioProfessor = u.idUsuario");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -91,9 +88,9 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     
     public function encontrarPorId($entidade) {
         $this->abrirConexao();
-        $this->criarComando("SELECT t.id, t.nome, t.matricula, t.email, t.rg, t.idUsuario,
-                u.login, u.senha, u.tipo FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuario = u.id WHERE t.id = {$entidade->getId()}");
+        $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
+        INNER JOIN Usuario AS u ON t.idUsuarioProfessor = u.idUsuario WHERE 
+        t.idProfessor = {$entidade->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();

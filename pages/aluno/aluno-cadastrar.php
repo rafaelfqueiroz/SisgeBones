@@ -22,6 +22,7 @@
     include_once '../../application/controller/ControllerUsuario.php';
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     include_once '../../application/utils/PermissionValidator.php';
+    include_once '../../application/utils/DadosSessao.php';
     session_start();
     
     if (empty($_SESSION["usuario"])):
@@ -88,12 +89,7 @@
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rafael<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a tabindex="-1" href="#">Action</a></li>                            
-                            <li><a tabindex="-1" href="#">Another action</a></li>                            
-                            <li><a tabindex="-1" href="#">Something else here</a></li>                            
-                        </ul>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>

@@ -5,6 +5,7 @@ class Usuario extends AbstractEntity {
     private $login;
     private $senha;
     private $tipo;
+    private $referente;
     
     /*
     tipos de usuario:
@@ -29,6 +30,15 @@ class Usuario extends AbstractEntity {
     public function setSenha($senha) {
         $this->senha = $senha;
     }
+    
+    public function getReferente() {
+        return $this->referente;
+    }
+    
+    public function setReferente($referente) {
+        $this->referente = $referente;
+    }
+    
     
     public function getTipo() {
         return $this->tipo;

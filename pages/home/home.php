@@ -5,9 +5,9 @@
     include_once '../../application/model/Administrador.php';
     
     include_once '../../application/utils/PermissionValidator.php';
+    include_once '../../application/utils/DadosSessao.php';
     
     session_start();
-
     if (empty($_SESSION["usuario"])):
         header("location: ../login/login.php");
     else :        
@@ -33,12 +33,7 @@
                 <ul class="profileBar">
                     <li class="user "><img src="../../resource/img/user.jpg" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rafael<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a tabindex="-1" href="#">Action</a></li>                            
-                            <li><a tabindex="-1" href="#">Another action</a></li>                            
-                            <li><a tabindex="-1" href="#">Logout</a></li>                            
-                        </ul>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
@@ -59,7 +54,7 @@
     
     <ul class="sideMenu">
         <li class="active">
-            <a href="index.php">Dashboard</a>
+            <a href="home.php">Início</a>
         </li>
         <?php if(PermissionValidator::isAdministrador()) : ?>
             <li>
@@ -108,11 +103,11 @@
 <div id="content" class="content-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2>Dashboard</h2>
+            <h2>Início</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
                 <input id="prependedInput" class="text-center" type="text" 
-                       placeholder="12/01/2013 - 18/01/2013" value="12/01/2013 - 18/01/2013">
+                       placeholder="<?php echo date("l, j-F-Y"); ?>" value="<?php echo date("l, j-F-Y"); ?>">
             </div>
         </div>
     </div>
@@ -126,11 +121,6 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab1">
-                        <div class="btn-group pull-right mrg-btm10" data-toggle="buttons-radio">
-                            <button class="btn active">Day</button>
-                            <button class="btn">Month</button>
-                            <button class="btn">Year</button>
-                        </div>
                     </div>
                     <div class="tab-pane" id="tab2">
                         <p>Section 2</p>

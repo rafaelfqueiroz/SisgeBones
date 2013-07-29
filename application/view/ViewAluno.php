@@ -135,7 +135,7 @@
         
         public function printListAsTable() {
             $this->list = $this->alunoController->listarComoUsuario();
-            $view = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table table-striped table-bordered dataTable\" id=\"example\" aria-describedby=\"example_info\">";
+            $view = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table table-bordered dataTable\" id=\"example\" aria-describedby=\"example_info\">";
                 $view .= "<thead>";
                     $view .= "<tr role=\"row\">";
                         $view .= "<th class=\"sorting_asc\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-sort=\"ascending\" aria-label=\"Rendering engine: activate to sort column descending\" style=\"width: 167px;\">Nome</th>";

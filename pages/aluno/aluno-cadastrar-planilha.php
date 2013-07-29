@@ -22,12 +22,14 @@
     include_once '../../application/model/Usuario.php';
     include_once '../../application/controller/ControllerUsuario.php';
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
-//    require_once '../../application/excel_reader2.php';
+    include_once '../../application/utils/DadosSessao.php';
+//    error_reporting(E_ALL ^ E_NOTICE);
+//    require_once '../../application/utils/excel_reader.php';
     
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/login.php");
+        header("location: ../login/index.php");
         exit();
     else :
         if (PermissionValidator::isAdministrador()) :
@@ -35,28 +37,51 @@
             $viewAluno = new ViewAluno();
 
             if (@$_POST['source'] == "cadastrarPlanilha") {
-//                 && $_FILES["planilha"]["tmp_name"] != NULL
-//                $reader = new Spreadsheet_Excel_Reader($_FILES["planilha"]["tmp_name"],false);
-                $aluno = new Aluno();
-                $aluno->setNome($_POST['nome']);
-                $aluno->setMatricula($_POST['matricula']);
-                $aluno->setCurso($_POST['curso']);
-                $aluno->setEmail($_POST['email']);
-                $aluno->setEMonitor(true);
-
-                $usuario = new Usuario();
-                $usuario->setLogin($_POST['login']);
-                $usuario->setSenha($_POST['senha']);
-                $usuario->setTipo(4);
-
-                $usuarioController = new ControllerUsuario();
-                $usuarioController->salvar($usuario);
-                $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
-
-                $aluno->setUsuario($responseDB->getId());        
-                $alunoController = new ControllerAluno();
-                $alunoController->salvar($aluno);
-                header('location:' . $_SERVER['PHP_SELF']);
+//                $data = array();
+                if ( $_FILES['planilha']['tmp_name'] ) {
+                    $dom = DOMDocument::load( $_FILES['planilha']['tmp_name'] );                    
+                    $rows = $dom->getElementsByTagName('Row');
+                    $first_row = false;
+                    foreach ($rows as $row) {
+                        if ( !$first_row ) {
+                            $content = "";
+                            $index = 1;
+                            $cells = $row->getElementsByTagName('Cell');                            
+                            foreach($cells as $cell) {
+                                $ind = $cell->getAttribute('Index');
+                                if ($ind != null) {
+                                    $index = $ind;
+                                }
+                                if ($index == 1) {
+                                    $content = $cell->nodeValue;
+                                }
+                                $cellContent = explode(" ", $content);
+                                $aluno = new Aluno();
+                                $aluno->setNome($cellContent[1]);
+                                $aluno->setMatricula($cellContent[2]);
+                                $aluno->setAtivo(false);
+                                $aluno->setEMonitor(false);
+                                $aluno->setEmail("Cadastro incompleto");
+                                $aluno->setCurso($_POST["curso"]);
+                                
+                                $usuario = new Usuario();
+                                $usuario->setLogin($cellContent[2]);
+                                $usuario->setSenha($cellContent[2]);
+                                $usuario->setTipo(3);
+                                
+                                $usuarioController = new ControllerUsuario();
+                                $usuarioController->salvar($usuario);
+                                $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
+                                
+                                $aluno->setUsuario($responseDB);
+                                $alunoController = new ControllerAluno();
+                                $alunoController->salvar($aluno);
+//                                array_push($data, $content);
+                            }                       
+                        }
+                    }
+                    header('location:' . $_SERVER['PHP_SELF']);
+                }
             }
 ?>
 <style rel="stylesheet" type="text/css">
@@ -77,19 +102,14 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>              
+                    <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>              
                     <li class="active">Página de alunos</li>
                 </ul>
                 
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rafael<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a tabindex="-1" href="#">Action</a></li>                            
-                            <li><a tabindex="-1" href="#">Another action</a></li>                            
-                            <li><a tabindex="-1" href="#">Something else here</a></li>                            
-                        </ul>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
@@ -110,7 +130,7 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="../home/index.php">Dashboard</a>
+            <a href="../home/home.php">Início</a>
         </li>
         <li>
             <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            

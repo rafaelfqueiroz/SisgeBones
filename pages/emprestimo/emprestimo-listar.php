@@ -10,6 +10,7 @@
         
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
+    include_once '../../application/persistence/interfaces/UsuarioDao.php';
     include_once '../../application/persistence/interfaces/EmprestimoDao.php';
     
     include_once '../../application/model/Administrador.php';
@@ -18,10 +19,16 @@
     include_once '../../application/persistence/implementacoes/PersistenceEmprestimo.php';
     include_once '../../application/view/ViewEmprestimo.php';
     
+    include_once '../../application/model/Usuario.php';
+    include_once '../../application/controller/ControllerUsuario.php';
+    include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+    
+    include_once '../../application/utils/DadosSessao.php';
+    
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/login.php");
+        header("location: ../login/index.php");
         exit();
     else :
         include_once '../../application/view/header.view.php';
@@ -31,7 +38,36 @@
     .row {
         margin-left: 0px;
     }
+/*    tr.gradeA, tr.odd, tr.even {
+        background-color:#e4e4e4 !important;
+    }*/
+    .table tbody tr td{
+        border-top:none;        
+    }
+    tr.odd {
+        background-color: #f9f9f9;
+    }
+    tr.odd.pendente, tr.even.pendente {
+        background-color: #fff0f0;
+    }
+    
+    tr.odd.pendente td, tr.even.pendente td {
+        border-bottom: 1px solid #FFCBCB;
+    }
+    
+    tr.gradeA:hover, tr.odd:hover, tr.even:hover {
+        background-color:#e4e4e4 !important;
+        cursor: pointer;
+    }
 </style>
+<script>
+    $(document).ready(function(){
+        $('#example tbody tr').click(function() {
+            var url = $(this).data('href');
+            window.location.href = url;
+        });
+    });
+</script>
 <header>
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
@@ -45,19 +81,14 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>                   
+                    <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>                   
                     <li class="active">Página de empréstimos</li>
                 </ul>
                 
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rafael<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a tabindex="-1" href="#">Action</a></li>                            
-                            <li><a tabindex="-1" href="#">Another action</a></li>                            
-                            <li><a tabindex="-1" href="#">Something else here</a></li>                            
-                        </ul>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     <li class="calendar"><a href="#"></a></li>
@@ -78,7 +109,7 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="../home/index.php">Dashboard</a>
+            <a href="../home/home.php">Início</a>
         </li>
         <li class="active">
             <a href="../emprestimo/emprestimo-listar.php">Empréstimo</a>            
