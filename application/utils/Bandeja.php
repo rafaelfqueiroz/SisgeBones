@@ -19,14 +19,14 @@
         $osso->setQuantidade($item->quantidade);
         $osso->setQtdDisponivel($item->qtdDisponivel);    
 
-        $qtdEmprestimo = $_POST["qtdOsso"];
-        $osso->setQuantidade($qtdEmprestimo);
-        if (array_key_exists($osso->getId(), $tray)) {
-            $soma = $tray[$osso->getId()]->getQuantidade() + $osso->getQuantidade();
-            $tray[$osso->getId()]->setQuantidade($soma);
-        } else {
+//        $qtdEmprestimo = $_POST["qtdOsso"];
+//        $osso->setQuantidade($qtdEmprestimo);
+//        if (isset($tray[$osso->getId()])) {
+//            $soma = $tray[$osso->getId()]->getQuantidade() + $osso->getQuantidade();
+//            $tray[$osso->getId()]->setQuantidade($soma);
+//        } else {
             $tray[$osso->getId()] = $osso;
-        }
+//        }
     } else if ($_POST["action"] == "remover") {
         $tray = unserialize($_SESSION["bandeja"]);
         $idOsso = json_decode($_POST["item"]);
@@ -36,9 +36,10 @@
     $textTray = "";
     $total = 0;
     foreach ($tray as $itemTray) {
+        $qtdEmprestimo = $itemTray->getQuantidade() - $itemTray->getQtdDisponivel();
         $textTray .= "<tr><td>{$itemTray->getNome()}</td><td>{$itemTray->getCodigo()}</td>
-        <td>{$itemTray->getQuantidade()}</td><td><a href=\"#\" onClick=\"removerDaBandeja({$itemTray->getId()}, {$itemTray->getQuantidade()})\">Retirar</a></td></tr>";
-        $total += $itemTray->getQuantidade();
+        <td>{$qtdEmprestimo}</td><td><a href=\"#\" onClick=\"removerDaBandeja({$itemTray->getId()}, {$itemTray->getQuantidade()})\">Retirar</a></td></tr>";
+        $total += $qtdEmprestimo;
     }
     $textTray .= "<tr><td></td><td></td><td></td><td id=\"totalQtdCell\"><b>Total:  {$total}</b></td></tr>";    
     echo $textTray;

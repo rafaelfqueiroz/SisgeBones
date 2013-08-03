@@ -55,14 +55,14 @@
             $view .= "<div class=\"control-group\">";
                 $view .= "<label class=\"control-label\" for=\"inputQuantidade\">Total de ossos</label>";
                 $view .= "<div class=\"controls\">";
-                    $view .= "<input type=\"text\" id=\"inputQuantidade\" name=\"quantidade\" value=\"\" placeholder=\"Total de ossos\" disabled required />";
+                    $view .= "<input type=\"text\" id=\"inputQuantidade\" name=\"quantidadeTotal\" value=\"\" placeholder=\"Total de ossos\" disabled >";
                 $view .= "</div>";
             $view .= "</div>";
             $view .= "<div class=\"control-group\">";
                 $view .= "<div class=\"controls\">";
                     $view .= "<input id=\"inputTipo\" type=\"hidden\" name=\"tipo\" value=\"3\">";
                     $view .= "<br/><br/><input type=\"hidden\" name=\"source\" value=\"registrar\" >";
-                    $view .= "<input type=\"submit\" value=\"Registrar\" class=\"btn btn-success\" >";
+                    $view .= "<input type=\"submit\" value=\"Registrar\" onClick=\"enableInput()\" class=\"btn btn-success\" >";
                 $view .= "</div>";
             $view .= "</div>";
             $view .= "<br/><br/><div id=\"divTableTray\">";
@@ -187,7 +187,8 @@
                 $view .= "</div>";
             $view .= "</div>";
             if (PermissionValidator::isAdministrador() && $emprestimo->getStatus() == 1) {
-                $view .= "<input type=\"hidden\" name=\"source\" value=\"registrar\" >";
+                $view .= "<input type=\"hidden\" name=\"idEmprestimo\" value=\"{$emprestimo->getId()}\" >";
+                $view .= "<input type=\"hidden\" name=\"source\" value=\"finalizar\" >";
                 $view .= "<input type=\"submit\" value=\"Finalizar Emprestimo\" class=\"btn btn-large btn-success\" >";
             }
             echo $view;

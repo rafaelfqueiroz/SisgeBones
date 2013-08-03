@@ -54,9 +54,6 @@
             $viewEmprestimo = new ViewEmprestimo();       
             $admin = unserialize($_SESSION["usuario"]);
             if (@$_POST['source'] == "registrar") {
-                var_dump($_POST['quantidade']);
-                var_dump($_POST['nome']);
-                exit();
                 $emprestimo = new Emprestimo();
                 if ($_POST['tipo'] == "3") {
                     $alunoController = new ControllerAluno();
@@ -70,12 +67,13 @@
                     $professor->setId($_POST['nome']);
                     $professor = $professorController->encontrarPorId($professor);
                     $emprestimo->setUsuario($professor->getUsuario());
-                }
+                }                
                 $emprestimo->setDataEmprestimo(date('Y-m-d-H:i:s'));
                 $emprestimo->setDataDevolucao(NULL);
                 
-                $emprestimo->setQuantidade($_POST["quantidade"]);
-                $emprestimo->setAdministrador($admin);    
+                $emprestimo->setQuantidade($_POST["quantidadeTotal"]);
+                $emprestimo->setAdministrador($admin);
+                $emprestimo->setStatus(true);
                 $ossoController = new ControllerOsso();
                 $ossos = array();
                 $ossos = unserialize($_SESSION["bandeja"]);
@@ -227,6 +225,10 @@
       function addRowAtTableTray(dataTBody) {
           $("#divTableTray tbody").html(dataTBody);
           $("#inputQuantidade").val(parseInt($("#totalQtdCell").text().substring(7)));
+      }
+      
+      function enableInput() {
+          $("#inputQuantidade").removeAttr("disabled");
       }
 </script>
 

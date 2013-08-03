@@ -15,7 +15,8 @@
     include_once '../../application/controller/ControllerOsso.php';    
     include_once '../../application/persistence/implementacoes/PersistenceOsso.php';
     include_once '../../application/view/ViewOsso.php';
-
+    
+    session_start();
     $ossoController = new ControllerOsso();
     $list = $ossoController->listar();
     if (isset($_SESSION["bandeja"])) {

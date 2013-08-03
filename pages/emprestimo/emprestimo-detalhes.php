@@ -50,8 +50,19 @@
         header("location: ../login/index.php");
         exit();
     else :
-        if (!empty($_GET["id"])) :
+        if (!empty($_GET["id"]) || @$_POST['source'] == "finalizar") :
             $viewEmprestimo = new ViewEmprestimo();
+            if (@$_POST['source'] == "finalizar") {
+                $emprestimoController = new ControllerEmprestimo();
+                $emprestimo = new Emprestimo();
+                $emprestimo->setId(@$_POST["idEmprestimo"]);
+                $emprestimo = $emprestimoController->encontrarPorId($emprestimo);
+                $emprestimo->setStatus(false);
+                $emprestimo->setDataDevolucao(date('Y-m-d-H:i:s'));
+                $emprestimoController->atualizar($emprestimo);
+                header("location: emprestimo-listar-pendentes.php");
+                exit();
+            }
 ?>
 
 <header>
@@ -139,7 +150,7 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="realizar">
-                        <form class="form-horizontal" method="post" action="emprestimo-registrar.php">
+                        <form class="form-horizontal" method="post" action="emprestimo-detalhes.php">
                             <?php $viewEmprestimo->printEmprestimoDetalhes($_GET["id"]); ?>
                         </form>
                     </div>      
