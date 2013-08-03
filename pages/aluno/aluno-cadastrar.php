@@ -23,10 +23,12 @@
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     include_once '../../application/utils/PermissionValidator.php';
     include_once '../../application/utils/DadosSessao.php';
+    include_once '../../application/utils/CurrentDate.php';
+    
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/login.php");
+        header("location: ../login/index.php");
         exit();
     else :
         if (PermissionValidator::isAdministrador()) :            
@@ -82,12 +84,12 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/index.php"></a><span class="divider"></span></li>              
+                    <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>              
                     <li class="active">Página de alunos</li>
                 </ul>
                 
                 <ul class="profileBar">
-                    <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
+                    <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
@@ -110,7 +112,7 @@
     
     <ul class="sideMenu">
         <li>
-            <a href="../home/index.php">Dashboard</a>
+            <a href="../home/home.php">Dashboard</a>
         </li>
         <?php if(PermissionValidator::isAdministrador()) : ?>
             <li>
@@ -146,8 +148,8 @@
             <h2>Aluno</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
-                <input id="prependedInput" class="text-center" type="text" 
-                       placeholder="12/01/2013 - 18/01/2013" value="12/01/2013 - 18/01/2013">
+                <input id="prependedInput" class="text-center" disabled type="text" 
+                       placeholder="<?php echo CurrentDate::getCurrentDate(); ?>" value="<?php echo CurrentDate::getCurrentDate(); ?>">
             </div>
         </div>
     </div>

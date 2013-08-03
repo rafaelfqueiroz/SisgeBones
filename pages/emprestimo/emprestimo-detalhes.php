@@ -42,19 +42,16 @@
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     include_once '../../application/utils/PermissionValidator.php';
     include_once '../../application/utils/DadosSessao.php';
+    include_once '../../application/utils/CurrentDate.php';
     
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/login.php");
+        header("location: ../login/index.php");
         exit();
     else :
-        if (PermissionValidator::isAdministrador()) :
-            $viewEmprestimo = new ViewEmprestimo();       
-            $admin = unserialize($_SESSION["usuario"]);
-            if (@$_POST['source'] == "registrar") {
-                
-            } 
+        if (!empty($_GET["id"])) :
+            $viewEmprestimo = new ViewEmprestimo();
 ?>
 
 <header>
@@ -75,7 +72,7 @@
                 </ul>
                 
                 <ul class="profileBar">
-                    <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
+                    <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
@@ -124,8 +121,8 @@
             <h2>Empréstimo</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
-                <input id="prependedInput" class="text-center" type="text" 
-                       placeholder="12/01/2013 - 18/01/2013" value="12/01/2013 - 18/01/2013">
+                <input id="prependedInput" class="text-center" disabled type="text" 
+                       placeholder="<?php echo CurrentDate::getCurrentDate(); ?>" value="<?php echo CurrentDate::getCurrentDate(); ?>">
             </div>
         </div>
     </div>
@@ -134,9 +131,11 @@
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="emprestimo-detalhes.php?id=<?php echo $_GET["id"] ?>" data-toggle="tab">Detalhes Empréstimo</a></li>
-                    <li><a href="emprestimo-registrar.php" data-toggle="tab">Registrar Empréstimo</a></li>
-                    <li><a href="emprestimo-listar.php" data-toggle="tab">Listar Empréstimos</a></li>
-                    <li><a href="emprestimo-listar-pendentes.php" data-toggle="tab">Empréstimos Pendentes</a></li>
+                    <?php if(PermissionValidator::isAdministrador()) : ?>
+                        <li><a href="emprestimo-registrar.php" data-toggle="tab">Registrar Empréstimo</a></li>
+                        <li><a href="emprestimo-listar.php" data-toggle="tab">Listar Empréstimos</a></li>
+                        <li><a href="emprestimo-listar-pendentes.php" data-toggle="tab">Empréstimos Pendentes</a></li>
+                    <?php endif; ?>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="realizar">
@@ -152,8 +151,13 @@
 <?php 
         include_once '../../application/view/footer.view.php'; 
         else :
-            header("location: ../home/home.php");
-            exit();
+            if (PermissionValidator::isAdministrador()) {
+                header("location: emprestimo-listar.php");
+                exit();
+            } else {
+                header("location: emprestimo-usuario.php");
+                exit();
+            }
         endif;
     endif;
 ?>

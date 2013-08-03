@@ -12,6 +12,7 @@
  */
 interface AlunoDao extends Dao{
     function listarComoUsuario();
+    function listarMonitores();
 }
 
 ?>

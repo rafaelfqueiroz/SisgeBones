@@ -105,9 +105,11 @@
                         $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Browser: activate to sort column ascending\" style=\"width: 232px;\">Matrícula</th>";
                         $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\">Email</th>";
                         $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Engine version: activate to sort column ascending\" style=\"width: 142px;\">RG</th>";
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\">Login</th>";                   
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";                   
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";                   
+                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\">Login</th>";
+                        if (PermissionValidator::isAdministrador()) {
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";
+                        }
                     $view .= "</tr>";
                 $view .= "</thead>";
                 $view .= "<tbody role=\"alert\" aria-live=\"polite\" aria-relevant=\"all\">";
@@ -122,12 +124,14 @@
                             $i = true;
                         }
                             $view .= "<td class=\"sorting_1\">{$professor->getNome()}</td>";
-                            $view .= "<td>{$professor->getMatricula()}</td>";                            
+                            $view .= "<td>{$professor->getMatricula()}</td>";
                             $view .= "<td>{$professor->getEmail()}</td>";
-                            $view .= "<td>{$professor->getRg()}</td>";                                                        
-                            $view .= "<td>{$professor->getUsuario()->getLogin()}</td>";                           
-                            $view .= "<td><a href=\"professor-editar.php?id={$professor->getId()}\">Editar</a></td>";                           
-                            $view .= "<td><a href=\"professor-remover.php?id={$professor->getId()}\">Remover</a></td>";                           
+                            $view .= "<td>{$professor->getRg()}</td>";
+                            $view .= "<td>{$professor->getUsuario()->getLogin()}</td>";
+                            if (PermissionValidator::isAdministrador()) {
+                                $view .= "<td><a href=\"professor-editar.php?id={$professor->getId()}\">Editar</a></td>";
+                                $view .= "<td><a href=\"professor-remover.php?id={$professor->getId()}\">Remover</a></td>";
+                            }
                         $view .= "</tr>";
                     }
                 }

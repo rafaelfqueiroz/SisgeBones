@@ -1,5 +1,4 @@
 <?php
-
 class ViewAdministrador extends AbstractView{
     protected $administradorController;
     protected $list;
@@ -105,6 +104,7 @@ class ViewAdministrador extends AbstractView{
         }
     
     public function printListAsTable() {
+        $admin = unserialize($_SESSION["usuario"]);
         $this->list = $this->administradorController->listarComoUsuario();
         $view = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table table-striped table-bordered dataTable\" id=\"example\" aria-describedby=\"example_info\">";
                 $view .= "<thead>";
@@ -112,9 +112,11 @@ class ViewAdministrador extends AbstractView{
                         $view .= "<th class=\"sorting_asc\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-sort=\"ascending\" aria-label=\"Rendering engine: activate to sort column descending\" style=\"width: 167px;\">Nome</th>";
                         $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Browser: activate to sort column ascending\" style=\"width: 232px;\">Matrícula</th>";
                         $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Engine version: activate to sort column ascending\" style=\"width: 142px;\">Email</th>";
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\">Moderador</th>";                        
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";
+                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\">Moderador</th>";
+                        if (PermissionValidator::isAdministrador() && $admin->getModerador() == 0) {
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";
+                        }
                     $view .= "</tr>";
                 $view .= "</thead>";
                 $view .= "<tbody role=\"alert\" aria-live=\"polite\" aria-relevant=\"all\">";
@@ -131,9 +133,11 @@ class ViewAdministrador extends AbstractView{
                             $view .= "<td class=\"sorting_1\">{$administrador->getNome()}</td>";
                             $view .= "<td>{$administrador->getMatricula()}</td>";
                             $view .= "<td>{$administrador->getEmail()}</td>";
-                            $view .= "<td>{$administrador->getModerador()}</td>";                                    
-                            $view .= "<td><a href=\"administrador-editar.php?id={$administrador->getId()}\">Editar</a></td>";    
-                            $view .= "<td><a href=\"administrador-remover.php?id={$administrador->getId()}\">Remover</a></td>";    
+                            $view .= "<td>{$administrador->getModerador()}</td>";
+                            if (PermissionValidator::isAdministrador() && $admin->getModerador() == 0) {
+                                $view .= "<td><a href=\"administrador-editar.php?id={$administrador->getId()}\">Editar</a></td>";  
+                                $view .= "<td><a href=\"administrador-remover.php?id={$administrador->getId()}\">Remover</a></td>";
+                            }
                         $view .= "</tr>";
                     }
                 }

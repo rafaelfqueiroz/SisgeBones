@@ -29,7 +29,7 @@ abstract class CrudController implements Controller {
         $this->persistencia->remover($entidade);
     }
     public function salvar($entidade) {
-        $this->persistencia->salvar($entidade);              
+        return $this->persistencia->salvar($entidade);              
     }
     public function encontrarPorId($entidade) {
         $resultado = $this->persistencia->encontrarPorId($entidade);

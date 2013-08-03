@@ -9,7 +9,7 @@
         
         <script src="../../resource/js/template/modernizr.js"></script>
         
-        <link rel="stylesheet" href="../../resource/css/prometheus.css"> 
+        <link rel="stylesheet" href="../../resource/css/sisgebones_stylesheet.css"> 
         <link rel="stylesheet" href="../../resource/css/menu.css">
         <link rel="stylesheet" href="../../resource/css/preview.css">
         

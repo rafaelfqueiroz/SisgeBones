@@ -22,6 +22,7 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
             $model->setId($row["idOsso"]);
             $model->setNome($row["nomeOsso"]);
             $model->setQuantidade($row["quantidadeOsso"]);
+            $model->setQtdDisponivel($row["disponivelOsso"]);
             $model->setCodigo($row["codigoOsso"]);
             $this->lista[] = $model;
         }        
@@ -33,6 +34,7 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
         }
         $columns[] = "nomeOsso";
         $columns[] = "quantidadeOsso";
+        $columns[] = "disponivelOsso";
         $columns[] = "codigoOsso";
         return implode(', ', $columns);
     }
@@ -40,6 +42,7 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
     protected function listarColunasComValores($model) {
         $columns[] = "nomeOsso = '{$model->getNome()}'";
         $columns[] = "quantidadeOsso = '{$model->getQuantidade()}'";
+        $columns[] = "disponivelOsso = '{$model->getQtdDisponivel()}'";
         $columns[] = "codigoOsso = '{$model->getCodigo()}'";
         return implode(', ', $columns);
     }

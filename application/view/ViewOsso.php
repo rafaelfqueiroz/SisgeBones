@@ -86,9 +86,11 @@ class ViewOsso extends AbstractView {
                     $view .= "<tr role=\"row\">";
                         $view .= "<th class=\"sorting_asc\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-sort=\"ascending\" aria-label=\"Rendering engine: activate to sort column descending\" style=\"width: 167px;\">Nome</th>";
                         $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Browser: activate to sort column ascending\" style=\"width: 232px;\">Código</th>";
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\">Quantidade</th>";                        
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";                        
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";                        
+                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\">Quantidade</th>";
+                        if (PermissionValidator::isAdministrador()) {
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";
+                        }
                     $view .= "</tr>";
                 $view .= "</thead>";
                 $view .= "<tbody role=\"alert\" aria-live=\"polite\" aria-relevant=\"all\">";
@@ -104,9 +106,11 @@ class ViewOsso extends AbstractView {
                         }
                             $view .= "<td class=\"sorting_1\">{$osso->getNome()}</td>";
                             $view .= "<td>{$osso->getCodigo()}</td>";
-                            $view .= "<td>{$osso->getQuantidade()}</td>";                       
-                            $view .= "<td><a href=\"osso-editar.php?id={$osso->getId()}\">Editar</a></td>";                       
-                            $view .= "<td><a href=\"osso-remover.php?id={$osso->getId()}\">Remover</a></td>";                       
+                            $view .= "<td>{$osso->getQuantidade()}</td>";
+                            if (PermissionValidator::isAdministrador()) {
+                                $view .= "<td><a href=\"osso-editar.php?id={$osso->getId()}\">Editar</a></td>";
+                                $view .= "<td><a href=\"osso-remover.php?id={$osso->getId()}\">Remover</a></td>";
+                            }
                         $view .= "</tr>";
                     } 
                 }

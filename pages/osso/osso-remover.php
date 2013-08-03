@@ -14,7 +14,7 @@
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/login.php");
+        header("location: ../login/index.php");
         exit();
     else :
          if (PermissionValidator::isAdministrador()) :

@@ -109,6 +109,18 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
         $this->fecharConexao();
         return $this->lista;
     }
+
+    public function listarMonitores() {
+        $this->abrirConexao();
+        $this->criarComando("SELECT * FROM Aluno AS t INNER JOIN Usuario AS u ON
+        t.idUsuarioAluno = u.idUsuario WHERE eMonitor = 1");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
+    }
 }
 
 ?>

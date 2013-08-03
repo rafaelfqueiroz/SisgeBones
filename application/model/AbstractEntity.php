@@ -11,7 +11,7 @@
  * @author RAFAEL
  */
 abstract class AbstractEntity {
-    protected $id;
+    public $id;
     
     public function getId() {
         return $this->id;

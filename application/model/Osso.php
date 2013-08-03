@@ -11,9 +11,10 @@
  * @author RAFAEL
  */
 class Osso extends AbstractEntity{
-    private $nome;
-    private $quantidade;
-    private $codigo;
+    public $nome;
+    public $quantidade;
+    public $codigo;
+    public $qtdDisponivel;
     
     public function Osso() {}
     
@@ -30,6 +31,14 @@ class Osso extends AbstractEntity{
     
     public function setQuantidade($quantidade) {
         $this->quantidade = $quantidade;
+    }
+    
+    public function getQtdDisponivel(){
+        return $this->qtdDisponivel;
+    }
+    
+    public function setQtdDisponivel($qtdDisponivel) {
+        $this->qtdDisponivel = $qtdDisponivel;
     }
     
     public function getCodigo() {

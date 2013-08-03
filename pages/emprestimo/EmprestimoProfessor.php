@@ -19,7 +19,7 @@
     
     $professorController = new ControllerProfessor();
     $professores = $professorController->listarComoUsuario();
-    $texto = "";
+    $texto = "<option></option>";
     foreach ($professores as $professor) {
         $texto .= "<option value=\"{$professor->getId()}\">{$professor->getNome()}</option>";
     }

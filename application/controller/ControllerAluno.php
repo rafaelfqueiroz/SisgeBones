@@ -19,5 +19,8 @@ class ControllerAluno extends CrudController{
         }        
         return $uniqueValue;
     }
+    public function listarMonitores() {
+        return $this->persistencia->listarMonitores();
+    }
 }
 ?>

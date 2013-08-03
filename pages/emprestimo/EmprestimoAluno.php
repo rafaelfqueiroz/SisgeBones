@@ -19,7 +19,7 @@
     
     $alunoController = new ControllerAluno();
     $alunos = $alunoController->listarComoUsuario();
-    $texto = "";
+    $texto = "<option></option>";
     foreach ($alunos as $aluno) {        
         $texto .= "<option value=\"{$aluno->getId()}\">{$aluno->getNome()}</option>";        
     }

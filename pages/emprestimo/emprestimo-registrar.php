@@ -42,6 +42,7 @@
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     include_once '../../application/utils/PermissionValidator.php';
     include_once '../../application/utils/DadosSessao.php';
+    include_once '../../application/utils/CurrentDate.php';
     
     session_start();
     
@@ -49,10 +50,13 @@
         header("location: ../login/index.php");
         exit();
     else :
-        if (PermissionValidator::isAdministrador()) :
+        if (PermissionValidator::isAdministrador()) :            
             $viewEmprestimo = new ViewEmprestimo();       
             $admin = unserialize($_SESSION["usuario"]);
             if (@$_POST['source'] == "registrar") {
+                var_dump($_POST['quantidade']);
+                var_dump($_POST['nome']);
+                exit();
                 $emprestimo = new Emprestimo();
                 if ($_POST['tipo'] == "3") {
                     $alunoController = new ControllerAluno();
@@ -69,49 +73,161 @@
                 }
                 $emprestimo->setDataEmprestimo(date('Y-m-d-H:i:s'));
                 $emprestimo->setDataDevolucao(NULL);
-                $emprestimo->setQuantidade($_POST["quantidade"]);
-                $emprestimo->setAdministrador($admin);      
-                $ossoController = new ControllerOsso();
-                $ossos = array();                
                 
-                foreach ($_POST["bones"] as $idOsso) {
-                    $osso = new Osso();
-                    $osso->setId($idOsso);
-                    $osso = $ossoController->encontrarPorId($osso);                    
-                    array_push($ossos, $osso);
+                $emprestimo->setQuantidade($_POST["quantidade"]);
+                $emprestimo->setAdministrador($admin);    
+                $ossoController = new ControllerOsso();
+                $ossos = array();
+                $ossos = unserialize($_SESSION["bandeja"]);
+                foreach ($ossos as $osso) {
+                    $osso = $ossoController->atualizar($osso);
                 }
                 $emprestimo->setOssos($ossos);
                 $emprestimoController = new ControllerEmprestimo();
-                $emprestimoController->salvar($emprestimo);
+                $flag = $emprestimoController->salvar($emprestimo);
+                if ($flag == 1) {
+                    unset($_SESSION["bandeja"]);
+                }
             } 
 ?>
 <script src="../../resource/js/jquery/select2.min.js"></script>
-<link rel="stylesheet" href="../../resource/css/select2/select2.css">
-<script>
-//      $(function(){jQuery('.select2').select2({placeholder:"Escolha uma opção"});});
-        $(function(){jQuery('.select2').select2();});
-        
+<!--<script src="../../resource/js/json2.js"></script>-->
+<link rel="stylesheet" href="../../resource/css/select2/select2.css" />
+<script>       
       var dataAluno;
       var dataProfessor;
+      var dataBones;
+      var listDataBones;
       $(document).ready(function() {
+          $('.select2').select2();//ESTA LINHA É ESTREMAMENTE NECESSÁRIOA PARA O FUNCUONAMENTO DOS SELECT
+          $(".select2#selectUsuario").select2({allowClear:true,placeholder:"Escolha um aluno"});
           dataAluno = $.get("EmprestimoAluno.php");
           dataProfessor = $.get("EmprestimoProfessor.php");
-          $("#s2id_selectUsuario a span.select2-chosen").text("Insira o nome do aluno");
+          dataBones = $.get("EmprestimoOsso.php");
           $("#radioAluno").bind('click', function(){
               dataAluno.done(function(data){
-                  $("#selectUsuario").html(data);
+                  $(".select2#selectUsuario").html(data);
                   $("#inputTipo").val(3);
-                  $("#s2id_selectUsuario a span.select2-chosen").text("Insira o nome do aluno");
+                  $(".select2#selectUsuario").select2({placeholder:"Escolha um aluno"});
               });
           });
           $("#radioProfessor").bind('click', function(){
               dataProfessor.done(function(data){
-                  $("#selectUsuario").html(data);
+                  $(".select2#selectUsuario").html(data);
                   $("#inputTipo").val(2);
-                  $("#s2id_selectUsuario a span.select2-chosen").text("Insira o nome do professor");
+                  $(".select2#selectUsuario").select2({placeholder:"Escolha um professor"});
               });
           });
+          
+          $(".select2#selectOsso").change(function(){              
+              $("#emprestimo-form .controls").children().attr("disabled", "disabled");
+              $("table").attr("disabled", "disabled");
+              adicionarComponentesDeEmprestimo();
+          });
+          $("#inputQuantidade").val($("#totalQtdCell").text().substring(7));
       });
+      
+      function adicionarComponentesDeEmprestimo() {
+          var componentesDiv = '<label class="control-label" for="qtdOssosEmprestimo">Quantidade</label>' +
+              '<div class="controls">' +
+              '<input id="qtdOssosEmprestimo" name="qtdOssos" style="width:50px;" required type="number" />&nbsp&nbsp&nbsp' +
+              '<a href="#" id="cancel-tray" class="btn" onClick="cancelarDaBandeja()">Cancelar</a>&nbsp&nbsp&nbsp' +
+              '<a href="#" id="add-tray" class="btn small-btn btn-success" onClick="adicionarNaBandeja()">Ok</a>' +
+              '</div>';
+          $("#divOssos").html(componentesDiv);
+      }
+      function removerComponentesDeEmprestimo() {
+          $("#emprestimo-form .controls").children().removeAttr("disabled");
+          $("#inputAdministrador").attr("disabled", "disabled");
+          $("#inputQuantidade").attr("disabled", "disabled");
+          $("table").removeAttr("disabled");
+          $("#divOssos").empty();
+          $(".select2#selectOsso").select2("val","");          
+      }
+      function adicionarNaBandeja() {
+          var idOsso = $('.select2#selectOsso').val();
+          var qtd = $('#qtdOssosEmprestimo').val();
+          var info;
+          if (listDataBones == null) {
+                dataBones.done(function(data) {
+                    listDataBones = $.parseJSON(data);
+                });
+          }
+          var index;
+          for (index = 0; index < listDataBones.length; index++) {
+              if (listDataBones[index].id == idOsso) {
+                  info = listDataBones[index];
+                  break;
+              }
+          }
+          var limite = info.qtdDisponivel - qtd;
+          if (limite >= 0) {
+                info.qtdDisponivel = limite;
+                listDataBones[index] = info;
+                info = JSON.stringify(info);
+
+                var posting = $.post("../../application/utils/Bandeja.php", 
+                { item: info, action:"adicionar", qtdOsso: qtd });
+                posting.done(function (response) {
+                    if($('#tableTray').length > 0) {
+                        addRowAtTableTray(response);
+                    } else {
+                        createTableTray();
+                        addRowAtTableTray(response);
+                    }
+            });
+            removerComponentesDeEmprestimo();            
+            return false;
+          } else {
+              alert("QUANTIDADE INDISPONIVEL PARA EMPRESTIMO");
+          }
+      }
+      
+      function removerDaBandeja(idOsso, qtdOsso) {
+            var info;
+            info = JSON.stringify(idOsso);
+            var posting = $.post("../../application/utils/Bandeja.php",
+            { item: info, action:"remover"});
+
+            posting.done(function (response) {
+                addRowAtTableTray(response);
+            });
+             var incremented;
+            var index;
+            for (index = 0; index < listDataBones.length; index++) {
+                if (listDataBones[index].id == idOsso) {
+                    incremented =  listDataBones[index].qtdDisponivel;
+                    break;
+                }
+            }
+            listDataBones[index].qtdDisponivel = incremented + qtdOsso;
+      }
+      
+      function cancelarDaBandeja() {
+          removerComponentesDeEmprestimo();
+      }
+      
+      function createTableTray() {
+          var table = 
+            '<table id="tableTray" class="table table-striped table-bordered dataTable">' +
+                '<thead>' +
+                    '<tr role="row">' +
+                        '<th class="sorting_asc" role="columnheader">Nome</th>' +
+                        '<th class="sorting" role="columnheader">Código</th>' +
+                        '<th class="sorting" role="columnheader">Quantidade</th>' +
+                        '<th class="sorting" role="columnheader"></th>' +
+                    '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '</tbody>' +
+            '</table>';
+          $("#divTableTray").html(table);
+      }
+      
+      function addRowAtTableTray(dataTBody) {
+          $("#divTableTray tbody").html(dataTBody);
+          $("#inputQuantidade").val(parseInt($("#totalQtdCell").text().substring(7)));
+      }
 </script>
 
 <style type="text/css">
@@ -142,7 +258,7 @@
                 </ul>
                 
                 <ul class="profileBar">
-                    <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
+                    <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
@@ -191,8 +307,8 @@
             <h2>Empréstimo</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
-                <input id="prependedInput" class="text-center" type="text" 
-                       placeholder="12/01/2013 - 18/01/2013" value="12/01/2013 - 18/01/2013">
+                <input id="prependedInput" class="text-center" disabled type="text" 
+                       placeholder="<?php echo CurrentDate::getCurrentDate(); ?>" value="<?php echo CurrentDate::getCurrentDate(); ?>">
             </div>
         </div>
     </div>
@@ -206,7 +322,7 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="realizar">
-                        <form class="form-horizontal" method="post" action="emprestimo-registrar.php">
+                        <form id="emprestimo-form" class="form-horizontal" method="post" action="emprestimo-registrar.php">
                             <?php $viewEmprestimo->printForm(); ?>
                         </form>
                     </div>                    
@@ -218,7 +334,7 @@
 <?php 
         include_once '../../application/view/footer.view.php'; 
         else :
-            header("location: ../home/home.php");
+            header("location: emprestimo-usuario.php");
             exit();
         endif;
     endif;

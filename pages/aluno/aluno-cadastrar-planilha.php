@@ -23,8 +23,7 @@
     include_once '../../application/controller/ControllerUsuario.php';
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     include_once '../../application/utils/DadosSessao.php';
-//    error_reporting(E_ALL ^ E_NOTICE);
-//    require_once '../../application/utils/excel_reader.php';
+    include_once '../../application/utils/CurrentDate.php';
     
     session_start();
     
@@ -107,7 +106,7 @@
                 </ul>
                 
                 <ul class="profileBar">
-                    <li class="user visible-desktop"><img src="../../resource/img/user.jpg" alt=""></li>
+                    <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
@@ -156,8 +155,8 @@
             <h2>Aluno</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
-                <input id="prependedInput" class="text-center" type="text" 
-                       placeholder="12/01/2013 - 18/01/2013" value="12/01/2013 - 18/01/2013">
+                <input id="prependedInput" class="text-center" disabled type="text" 
+                       placeholder="<?php echo CurrentDate::getCurrentDate(); ?>" value="<?php echo CurrentDate::getCurrentDate(); ?>">
             </div>
         </div>
     </div>

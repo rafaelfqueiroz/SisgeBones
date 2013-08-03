@@ -2,8 +2,7 @@
     include_once '../../application/model/AbstractEntity.php';
     include_once '../../application/model/Aluno.php';
     include_once '../../application/model/Professor.php';
-    include_once '../../application/model/Administrador.php';
-    include_once '../../application/utils/PermissionValidator.php';
+    include_once '../../application/model/Administrador.php';    
 
 class PermissionValidator {
     public static function isAluno() {
