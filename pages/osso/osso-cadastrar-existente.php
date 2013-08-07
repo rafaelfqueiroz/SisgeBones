@@ -19,6 +19,7 @@
     include_once '../../application/view/ViewOsso.php';
     include_once '../../application/utils/DadosSessao.php';
     include_once '../../application/utils/CurrentDate.php';
+    include_once '../../application/utils/Validator.php';
     
     session_start();
     
@@ -33,7 +34,9 @@
             if (@$_POST['osso-existente'] == "inserir") {
                 $codigoOsso = @$_POST['codigo'];
                 $quantidadeOsso = @$_POST['quantidade'];
-                $ossoController = new ControllerOsso();        
+                $ossoController = new ControllerOsso();
+                Validator::validate($codigoOsso == null, "O campo código é necessário");
+                Validator::onErrorRedirectTo("../../pages/osso/osso-cadastrar-existente.php");
                 $osso = $ossoController->encontrarPorCodigo($codigoOsso);
                 $quantidadeOsso += $osso->getQuantidade();
                 $qtdDisponivel += $osso->getQtdDisponivel();
@@ -51,7 +54,13 @@
 </style>
 
 <script src="../../resource/js/sisgebones/scriptValidateOsso.js"></script>
-
+<link rel="stylesheet" href="../../resource/css/select2/select2.css" />
+<script src="../../resource/js/jquery/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+          $('.select2').select2({placeholder:"Escolha um osso"});
+});
+</script>
 <header>
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
@@ -72,11 +81,11 @@
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="../home/perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
+                    
+                    
                 </ul>                               
             </div>
         </div>
@@ -84,12 +93,10 @@
 </header>
 
 <aside>
-    <form class="form-search">
-        <div class="input-prepend">
-            <button type="submit" class="btn"></button>
-            <input type="text" class="search-query">
-        </div>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
     
     <ul class="sideMenu">
         <li>
@@ -133,11 +140,10 @@
                     <li><a href="osso-listar.php" data-toggle="tab">Listar Ossos</a></li>                
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="cadastrar-novo-osso">
-                        <form id="form-osso" class="form-horizontal" method="post" action="osso-cadastrar-existente.php">
-                            <?php $viewOsso->printFormOsso(); ?>
-                        </form>
-                    </div>
+                    <?php Validator::showError(); ?>
+                    <form id="form-osso" class="form-horizontal" method="post" action="osso-cadastrar-existente.php">
+                        <?php $viewOsso->printFormOsso(); ?>
+                    </form>
                 </div>
             </div>
         </div>

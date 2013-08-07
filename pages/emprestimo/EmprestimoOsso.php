@@ -20,6 +20,8 @@
     $ossoController = new ControllerOsso();
     $list = $ossoController->listar();
     if (isset($_SESSION["bandeja"])) {
+        var_dump("ENTROU NO IF DA BANDEJA");
+        exit();
         $hash = array();
         for ($i = 0; $i < sizeof($list);$i++) {
             $hash[$list[$i]->getId()] = $i;            
@@ -27,7 +29,7 @@
         $tray = unserialize($_SESSION["bandeja"]);
         foreach ($tray as $item) {
             $qtdValue = $list[$hash[$item->getId()]]->getQtdDisponivel();
-            $list[$hash[$item->getId()]]->setQtdDisponivel($qtdValue - $item->getQuantidade());
+            $list[$hash[$item->getId()]]->setQtdDisponivel($qtdValue - $_SESSION["contador"][$item->getId()]);
         }
     }
     echo json_encode($list);

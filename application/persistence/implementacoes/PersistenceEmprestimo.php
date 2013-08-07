@@ -13,7 +13,7 @@
 class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao{
 
     protected function conseguirNomeDaTabela() {
-        return "Emprestimo";
+        return "emprestimo";
     }
 
     protected function dadosParaModel() {
@@ -107,10 +107,10 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         u.tipoUsuario, al.idAluno, al.nomeAluno,al.matriculaAluno,al.emailAluno,
         al.cursoAluno, al.ativo, al.eMonitor, a.idAdministrador,
         a.nomeAdministrador, a.matriculaAdministrador, a.emailAdministrador,
-        a.idUsuarioAdministrador, a.moderador FROM Emprestimo AS e INNER JOIN
-        Usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
-        Administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
-        INNER JOIN Aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno
+        a.idUsuarioAdministrador, a.moderador FROM emprestimo AS e INNER JOIN
+        usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
+        administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
+        INNER JOIN aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno
         UNION
         SELECT e.idEmprestimo, e.dataEmprestimo, e.dataDevolucao,
         e.statusEmprestimo, e.quantidadeEmprestimo, e.idUsuarioEmprestimo, e.idAdministradorEmprestimo,
@@ -118,9 +118,9 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         p.nomeProfessor, p.matriculaProfessor, p.emailProfessor, p.rgProfessor,
         idUsuarioProfessor, u.idUsuario, a.idAdministrador, a.nomeAdministrador,
         a.matriculaAdministrador, a.emailAdministrador, a.idUsuarioAdministrador,
-        a.moderador FROM Emprestimo AS e INNER JOIN Usuario AS u ON
-        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN Administrador AS a ON
-        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN Professor AS
+        a.moderador FROM emprestimo AS e INNER JOIN usuario AS u ON
+        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN administrador AS a ON
+        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN professor AS
         p ON e.idUsuarioEmprestimo = p.idUsuarioProfessor) a ORDER BY
         idEmprestimo DESC LIMIT 1");
             $this->executarComando();
@@ -129,9 +129,10 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
             }
             $emprestimoRegistrado = $this->lista[0];            
             foreach ($entidade->getOssos() as $osso) {
+                $qtdEmprestado = $_SESSION["contador"][$osso->getId()];
                 $this->criarComando("INSERT INTO osso_emprestimo
-                (idOssoOsso_Emprestimo, idEmprestimoOsso_Emprestimo) VALUES 
-                ({$osso->getId()}, {$emprestimoRegistrado->getId()})");
+                (idOssoOsso_Emprestimo, idEmprestimoOsso_Emprestimo, quantidadeOsso_Emprestimo) VALUES 
+                ({$osso->getId()}, {$emprestimoRegistrado->getId()}, {$qtdEmprestado})");
                 $this->executarComando();
             }
             $this->fecharConexao();
@@ -148,10 +149,10 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         u.tipoUsuario, al.idAluno, al.nomeAluno,al.matriculaAluno,al.emailAluno,
         al.cursoAluno, al.ativo, al.eMonitor, a.idAdministrador,
         a.nomeAdministrador, a.matriculaAdministrador, a.emailAdministrador,
-        a.idUsuarioAdministrador, a.moderador FROM Emprestimo AS e INNER JOIN
-        Usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
-        Administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
-        INNER JOIN Aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno
+        a.idUsuarioAdministrador, a.moderador FROM emprestimo AS e INNER JOIN
+        usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
+        administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
+        INNER JOIN aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno
         UNION
         SELECT e.idEmprestimo, e.dataEmprestimo, e.dataDevolucao,
         e.statusEmprestimo, e.quantidadeEmprestimo, e.idUsuarioEmprestimo, e.idAdministradorEmprestimo,
@@ -159,9 +160,9 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         p.nomeProfessor, p.matriculaProfessor, p.emailProfessor, p.rgProfessor,
         idUsuarioProfessor, u.idUsuario, a.idAdministrador, a.nomeAdministrador,
         a.matriculaAdministrador, a.emailAdministrador, a.idUsuarioAdministrador,
-        a.moderador FROM Emprestimo AS e INNER JOIN Usuario AS u ON
-        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN Administrador AS a ON
-        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN Professor AS
+        a.moderador FROM emprestimo AS e INNER JOIN usuario AS u ON
+        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN administrador AS a ON
+        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN professor AS
         p ON e.idUsuarioEmprestimo = p.idUsuarioProfessor");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
@@ -181,10 +182,10 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         u.tipoUsuario, al.idAluno, al.nomeAluno,al.matriculaAluno,al.emailAluno,
         al.cursoAluno, al.ativo, al.eMonitor, a.idAdministrador,
         a.nomeAdministrador, a.matriculaAdministrador, a.emailAdministrador,
-        a.idUsuarioAdministrador, a.moderador FROM Emprestimo AS e INNER JOIN
-        Usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
-        Administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
-        INNER JOIN Aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno WHERE e.statusEmprestimo = 1
+        a.idUsuarioAdministrador, a.moderador FROM emprestimo AS e INNER JOIN
+        usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
+        administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
+        INNER JOIN aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno WHERE e.statusEmprestimo = 1
         UNION
         SELECT e.idEmprestimo, e.dataEmprestimo, e.dataDevolucao,
         e.statusEmprestimo, e.quantidadeEmprestimo, e.idUsuarioEmprestimo, e.idAdministradorEmprestimo,
@@ -192,9 +193,9 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         p.nomeProfessor, p.matriculaProfessor, p.emailProfessor, p.rgProfessor,
         idUsuarioProfessor, u.idUsuario, a.idAdministrador, a.nomeAdministrador,
         a.matriculaAdministrador, a.emailAdministrador, a.idUsuarioAdministrador,
-        a.moderador FROM Emprestimo AS e INNER JOIN Usuario AS u ON
-        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN Administrador AS a ON
-        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN Professor AS
+        a.moderador FROM emprestimo AS e INNER JOIN usuario AS u ON
+        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN administrador AS a ON
+        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN professor AS
         p ON e.idUsuarioEmprestimo = p.idUsuarioProfessor WHERE e.statusEmprestimo = 1");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
@@ -212,10 +213,10 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         u.tipoUsuario, al.idAluno, al.nomeAluno,al.matriculaAluno,al.emailAluno,
         al.cursoAluno, al.ativo, al.eMonitor, a.idAdministrador,
         a.nomeAdministrador, a.matriculaAdministrador, a.emailAdministrador,
-        a.idUsuarioAdministrador, a.moderador FROM Emprestimo AS e INNER JOIN
-        Usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
-        Administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
-        INNER JOIN Aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno 
+        a.idUsuarioAdministrador, a.moderador FROM emprestimo AS e INNER JOIN
+        usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
+        administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
+        INNER JOIN aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno 
         WHERE e.idEmprestimo = {$entidade->getId()}
         UNION
         SELECT e.idEmprestimo, e.dataEmprestimo, e.dataDevolucao,
@@ -224,9 +225,9 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         p.nomeProfessor, p.matriculaProfessor, p.emailProfessor, p.rgProfessor,
         idUsuarioProfessor, u.idUsuario, a.idAdministrador, a.nomeAdministrador,
         a.matriculaAdministrador, a.emailAdministrador, a.idUsuarioAdministrador,
-        a.moderador FROM Emprestimo AS e INNER JOIN Usuario AS u ON
-        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN Administrador AS a ON
-        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN Professor AS
+        a.moderador FROM emprestimo AS e INNER JOIN usuario AS u ON
+        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN administrador AS a ON
+        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN professor AS
         p ON e.idUsuarioEmprestimo = p.idUsuarioProfessor 
         WHERE e.idEmprestimo = {$entidade->getId()}");
         $this->executarComando();
@@ -246,10 +247,10 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         u.tipoUsuario, al.idAluno, al.nomeAluno,al.matriculaAluno,al.emailAluno,
         al.cursoAluno, al.ativo, al.eMonitor, a.idAdministrador,
         a.nomeAdministrador, a.matriculaAdministrador, a.emailAdministrador,
-        a.idUsuarioAdministrador, a.moderador FROM Emprestimo AS e INNER JOIN
-        Usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
-        Administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
-        INNER JOIN Aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno WHERE
+        a.idUsuarioAdministrador, a.moderador FROM emprestimo AS e INNER JOIN
+        usuario AS u ON e.idUsuarioEmprestimo = u.idUsuario INNER JOIN
+        administrador AS a ON e.idAdministradorEmprestimo = a.idAdministrador
+        INNER JOIN aluno AS al ON e.idUsuarioEmprestimo = al.idUsuarioAluno WHERE
         e.idUsuarioEmprestimo = {$usuario->getId()}
         UNION
         SELECT e.idEmprestimo, e.dataEmprestimo, e.dataDevolucao,
@@ -258,14 +259,37 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
         p.nomeProfessor, p.matriculaProfessor, p.emailProfessor, p.rgProfessor,
         idUsuarioProfessor, u.idUsuario, a.idAdministrador, a.nomeAdministrador,
         a.matriculaAdministrador, a.emailAdministrador, a.idUsuarioAdministrador,
-        a.moderador FROM Emprestimo AS e INNER JOIN Usuario AS u ON
-        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN Administrador AS a ON
-        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN Professor AS
+        a.moderador FROM emprestimo AS e INNER JOIN usuario AS u ON
+        e.idUsuarioEmprestimo = u.idUsuario INNER JOIN administrador AS a ON
+        e.idAdministradorEmprestimo = a.idAdministrador INNER JOIN professor AS
         p ON e.idUsuarioEmprestimo = p.idUsuarioProfessor WHERE
         e.idUsuarioEmprestimo = {$usuario->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
+        }
+        $this->fecharConexao();
+        return $this->lista;
+    }
+    public function dadosOssoEmprestimoParaModel() {
+        while ($row = mysql_fetch_array($this->resultado)) {
+            $model = new Osso();
+            $model->setId($row["idOsso"]);
+            $model->setNome($row["nomeOsso"]);
+            $model->setCodigo($row["codigoOsso"]);
+            $model->setQuantidade($row["quantidadeOsso"]);
+            $model->setQtdDisponivel($row["disponivelOsso"]);
+            $model->setQtdEmprestada($row["quantidadeOsso_Emprestimo"]);
+            $this->lista[] = $model;
+        }
+    }
+    public function listarOssosDeEmprestimo($entidade) {
+        $this->abrirConexao();
+        $this->criarComando("SELECT * FROM osso_emprestimo as oe INNER JOIN osso
+        AS o ON oe.idOssoOsso_Emprestimo = o.idOsso WHERE idEmprestimoOsso_Emprestimo = {$entidade->getId()}");
+        $this->executarComando();
+        if (gettype($this->resultado) != "boolean") {
+            $this->dadosOssoEmprestimoParaModel();
         }
         $this->fecharConexao();
         return $this->lista;

@@ -13,7 +13,7 @@
 class OssoPersistence extends AbstractPersistence implements OssoDao {
 
     protected function conseguirNomeDaTabela() {
-        return "Osso";
+        return "osso";
     }
 
     protected function dadosParaModel() {
@@ -65,5 +65,4 @@ class OssoPersistence extends AbstractPersistence implements OssoDao {
         return $this->lista;
     }
 }
-
 ?>

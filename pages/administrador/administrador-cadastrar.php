@@ -24,6 +24,7 @@
     include_once '../../application/utils/PermissionValidator.php';
     include_once '../../application/utils/DadosSessao.php';
     include_once '../../application/utils/CurrentDate.php';
+    include_once '../../application/utils/Validator.php';
     
     session_start();
     
@@ -38,21 +39,21 @@
                 $viewAdministrador = new ViewAdministrador();
                 if (@$_POST['source'] == "cadastrar") {
                     $administrador = new Administrador();
-                    $administrador->setNome($_POST['nome']);
-                    $administrador->setMatricula($_POST['matricula']);      
-                    $administrador->setEmail($_POST['email']);    
+                    $administrador->setNome(@$_POST['nome']);
+                    $administrador->setMatricula(@$_POST['matricula']);      
+                    $administrador->setEmail(@$_POST['email']);    
                     if(isset($_POST["moderador"])) {
                         $administrador->setModerador(true);
                     } else {
                         $administrador->setModerador(false);
                     }
                     $usuario = new Usuario();
-                    $usuario->setLogin($_POST['login']);
-                    $usuario->setSenha($_POST['senha']);
+                    $usuario->setLogin(@$_POST['login']);
+                    $usuario->setSenha(@$_POST['senha']);
                     $usuario->setTipo(1);
 
                     $usuarioController = new ControllerUsuario();
-                    $usuarioController->salvar($usuario);
+                    $usuarioController->salvarUsuario($usuario, @$_POST["confirmarSenha"]);
                     $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
 
                     $administrador->setUsuario($responseDB);
@@ -75,31 +76,29 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>                
+                    <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>
                     <li class="active">Página de administradores</li>
                 </ul>
                 
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="../home/perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
-                </ul>                               
+                    
+                    
+                </ul>
             </div>
         </div>
     </div>
 </header>
 
 <aside>
-    <form class="form-search">
-        <div class="input-prepend">
-            <button type="submit" class="btn"></button>
-            <input type="text" class="search-query">
-        </div>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
     
     <ul class="sideMenu">
         <li>
@@ -142,6 +141,7 @@
                     <li><a href="administrador-listar.php" data-toggle="tab">Listar Administrador</a></li>
                 </ul>
                 <div class="tab-content">
+                    <?php Validator::showError(); ?>
                     <form class="form-horizontal" method="post" action="administrador-cadastrar.php">
                         <?php $viewAdministrador->printForm(); ?>
                     </form>

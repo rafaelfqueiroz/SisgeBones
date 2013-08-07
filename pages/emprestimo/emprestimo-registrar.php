@@ -43,6 +43,7 @@
     include_once '../../application/utils/PermissionValidator.php';
     include_once '../../application/utils/DadosSessao.php';
     include_once '../../application/utils/CurrentDate.php';
+    include_once '../../application/utils/Validator.php';
     
     session_start();
     
@@ -55,23 +56,23 @@
             $admin = unserialize($_SESSION["usuario"]);
             if (@$_POST['source'] == "registrar") {
                 $emprestimo = new Emprestimo();
-                if ($_POST['tipo'] == "3") {
+                if (@$_POST['tipo'] == "3") {
                     $alunoController = new ControllerAluno();
                     $aluno = new Aluno();
-                    $aluno->setId($_POST['nome']);
+                    $aluno->setId(@$_POST['nome']);
                     $aluno = $alunoController->encontrarPorId($aluno);
                     $emprestimo->setUsuario($aluno->getUsuario());
-                } else if ($_POST['tipo'] == "2"){
+                } else if (@$_POST['tipo'] == "2"){
                     $professorController = new ControllerProfessor();
                     $professor = new Professor();
-                    $professor->setId($_POST['nome']);
+                    $professor->setId(@$_POST['nome']);
                     $professor = $professorController->encontrarPorId($professor);
                     $emprestimo->setUsuario($professor->getUsuario());
                 }                
                 $emprestimo->setDataEmprestimo(date('Y-m-d-H:i:s'));
                 $emprestimo->setDataDevolucao(NULL);
                 
-                $emprestimo->setQuantidade($_POST["quantidadeTotal"]);
+                $emprestimo->setQuantidade(@$_POST["quantidadeTotal"]);
                 $emprestimo->setAdministrador($admin);
                 $emprestimo->setStatus(true);
                 $ossoController = new ControllerOsso();
@@ -85,11 +86,13 @@
                 $flag = $emprestimoController->salvar($emprestimo);
                 if ($flag == 1) {
                     unset($_SESSION["bandeja"]);
+                    unset($_SESSION["contador"]);
                 }
             } 
 ?>
+<script src="../../resource/js/jquery/jquery.blockUI.js"></script>
 <script src="../../resource/js/jquery/select2.min.js"></script>
-<!--<script src="../../resource/js/json2.js"></script>-->
+<script src="../../resource/js/json2.js"></script>
 <link rel="stylesheet" href="../../resource/css/select2/select2.css" />
 <script>       
       var dataAluno;
@@ -123,6 +126,21 @@
               adicionarComponentesDeEmprestimo();
           });
           $("#inputQuantidade").val($("#totalQtdCell").text().substring(7));
+          
+          $('#registrarEmprestimoBtn').click(function () {
+                $.blockUI({
+                    message: 'Por favor, aguarde...',
+                    css: { 
+                        border: 'none', 
+                        padding: '15px',
+                        backgroundColor: '#000', 
+                        '-webkit-border-radius': '10px', 
+                        '-moz-border-radius': '10px', 
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+          });
       });
       
       function adicionarComponentesDeEmprestimo() {
@@ -262,11 +280,11 @@
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="../home/perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
+                    
+                    
                 </ul>                               
             </div>
         </div>
@@ -274,12 +292,10 @@
 </header>
 
 <aside>
-    <form class="form-search">
-        <div class="input-prepend">
-            <button type="submit" class="btn"></button>
-            <input type="text" class="search-query">
-        </div>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
     
     <ul class="sideMenu">
         <li>
@@ -323,11 +339,10 @@
                     <li><a href="emprestimo-listar-pendentes.php" data-toggle="tab">Empréstimos Pendentes</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="realizar">
-                        <form id="emprestimo-form" class="form-horizontal" method="post" action="emprestimo-registrar.php">
-                            <?php $viewEmprestimo->printForm(); ?>
-                        </form>
-                    </div>                    
+                    <?php Validator::showError(); ?>
+                    <form id="emprestimo-form" class="form-horizontal" method="post" action="emprestimo-registrar.php">
+                        <?php $viewEmprestimo->printForm(); ?>
+                    </form>
                 </div>
             </div>
         </div>

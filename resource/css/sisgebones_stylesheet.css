@@ -221,7 +221,7 @@ header .breadcrumb > li > .divider {
 
 .profileBar .profile {
     padding: 0 10px 0 15px;
-    border-right: none;
+/*    border-right: none;*/
 }
 
 .profileBar .profile > a {

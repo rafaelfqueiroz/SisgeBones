@@ -13,6 +13,7 @@
 interface EmprestimoDao extends Dao{
     function listarPendentes();
     function listarEmprestimosUsuario($usuario);
+    function listarOssosDeEmprestimo($entidade);
 }
 
 ?>

@@ -24,6 +24,7 @@
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     include_once '../../application/utils/DadosSessao.php';
     include_once '../../application/utils/CurrentDate.php';
+    include_once '../../application/utils/Validator.php';
     
     session_start();
     
@@ -49,11 +50,11 @@
                 $usuario->setTipo(2);
 
                 $usuarioController = new ControllerUsuario();
-                $usuarioController->atualizar($usuario);                
+                $usuarioController->atualizarUsuario($usuario, $_POST["confirmarSenha"]);
 
                 $professor->setUsuario($usuario);
                 $professorController = new ControllerProfessor();       
-                $professorController->atualizar($professor);
+                $professorController->atualizarProfessor($professor, @$_POST["id"]);
                                 
                 header("location: professor-listar.php");
                 exit();
@@ -82,11 +83,11 @@
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="../home/perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
+                    
+                    
                 </ul>                               
             </div>
         </div>
@@ -94,12 +95,10 @@
 </header>
 
 <aside>
-    <form class="form-search">
-        <div class="input-prepend">
-            <button type="submit" class="btn"></button>
-            <input type="text" class="search-query">
-        </div>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
     
     <ul class="sideMenu">
         <li>
@@ -142,11 +141,10 @@
                     <li><a href="professor-listar.php" data-toggle="tab">Listar Professores</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="cadastrar">
-                       <form class="form-horizontal" method="post" action="professor-editar.php">
-                            <?php $viewProfessor->printEditForm($_GET["id"]); ?>
-                        </form>
-                    </div>
+                    <?php Validator::showError(); ?>
+                    <form class="form-horizontal" method="post" action="professor-editar.php">
+                        <?php $viewProfessor->printEditForm($_GET["id"]); ?>
+                    </form>
                 </div>
             </div>
         </div>

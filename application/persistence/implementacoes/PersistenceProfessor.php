@@ -13,7 +13,7 @@
 class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     
     protected function conseguirNomeDaTabela() {
-        return "Professor";
+        return "professor";
     }
     protected function dadosParaModel() {        
         while ($row = mysql_fetch_array($this->resultado)) {
@@ -64,7 +64,7 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     
     public function encontrarProfessorPorIdUsuario($idUsuario) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Professor AS t INNER JOIN Usuario AS 
+        $this->criarComando("SELECT * FROM professor AS t INNER JOIN usuario AS 
         u ON t.idUsuarioProfessor = u.idUsuario WHERE idUsuarioProfessor = {$idUsuario}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
@@ -76,8 +76,8 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     
     public function listarComoUsuario() {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Professor AS t 
-        INNER JOIN Usuario AS u ON t.idUsuarioProfessor = u.idUsuario");
+        $this->criarComando("SELECT * FROM professor AS t 
+        INNER JOIN usuario AS u ON t.idUsuarioProfessor = u.idUsuario");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -89,7 +89,7 @@ class ProfessorPersistence extends AbstractPersistence implements ProfessorDao{
     public function encontrarPorId($entidade) {
         $this->abrirConexao();
         $this->criarComando("SELECT * FROM {$this->conseguirNomeDaTabela()} AS t 
-        INNER JOIN Usuario AS u ON t.idUsuarioProfessor = u.idUsuario WHERE 
+        INNER JOIN usuario AS u ON t.idUsuarioProfessor = u.idUsuario WHERE 
         t.idProfessor = {$entidade->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {

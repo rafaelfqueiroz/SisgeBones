@@ -1,45 +1,37 @@
-<?php     
-    include_once '../../application/config.php';
-    
+<?php 
+
     include_once '../../application/controller/Controller.php';
     include_once '../../application/controller/CrudController.php';
-    include_once '../../application/model/AbstractEntity.php';
     include_once '../../application/view/AbstractView.php';
-        
+    
     include_once '../../application/persistence/abstracao/Dao.php';
     include_once '../../application/persistence/abstracao/Persistencia.php';
+    include_once '../../application/persistence/interfaces/AdministradorDao.php';
     include_once '../../application/persistence/interfaces/UsuarioDao.php';
-    include_once '../../application/persistence/interfaces/AlunoDao.php';
     
-    include_once '../../application/model/Administrador.php';
+    include_once '../../application/model/AbstractEntity.php';
     include_once '../../application/model/Aluno.php';
-    include_once '../../application/controller/ControllerAluno.php';    
-    include_once '../../application/persistence/implementacoes/PersistenceAluno.php';
-    include_once '../../application/view/ViewAluno.php';
+    include_once '../../application/model/Professor.php';
+    include_once '../../application/model/Administrador.php';
     
     include_once '../../application/model/Usuario.php';
     include_once '../../application/controller/ControllerUsuario.php';
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     
+    include_once '../../application/view/ViewUsuario.php';
     include_once '../../application/utils/PermissionValidator.php';
     include_once '../../application/utils/DadosSessao.php';
     include_once '../../application/utils/CurrentDate.php';
     include_once '../../application/utils/Validator.php';
     
     session_start();
-    
-    if (empty($_SESSION["usuario"])) :
+    if (empty($_SESSION["usuario"])):
         header("location: ../login/index.php");
-        exit();
-    else :
+    else :      
         include_once '../../application/view/header.view.php';
-        $viewAluno = new ViewAluno();
+        $viewUsuario = new ViewUsuario();
 ?>
-<style rel="stylesheet" type="text/css">
-    .row {
-        margin-left: 0px;
-    }
-</style>
+
 <header>
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
@@ -53,14 +45,13 @@
                 <a class="logo" href="#">Sisgebones</a>
                 
                 <ul class="breadcrumb visible-desktop">
-                    <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>              
-                    <li class="active">Página de alunos</li>
+                    <li class="home"><a href="index.php"></a><span class="divider"></span></li>
                 </ul>
                 
                 <ul class="profileBar">
-                    <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
+                    <li class="user "><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="../home/perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
                     
@@ -76,19 +67,18 @@
     <br>
     <br>
     <br>
-    
     <ul class="sideMenu">
-        <li>
-            <a href="../home/home.php">Inicio</a>
+        <li class="active">
+            <a href="home.php">Início</a>
         </li>
         <?php if(PermissionValidator::isAdministrador()) : ?>
             <li>
                 <a href="../emprestimo/emprestimo-registrar.php">Empréstimo</a>            
             </li>
         <?php else : ?>
-            <li>
-                <a href="../emprestimo/emprestimo-listar.php">Empréstimo</a>            
-            </li>        
+        <li>
+            <a href="../emprestimo/emprestimo-listar.php">Empréstimo</a>            
+        </li>        
         <?php endif; ?>
         <?php if(PermissionValidator::isAdministrador()) : ?>
             <li>
@@ -107,10 +97,16 @@
             <li>
                 <a href="../professor/professor-listar.php">Professor</a>
             </li>
-        <?php endif; ?>        
-        <li class="active">
-            <a href="monitor-listar.php">Aluno</a>
-        </li>        
+        <?php endif; ?>
+        <?php if(PermissionValidator::isAdministrador()) : ?>
+            <li>
+                <a href="../aluno/aluno-cadastrar.php">Aluno</a>
+            </li>
+        <?php else : ?>
+            <li>
+                <a href="../aluno/aluno-listar.php">Aluno</a>
+            </li>
+        <?php endif; ?>
         <?php if(PermissionValidator::isAdministrador()) : ?>
             <li>
                 <a href="../administrador/administrador-cadastrar.php">Administrador</a>
@@ -122,7 +118,7 @@
 <div id="content" class="content-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h2>Aluno</h2>
+            <h2>Perfil</h2>
             <div class="input-prepend pull-right">
                 <span class="add-on"><i class="icon-calendar"></i></span>
                 <input id="prependedInput" class="text-center" disabled type="text" 
@@ -134,25 +130,19 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <?php if(PermissionValidator::isAdministrador()) : ?>
-                        <li><a href="aluno-cadastrar.php" data-toggle="tab">Cadastrar Aluno</a></li>
-                    <?php endif; ?>
-                    <?php if(PermissionValidator::isAdministrador()) : ?>
-                        <li><a href="aluno-cadastrar-planilha.php" data-toggle="tab">Cadastrar Planilha de Alunos</a></li>
-                    <?php endif; ?>
-                    <li><a href="aluno-listar.php" data-toggle="tab">Listar Alunos</a></li>
-                    <li class="active"><a href="monitor-listar.php" data-toggle="tab">Listar Monitores</a></li>
+                    <li class="active"><a href="#tab1" data-toggle="tab">Perfil de usuário</a></li>                    
                 </ul>
                 <div class="tab-content">
                     <?php Validator::showError(); ?>
-                    <?php $viewAluno->printTableMonitor(); ?>
+                    <form class="form-horizontal" method="post" action="perfil.php">
+                        <?php $viewUsuario->printForm(); ?>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <?php 
-    include_once '../../application/view/footer.view.php'; 
+        include_once '../../application/view/footer.view.php';
     endif;
 ?>

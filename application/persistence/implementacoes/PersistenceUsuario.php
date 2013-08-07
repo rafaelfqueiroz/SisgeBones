@@ -13,7 +13,7 @@
 class UsuarioPersistence extends AbstractPersistence implements UsuarioDao {
 
     protected function conseguirNomeDaTabela() {
-        return "Usuario";
+        return "usuario";
     }
 
     protected function dadosParaModel() {
@@ -53,7 +53,7 @@ class UsuarioPersistence extends AbstractPersistence implements UsuarioDao {
 
     public function encontrarPorLogin($login) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Usuario WHERE loginUsuario = '{$login}'");
+        $this->criarComando("SELECT * FROM usuario WHERE loginUsuario = '{$login}'");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -64,7 +64,7 @@ class UsuarioPersistence extends AbstractPersistence implements UsuarioDao {
 
     public function encontrarPorLoginESenha($login, $senha) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Usuario WHERE loginUsuario = '{$login}'
+        $this->criarComando("SELECT * FROM usuario WHERE loginUsuario = '{$login}'
         and senhaUsuario = '{$senha}'");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {

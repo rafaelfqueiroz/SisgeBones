@@ -33,12 +33,19 @@ class ViewOsso extends AbstractView {
     }
     
     public function printFormOsso() {
+        $ossoController = new ControllerOsso();
+        $ossos = $ossoController->listar();
         $view = "<div class=\"control-group\">";
-            $view .= "<label class=\"control-label\" for=\"codigoOsso\">Código</label>";
-            $view .= "<div class=\"controls\">";
-                $view .= "<input id=\"inputCodigo\" type=\"text\" name=\"codigo\" placeholder=\"Código do osso existente\" required>";
+                $view .= "<label class=\"control-label\" for=\"selectCodigo\">Código</label>";
+                $view .= "<div class=\"controls\">";
+                        $view .= "<select id=\"selectOsso\" class=\"select2\" name=\"codigo\" data-placeholder=\"Escolha um osso\" style=\"width:400px;\">";
+                            $view .= "<option></option>";
+                            foreach ($ossos as $osso) {
+                                $view .= "<option value=\"{$osso->getId()}\">{$osso->getCodigo()}</option>";
+                            }
+                        $view .= "</select>";
+                    $view .= "</div>";
             $view .= "</div>";
-        $view .= "</div>";
         $view .= "<div class=\"control-group\">";
             $view .= "<label class=\"control-label\" for=\"quantidadeOsso\">Quantidade</label>";
             $view .= "<div class=\"controls\">";
@@ -80,42 +87,47 @@ class ViewOsso extends AbstractView {
     }
     
     public function printListAsTable() {
-        $this->list = $this->ossoController->listar();        
-        $view = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table table-striped table-bordered dataTable\" id=\"example\" aria-describedby=\"example_info\">";
-                $view .= "<thead>";
-                    $view .= "<tr role=\"row\">";
-                        $view .= "<th class=\"sorting_asc\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-sort=\"ascending\" aria-label=\"Rendering engine: activate to sort column descending\" style=\"width: 167px;\">Nome</th>";
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Browser: activate to sort column ascending\" style=\"width: 232px;\">Código</th>";
-                        $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\">Quantidade</th>";
-                        if (PermissionValidator::isAdministrador()) {
-                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";
-                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";
-                        }
-                    $view .= "</tr>";
-                $view .= "</thead>";
-                $view .= "<tbody role=\"alert\" aria-live=\"polite\" aria-relevant=\"all\">";
-                if (gettype($this->list) == "array") {
-                   $i = true;
-                    foreach ($this->list as $osso) {
-                        if ($i) {
-                            $view .= "<tr class =\"gradeA odd\">";
-                            $i = false;
-                        } else {
-                            $view .= "<tr class =\"gradeA even\">";
-                            $i = true;
-                        }
-                            $view .= "<td class=\"sorting_1\">{$osso->getNome()}</td>";
-                            $view .= "<td>{$osso->getCodigo()}</td>";
-                            $view .= "<td>{$osso->getQuantidade()}</td>";
+        $this->list = $this->ossoController->listar();
+        $view = "";
+        if ($this->list != null) {
+            $view .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"table table-striped table-bordered dataTable\" id=\"example\" aria-describedby=\"example_info\">";
+                    $view .= "<thead>";
+                        $view .= "<tr role=\"row\">";
+                            $view .= "<th class=\"sorting_asc\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-sort=\"ascending\" aria-label=\"Rendering engine: activate to sort column descending\" style=\"width: 167px;\">Nome</th>";
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Browser: activate to sort column ascending\" style=\"width: 232px;\">Código</th>";
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\">Quantidade</th>";
                             if (PermissionValidator::isAdministrador()) {
-                                $view .= "<td><a href=\"osso-editar.php?id={$osso->getId()}\">Editar</a></td>";
-                                $view .= "<td><a href=\"osso-remover.php?id={$osso->getId()}\">Remover</a></td>";
+                                $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";
+                                $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\"></th>";
                             }
                         $view .= "</tr>";
-                    } 
-                }
-                $view .= "</tbody";
-            $view .= "</table>";
+                    $view .= "</thead>";
+                    $view .= "<tbody role=\"alert\" aria-live=\"polite\" aria-relevant=\"all\">";
+                    if (gettype($this->list) == "array") {
+                    $i = true;
+                        foreach ($this->list as $osso) {
+                            if ($i) {
+                                $view .= "<tr class =\"gradeA odd\">";
+                                $i = false;
+                            } else {
+                                $view .= "<tr class =\"gradeA even\">";
+                                $i = true;
+                            }
+                                $view .= "<td class=\"sorting_1\">{$osso->getNome()}</td>";
+                                $view .= "<td>{$osso->getCodigo()}</td>";
+                                $view .= "<td>{$osso->getQuantidade()}</td>";
+                                if (PermissionValidator::isAdministrador()) {
+                                    $view .= "<td><a href=\"osso-editar.php?id={$osso->getId()}\">Editar</a></td>";
+                                    $view .= "<td><a href=\"osso-remover.php?id={$osso->getId()}\">Remover</a></td>";
+                                }
+                            $view .= "</tr>";
+                        } 
+                    }
+                    $view .= "</tbody";
+                $view .= "</table>";
+        } else {
+            $view .= "<h5>Não há ossos cadastrados</h5>";
+        }
         echo $view;
     }
 }

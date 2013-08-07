@@ -17,12 +17,14 @@
                 
         <script src="../../resource/js/jquery/jquery-latest.js"></script>    
         <script src="../../resource/js/template/menu.js"></script>
+        <script src="../../resource/js/sisgebones/sisgebones.js"></script>
 <!--        <script src="../../resource/js/bootstrap/bootstrap.min.js"></script>-->
         <script src="../../resource/js/jquery/jquery.dataTables.js"></script>
         <script src="../../resource/js/bootstrap/DT_bootstrap.js"></script>
         <script src="../../resource/js//jquery/jquery-validate.min.js"></script>
         <script src="../../resource/js/jquery/jquery.mask.min.js"></script>        
         <title>SisGeBones</title>
+        <link rel="shortcut icon" href="../../resource/img/icon-sisgebones.ico" />
         <?php include_once '../../resource/krumo/class.krumo.php'; ?>
     </head>
      <body>

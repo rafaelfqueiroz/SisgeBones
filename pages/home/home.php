@@ -34,11 +34,11 @@
                 <ul class="profileBar">
                     <li class="user "><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
+                    
+                    
                 </ul>                               
             </div>
         </div>
@@ -46,12 +46,10 @@
 </header>
 
 <aside>
-    <form class="form-search">
-        <div class="input-prepend">
-            <button type="submit" class="btn"></button>
-            <input type="text" class="search-query">
-        </div>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
     
     <ul class="sideMenu">
         <li class="active">
@@ -114,27 +112,11 @@
     </div>
     <div class="row-fluid">
         <div class="span12">
-            <div class="tabbable widget">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab1" data-toggle="tab">Realizar Empréstimo</a></li>
-                    <li><a href="#tab2" data-toggle="tab">Listar Empréstimos</a></li>
-                    <li><a href="#tab3" data-toggle="tab">Empréstimos Pendentes</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
-                    </div>
-                    <div class="tab-pane" id="tab2">
-                        <p>Section 2</p>
-                    </div>
-                    <div class="tab-pane" id="tab3">
-                        <p>Section 3</p>
-                    </div>
-                </div>
-            </div>
+            <img src="../../resource/img/logo_cinza.jpg" alt="">
         </div>
     </div>
 </div>
 <?php 
-    include_once 'application/view/footer.view.php';
+    include_once '../../application/view/footer.view.php';
     endif;
 ?>

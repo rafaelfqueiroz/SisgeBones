@@ -29,6 +29,7 @@ abstract class CrudController implements Controller {
         $this->persistencia->remover($entidade);
     }
     public function salvar($entidade) {
+        $this->validate($entidade);
         return $this->persistencia->salvar($entidade);              
     }
     public function encontrarPorId($entidade) {
@@ -39,6 +40,10 @@ abstract class CrudController implements Controller {
         }        
         
         return $uniqueValue;        
+    }
+    
+    public function validate($entidade) {
+        
     }
 }
 

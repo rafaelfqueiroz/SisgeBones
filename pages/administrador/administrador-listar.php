@@ -23,6 +23,7 @@
     include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
     include_once '../../application/utils/DadosSessao.php';
     include_once '../../application/utils/CurrentDate.php';
+    include_once '../../application/utils/Validator.php';
     
     session_start();
     if (empty($_SESSION["usuario"])):
@@ -59,11 +60,11 @@
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="../home/perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
+                    
+                    
                 </ul>                               
             </div>
         </div>
@@ -71,12 +72,10 @@
 </header>
 
 <aside>
-    <form class="form-search">
-        <div class="input-prepend">
-            <button type="submit" class="btn"></button>
-            <input type="text" class="search-query">
-        </div>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
     
     <ul class="sideMenu">
         <li>
@@ -121,6 +120,7 @@
                     <li class="active"><a href="administrador-listar.php" data-toggle="tab">Listar Administrador</a></li>
                 </ul>
                 <div class="tab-content">
+                    <?php Validator::showError(); ?>
                     <?php $viewAdministrador->printListAsTable(); ?>
                 </div>
             </div>            

@@ -8,7 +8,7 @@
 class AdministradorPersistence extends AbstractPersistence implements AdministradorDao {
 
     protected function conseguirNomeDaTabela() {
-        return "Administrador";
+        return "administrador";
     }
 
     protected function dadosParaModel() {
@@ -64,7 +64,7 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
     
     public function encontrarAdministradorPorIdUsuario($idUsuario) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Administrador AS t INNER JOIN Usuario 
+        $this->criarComando("SELECT * FROM administrador AS t INNER JOIN usuario 
         AS u ON t.idUsuarioAdministrador = u.idUsuario WHERE idUsuarioAdministrador = {$idUsuario}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
@@ -76,8 +76,8 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
     
     public function listarComoUsuario() {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Administrador AS t 
-        INNER JOIN Usuario AS u ON t.idUsuarioAdministrador = u.idUsuario");
+        $this->criarComando("SELECT * FROM administrador AS t 
+        INNER JOIN usuario AS u ON t.idUsuarioAdministrador = u.idUsuario");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -88,7 +88,7 @@ class AdministradorPersistence extends AbstractPersistence implements Administra
     
     public function encontrarPorId($entidade) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Administrador AS t INNER JOIN Usuario 
+        $this->criarComando("SELECT * FROM administrador AS t INNER JOIN usuario 
         AS u ON t.idUsuarioAdministrador = u.idUsuario WHERE t.idAdministrador = {$entidade->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {

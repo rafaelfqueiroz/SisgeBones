@@ -23,6 +23,7 @@
     include_once '../../application/utils/PermissionValidator.php';
     include_once '../../application/utils/DadosSessao.php';
     include_once '../../application/utils/CurrentDate.php';
+    include_once '../../application/utils/Validator.php';
     
     session_start();
     
@@ -37,27 +38,27 @@
                 $viewAdministrador = new ViewAdministrador();
                 if (@$_POST['source'] == "editar") {                    
                     $administrador = new Administrador();
-                    $administrador->setId($_POST['id']);
-                    $administrador->setNome($_POST['nome']);
-                    $administrador->setMatricula($_POST['matricula']);  
-                    $administrador->setEmail($_POST['email']);
+                    $administrador->setId(@$_POST['id']);
+                    $administrador->setNome(@$_POST['nome']);
+                    $administrador->setMatricula(@$_POST['matricula']);  
+                    $administrador->setEmail(@$_POST['email']);
                     if(isset($_POST['moderador'])) {
                         $administrador->setModerador(true);
                     } else {
                         $administrador->setModerador(false);
                     }
                     $usuario = new Usuario();
-                    $usuario->setId($_POST['idUsuario']);
-                    $usuario->setLogin($_POST['login']);
-                    $usuario->setSenha($_POST['senha']);
+                    $usuario->setId(@$_POST['idUsuario']);
+                    $usuario->setLogin(@$_POST['login']);
+                    $usuario->setSenha(@$_POST['senha']);
                     $usuario->setTipo(1);
 
                     $usuarioController = new ControllerUsuario();
-                    $usuarioController->atualizar($usuario);
+                    $usuarioController->atualizarUsuario($usuario, @$_POST["confirmarSenha"], @$_POST["id"]);
 
                     $administrador->setUsuario($usuario);
                     $adminController = new ControllerAdministrador();
-                    $adminController->atualizar($administrador);                    
+                    $adminController->atualizarAdministrador($administrador);                    
                     header('location: administrador-listar.php');
                     exit();
                 }
@@ -83,11 +84,11 @@
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="../home/perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
+                    
+                    
                 </ul>                               
             </div>
         </div>
@@ -95,12 +96,10 @@
 </header>
 
 <aside>
-    <form class="form-search">
-        <div class="input-prepend">
-            <button type="submit" class="btn"></button>
-            <input type="text" class="search-query">
-        </div>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
     
     <ul class="sideMenu">
         <li>
@@ -143,6 +142,7 @@
                     <li><a href="administrador-listar.php" data-toggle="tab">Listar Administrador</a></li>
                 </ul>
                 <div class="tab-content">
+                    <?php Validator::showError(); ?>
                     <form class="form-horizontal" method="post" action="administrador-editar.php">
                         <?php $viewAdministrador->printEditForm($_GET["id"]); ?>
                     </form>

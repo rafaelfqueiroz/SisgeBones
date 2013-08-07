@@ -51,8 +51,8 @@
                         </ul>
                     </li>
                     <li class="notify"><a href="#"><span>2</span></a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
+                    
+                    
                 </ul>                               
             </div>
         </div>

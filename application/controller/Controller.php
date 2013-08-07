@@ -13,7 +13,7 @@ interface Controller {
     
     function salvar($entidade);
     function remover($entidade);
-    function atualizar($entidade);
+    function atualizar($entidade);    
     function listar();
 }
 

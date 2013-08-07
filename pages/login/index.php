@@ -28,7 +28,9 @@
     include_once '../../application/persistence/interfaces/ProfessorDao.php';
     include_once '../../application/persistence/implementacoes/PersistenceProfessor.php';
     include_once '../../application/utils/PermissionValidator.php';
+    include_once '../../application/utils/Validator.php';
     
+    session_start();
     
     if (@$_POST['source'] == "login") {        
         $usuarioController = new ControllerUsuario();
@@ -69,7 +71,7 @@
     <link rel="stylesheet" type="text/css" href="../../resource/css/theme.css">
     <link rel="stylesheet" type="text/css" href="../../resource/css/font-awesome.css">
 
-    <script src="../../resource/js/jquery-latest.js" type="text/javascript"></script>
+<!--    <script src="../../resource/js/jquery-latest.js" type="text/javascript"></script>-->
     
     <style type="text/css">
         #line-chart {
@@ -123,13 +125,15 @@
                     <input type="password" name="senha" class="span12">
                     <input type="hidden" name="source" value="login">
                     <input type="submit" class="btn btn-primary pull-right" value="Entrar">
-                    <label class="remember-me"><input type="checkbox"> Lembrar me</label>
+<!--                    <p><a href="#">Esqueceu sua senha?</a></p>-->
                     <div class="clearfix"></div>
                 </form>
             </div>
+            <?php Validator::showError(); ?>
         </div>
-        <p><a href="#">Esqueceu sua senha?</a></p>
+        
     </div>
+                
 </div>
     <script src="../../resource/js/bootstrap/bootstrap.js"></script>
     

@@ -24,6 +24,7 @@
     include_once '../../application/utils/PermissionValidator.php';
     include_once '../../application/utils/DadosSessao.php';
     include_once '../../application/utils/CurrentDate.php';
+    include_once '../../application/utils/Validator.php';
     
     session_start();
     
@@ -57,7 +58,7 @@
                 $usuario->setTipo(3);
 
                 $usuarioController = new ControllerUsuario();
-                $usuarioController->salvar($usuario);
+                $usuarioController->salvarUsuario($usuario, $_POST["confirmarSenha"]);
                 $responseDB = $usuarioController->encontrarPorLogin($usuario->getLogin());
 
                 $aluno->setUsuario($responseDB);        
@@ -91,11 +92,11 @@
                 <ul class="profileBar">
                     <li class="user visible-desktop"><img src="../../resource/img/user_avatar.png" alt=""></li>
                     <li class="profile">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="../home/perfil.php"><?php echo DadosSessao::getDadosSessao()->getNome(); ?></a>
                     </li>
                     <li class="profile"><a class="dropdown-toggle" href="../login/logout.php">Logout</a></li>
-                    <li class="calendar"><a href="#"></a></li>
-                    <li class="mail"><a href="#"></a><span class="attention">!</span></li>
+                    
+                    
                 </ul>                               
             </div>
         </div>
@@ -103,12 +104,10 @@
 </header>
 
 <aside>
-    <form class="form-search">
-        <div class="input-prepend">
-            <button type="submit" class="btn"></button>
-            <input type="text" class="search-query">
-        </div>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
     
     <ul class="sideMenu">
         <li>
@@ -167,11 +166,10 @@
                     <li><a href="monitor-listar.php" data-toggle="tab">Listar Monitores</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="cadastrar">
-                        <form class="form-horizontal" method="post" action="aluno-cadastrar.php">
-                            <?php $viewAluno->printForm(); ?>
-                        </form>
-                    </div>
+                    <?php Validator::showError(); ?>
+                    <form class="form-horizontal" method="post" action="aluno-cadastrar.php">
+                        <?php $viewAluno->printForm(); ?>
+                    </form>
                 </div>
             </div>
         </div>

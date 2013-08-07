@@ -13,7 +13,7 @@
 class AlunoPersistence extends AbstractPersistence implements AlunoDao{
 
     protected function conseguirNomeDaTabela() {
-        return "Aluno";
+        return "aluno";
     }
 
     protected function dadosParaModel() {
@@ -76,7 +76,7 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     
     public function encontrarAlunoPorIdUsuario($idUsuario) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Aluno AS t INNER JOIN Usuario AS u ON
+        $this->criarComando("SELECT * FROM aluno AS t INNER JOIN usuario AS u ON
         t.idUsuarioAluno = u.idUsuario WHERE idUsuarioAluno = {$idUsuario}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
@@ -88,7 +88,7 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     
     public function listarComoUsuario() {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Aluno AS t INNER JOIN Usuario AS u ON
+        $this->criarComando("SELECT * FROM aluno AS t INNER JOIN usuario AS u ON
         t.idUsuarioAluno = u.idUsuario");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
@@ -100,7 +100,7 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     
     public function encontrarPorId($entidade) {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Aluno AS t INNER JOIN Usuario AS u ON
+        $this->criarComando("SELECT * FROM aluno AS t INNER JOIN usuario AS u ON
         t.idUsuarioAluno = u.idUsuario WHERE t.idAluno = {$entidade->getId()}");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
@@ -112,7 +112,7 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
 
     public function listarMonitores() {
         $this->abrirConexao();
-        $this->criarComando("SELECT * FROM Aluno AS t INNER JOIN Usuario AS u ON
+        $this->criarComando("SELECT * FROM aluno AS t INNER JOIN usuario AS u ON
         t.idUsuarioAluno = u.idUsuario WHERE eMonitor = 1");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
