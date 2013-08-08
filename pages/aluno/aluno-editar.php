@@ -29,9 +29,13 @@
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/index.php");
+        header("location: ../../index.php");
         exit();
     else :
+        if (PermissionValidator::isAluno() && DadosSessao::getDadosSessao()->getAtivo() == 0) {
+            header('location: ../home/perfil.php');
+            exit();
+        }
         if (PermissionValidator::isAdministrador()) :            
             include_once '../../application/view/header.view.php';
             $viewAluno = new ViewAluno();
@@ -61,11 +65,31 @@
                 
                 $alunoController = new ControllerAluno();
                 $aluno->setUsuario($usuario);
-                $alunoController->atualizarAluno($aluno);
+                $flag = $alunoController->atualizarAluno($aluno);
+                if ($flag) {
+                    if ($aluno->getId() == DadosSessao::getDadosSessao()->getId()) {
+                        $_SESSION["usuario"] = serialize($aluno);
+                    }
+                }
                 header('location: aluno-listar.php');
                 exit();
             }
 ?>
+<script>
+    function showPasswordElements() {
+        $(".passwordComponent").show();
+        $(".cancelAlterPassword").show();
+        $(".alterPassword").hide();
+    }
+    
+    function hidePasswordElements() {
+        $(".passwordComponent").hide();
+        $(".cancelAlterPassword").hide();
+        $(".alterPassword").show();
+        $("#inputSenhaConfirmacao").val("");
+        $("#inputSenha").val("");
+    }
+</script>
 <style rel="stylesheet" type="text/css">
     .row {
         margin-left: 0px;

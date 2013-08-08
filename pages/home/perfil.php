@@ -37,7 +37,7 @@
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/index.php");
+        header("location: ../../index.php");
     else :      
         include_once '../../application/view/header.view.php';
         $viewUsuario = new ViewUsuario();

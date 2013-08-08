@@ -54,10 +54,7 @@ class ControllerUsuario extends CrudController {
     }
     
     public function validatePerfilUsuario($entidade, $confirmarSenha) {
-        Validator::validate($entidade == null, "Preencha todos os campos");
-        Validator::validate($entidade->getLogin() == null, "O campo login deve ser preenchido");
-        Validator::validate($entidade->getSenha() != $confirmarSenha, "Os campos 'senha' e 'confirmar senha' devem ser preenchidos");
-        Validator::validate($entidade->getSenha() == null, "O campo senha deve ser preenchido");
+        $this->validationMessage($entidade, $confirmarSenha);
         Validator::onErrorRedirectTo("../../pages/home/perfil.php");
     }
     

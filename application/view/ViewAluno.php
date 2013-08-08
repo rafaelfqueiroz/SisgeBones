@@ -99,16 +99,26 @@
                     $view .= "<input type=\"text\" id=\"inputLogin\" name=\"login\" placeholder=\"Login do aluno\" value=\"{$aluno->getUsuario()->getLogin()}\" required>";
                 $view .= "</div>";
             $view .= "</div>";
-            $view .= "<div class=\"control-group\">";
+            $view .= "<div class=\"control-group passwordComponent\" style=\"display:none;\">";
                 $view .= "<label class=\"control-label\" for=\"inputSenha\">Senha</label>";
                 $view .= "<div class=\"controls\">";
-                    $view .= "<input type=\"password\" id=\"inputSenha\" name=\"senha\" placeholder=\"Senha do aluno\" value=\"\" required>";
+                    $view .= "<input type=\"password\" id=\"inputSenha\" name=\"senha\" placeholder=\"Senha do aluno\">";
                 $view .= "</div>";
             $view .= "</div>";
-            $view .= "<div class=\"control-group\">";
+            $view .= "<div class=\"control-group passwordComponent\" style=\"display:none;\">";
                 $view .= "<label class=\"control-label\"for=\"inputSenhaConfirmacao\">Senha de Confirmação</label>";
                 $view .= "<div class=\"controls\">";
-                    $view .= "<input type=\"password\"id=\"inputSenhaConfirmacao\" name=\"confirmarSenha\" placeholder=\"Senha de confirmação do aluno\" required>";
+                    $view .= "<input type=\"password\"id=\"inputSenhaConfirmacao\" name=\"confirmarSenha\" placeholder=\"Senha de confirmação do aluno\">";
+                $view .= "</div>";
+            $view .= "</div>";
+            $view .= "<div class=\"control-group alterPassword\">";
+                $view .= "<div class=\"controls\">";
+                    $view .= "<a href=\"#\" onClick=\"showPasswordElements()\">Alterar senha</a>";
+                $view .= "</div>";
+            $view .= "</div>";
+            $view .= "<div class=\"control-group cancelAlterPassword\" style=\"display:none;\">";
+                $view .= "<div class=\"controls\">";
+                    $view .= "<a href=\"#\" onClick=\"hidePasswordElements()\">Cancelar alteração senha</a>";
                 $view .= "</div>";
             $view .= "</div>";
             $view .= "<div class=\"control-group\">";
@@ -121,7 +131,7 @@
                     }
                     $view .= "</label>";
                 $view .= "</div>";
-            $view .= "</div>";                        
+            $view .= "</div>";
             $view .= "<input type=\"hidden\" name=\"source\" value=\"editar\">";
             $view .= "<input type=\"submit\" class=\"btn btn-success\" value=\"Atualizar\" >";
             echo $view;
@@ -178,7 +188,11 @@
                                 $view .= "<td>{$aluno->getMatricula()}</td>";
                                 $view .= "<td>{$aluno->getCurso()}</td>";
                                 $view .= "<td>{$aluno->getEmail()}</td>";
-                                $view .= "<td>{$aluno->getEMonitor()}</td>";
+                                if ($aluno->getEMonitor() == 1) {
+                                    $view .= "<td>Sim</td>";
+                                } else if ($aluno->getEMonitor() == 0) {
+                                    $view .= "<td>Não</td>";
+                                }
                                 if (PermissionValidator::isAdministrador()) {
                                     $view .= "<td><a href=\"aluno-editar.php?id={$aluno->getId()}\">Editar</a></td>";
                                     $view .= "<td><a href=\"aluno-remover.php?id={$aluno->getId()}\">Remover</a></td>";
@@ -204,8 +218,7 @@
                             $view .= "<th class=\"sorting_asc\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-sort=\"ascending\" aria-label=\"Rendering engine: activate to sort column descending\" style=\"width: 167px;\">Nome</th>";
                             $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Browser: activate to sort column ascending\" style=\"width: 232px;\">Matrícula</th>";
                             $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Platform(s): activate to sort column ascending\" style=\"width: 214px;\">Curso</th>";
-                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Engine version: activate to sort column ascending\" style=\"width: 142px;\">Email</th>";
-                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\">Monitor</th>";
+                            $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"Engine version: activate to sort column ascending\" style=\"width: 142px;\">Email</th>";    
                             if (PermissionValidator::isAdministrador()) {
                                 $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";
                                 $view .= "<th class=\"sorting\" role=\"columnheader\" tabindex=\"0\" aria-controls=\"example\" rowspan=\"1\" colspan=\"1\" aria-label=\"CSS grade: activate to sort column ascending\" style=\"width: 99px;\"></th>";
@@ -227,7 +240,6 @@
                                 $view .= "<td>{$aluno->getMatricula()}</td>";
                                 $view .= "<td>{$aluno->getCurso()}</td>";
                                 $view .= "<td>{$aluno->getEmail()}</td>";
-                                $view .= "<td>{$aluno->getEMonitor()}</td>";
                                 if (PermissionValidator::isAdministrador()) {
                                     $view .= "<td><a href=\"aluno-editar.php?id={$aluno->getId()}\">Editar</a></td>";
                                     $view .= "<td><a href=\"aluno-remover.php?id={$aluno->getId()}\">Remover</a></td>";

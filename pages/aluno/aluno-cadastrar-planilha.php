@@ -29,9 +29,13 @@
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/index.php");
+        header("location: ../../index.php");
         exit();
     else :
+        if (PermissionValidator::isAluno() && DadosSessao::getDadosSessao()->getAtivo() == 0) {
+            header('location: ../home/perfil.php');
+            exit();
+        }
         if (PermissionValidator::isAdministrador()) :
             include_once '../../application/view/header.view.php';
             $viewAluno = new ViewAluno();
@@ -39,7 +43,7 @@
             if (@$_POST['source'] == "cadastrarPlanilha") {
 //                $data = array();
                 if ( $_FILES['planilha']['tmp_name'] ) {
-                    $dom = DOMDocument::load( @$_FILES['planilha']['tmp_name'] );
+                    $dom = DOMDocument::load($_FILES['planilha']['tmp_name'] );
                     $rows = $dom->getElementsByTagName('Row');
                     $first_row = false;
                     foreach ($rows as $row) {

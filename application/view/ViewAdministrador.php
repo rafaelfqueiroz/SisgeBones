@@ -87,16 +87,26 @@ class ViewAdministrador extends AbstractView{
                     $view .= "<input type=\"text\"id=\"inputLogin\" name=\"login\" placeholder=\"Login do administrador\" value=\"{$administrador->getUsuario()->getLogin()}\" required>";
                 $view .= "</div>";
             $view .= "</div>";
-            $view .= "<div class=\"control-group\">";
+            $view .= "<div class=\"control-group passwordComponent\" style=\"display:none;\">";
                 $view .= "<label class=\"control-label\"for=\"inputSenha\">Senha</label>";
                 $view .= "<div class=\"controls\">";
-                    $view .= "<input type=\"password\"id=\"inputSenha\" name=\"senha\" placeholder=\"Senha do administrador\" value=\"\" required>";
+                    $view .= "<input type=\"password\"id=\"inputSenha\" name=\"senha\" placeholder=\"Senha do administrador\">";
                 $view .= "</div>";
             $view .= "</div>";
-            $view .= "<div class=\"control-group\">";
+            $view .= "<div class=\"control-group passwordComponent\" style=\"display:none;\">";
                 $view .= "<label class=\"control-label\"for=\"inputSenhaConfirmacao\">Senha de Confirmação</label>";
                 $view .= "<div class=\"controls\">";
-                    $view .= "<input type=\"password\"id=\"inputSenhaConfirmacao\" name=\"confirmarSenha\" placeholder=\"Senha de confirmação do administrador\" required>";
+                    $view .= "<input type=\"password\"id=\"inputSenhaConfirmacao\" name=\"confirmarSenha\" placeholder=\"Senha de confirmação do administrador\">";
+                $view .= "</div>";
+            $view .= "</div>";
+            $view .= "<div class=\"control-group alterPassword\">";
+                $view .= "<div class=\"controls\">";
+                    $view .= "<a href=\"#\" onClick=\"showPasswordElements()\">Alterar senha</a>";
+                $view .= "</div>";
+            $view .= "</div>";
+            $view .= "<div class=\"control-group cancelAlterPassword\" style=\"display:none;\">";
+                $view .= "<div class=\"controls\">";
+                    $view .= "<a href=\"#\" onClick=\"hidePasswordElements()\">Cancelar alteração senha</a>";
                 $view .= "</div>";
             $view .= "</div>";
             $view .= "<div class=\"control-group\">";
@@ -147,7 +157,11 @@ class ViewAdministrador extends AbstractView{
                                 $view .= "<td class=\"sorting_1\">{$administrador->getNome()}</td>";
                                 $view .= "<td>{$administrador->getMatricula()}</td>";
                                 $view .= "<td>{$administrador->getEmail()}</td>";
-                                $view .= "<td>{$administrador->getModerador()}</td>";
+                                if ($administrador->getModerador() == 1) {
+                                    $view .= "<td>Sim</td>";
+                                } else if ($administrador->getModerador() == 0) {
+                                    $view .= "<td>Não</td>";
+                                }
                                 if (PermissionValidator::isAdministrador() && $admin->getModerador() == 0) {
                                     $view .= "<td><a href=\"administrador-editar.php?id={$administrador->getId()}\">Editar</a></td>";  
                                     $view .= "<td><a href=\"administrador-remover.php?id={$administrador->getId()}\">Remover</a></td>";

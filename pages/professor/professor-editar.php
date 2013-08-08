@@ -29,9 +29,13 @@
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/index.php");
+        header("location: ../../index.php");
         exit();
     else :
+        if (PermissionValidator::isAluno() && DadosSessao::getDadosSessao()->getAtivo() == 0) {
+            header('location: ../home/perfil.php');
+            exit();
+        }
         if (PermissionValidator::isAdministrador()) :
             include_once '../../application/view/header.view.php';
             $viewProfessor = new ViewProfessor();
@@ -54,15 +58,33 @@
 
                 $professor->setUsuario($usuario);
                 $professorController = new ControllerProfessor();       
-                $professorController->atualizarProfessor($professor);
-                                
+                $flag = $professorController->atualizarProfessor($professor);
+                if ($flag) {
+                    if ($professor->getId() == DadosSessao::getDadosSessao()->getId()) {
+                        $_SESSION["usuario"] = serialize($professor);
+                    }
+                }  
                 header("location: professor-listar.php");
                 exit();
             }
 ?>
 
 <script src="../../resource/js/sisgebones/scriptValidateProfessor.js"></script>
-
+<script>
+    function showPasswordElements() {
+        $(".passwordComponent").show();
+        $(".cancelAlterPassword").show();
+        $(".alterPassword").hide();
+    }
+    
+    function hidePasswordElements() {
+        $(".passwordComponent").hide();
+        $(".cancelAlterPassword").hide();
+        $(".alterPassword").show();
+        $("#inputSenhaConfirmacao").val("");
+        $("#inputSenha").val("");
+    }
+</script>
 <header>
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">

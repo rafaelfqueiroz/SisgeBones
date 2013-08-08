@@ -1,34 +1,34 @@
 <?php    
-    include_once '../../application/config.php';    
+    include_once 'application/config.php';    
     
-    include_once '../../application/controller/Controller.php';
-    include_once '../../application/controller/CrudController.php';
-    include_once '../../application/model/AbstractEntity.php';
+    include_once 'application/controller/Controller.php';
+    include_once 'application/controller/CrudController.php';
+    include_once 'application/model/AbstractEntity.php';
         
-    include_once '../../application/persistence/abstracao/Dao.php';
-    include_once '../../application/persistence/abstracao/Persistencia.php';
+    include_once 'application/persistence/abstracao/Dao.php';
+    include_once 'application/persistence/abstracao/Persistencia.php';
 
-    include_once '../../application/persistence/interfaces/UsuarioDao.php';
-    include_once '../../application/model/Usuario.php';
-    include_once '../../application/controller/ControllerUsuario.php';
-    include_once '../../application/persistence/implementacoes/PersistenceUsuario.php';
+    include_once 'application/persistence/interfaces/UsuarioDao.php';
+    include_once 'application/model/Usuario.php';
+    include_once 'application/controller/ControllerUsuario.php';
+    include_once 'application/persistence/implementacoes/PersistenceUsuario.php';
     
-    include_once '../../application/model/Administrador.php';
-    include_once '../../application/controller/ControllerAdministrador.php';
-    include_once '../../application/persistence/interfaces/AdministradorDao.php';
-    include_once '../../application/persistence/implementacoes/PersistenceAdministrador.php';
+    include_once 'application/model/Administrador.php';
+    include_once 'application/controller/ControllerAdministrador.php';
+    include_once 'application/persistence/interfaces/AdministradorDao.php';
+    include_once 'application/persistence/implementacoes/PersistenceAdministrador.php';
     
-    include_once '../../application/model/Aluno.php';
-    include_once '../../application/controller/ControllerAluno.php';
-    include_once '../../application/persistence/interfaces/AlunoDao.php';
-    include_once '../../application/persistence/implementacoes/PersistenceAluno.php';
+    include_once 'application/model/Aluno.php';
+    include_once 'application/controller/ControllerAluno.php';
+    include_once 'application/persistence/interfaces/AlunoDao.php';
+    include_once 'application/persistence/implementacoes/PersistenceAluno.php';
     
-    include_once '../../application/model/Professor.php';
-    include_once '../../application/controller/ControllerProfessor.php';
-    include_once '../../application/persistence/interfaces/ProfessorDao.php';
-    include_once '../../application/persistence/implementacoes/PersistenceProfessor.php';
-    include_once '../../application/utils/PermissionValidator.php';
-    include_once '../../application/utils/Validator.php';
+    include_once 'application/model/Professor.php';
+    include_once 'application/controller/ControllerProfessor.php';
+    include_once 'application/persistence/interfaces/ProfessorDao.php';
+    include_once 'application/persistence/implementacoes/PersistenceProfessor.php';
+    include_once 'application/utils/PermissionValidator.php';
+    include_once 'application/utils/Validator.php';
     
     session_start();
     
@@ -50,11 +50,11 @@
                 $aluno = $alunoController->encontrarAlunoPorIdUsuario($usuario->getId());
                 $_SESSION["usuario"] = serialize($aluno);
                 if ($aluno->getAtivo() == 0) {
-                    header("location: ../home/perfil.php");
+                    header("location: pages/home/perfil.php");
                     die();
                 }
             } 
-            header('location: ../home/home.php');
+            header('location: pages/home/home.php');
             die();
         }
     }
@@ -70,12 +70,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link rel="stylesheet" type="text/css" href="../../resource/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../../resource/css/bootstrap-responsive.css">
-    <link rel="stylesheet" type="text/css" href="../../resource/css/theme.css">
-    <link rel="stylesheet" type="text/css" href="../../resource/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="resource/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="resource/css/bootstrap-responsive.css">
+    <link rel="stylesheet" type="text/css" href="resource/css/theme.css">
+    <link rel="stylesheet" type="text/css" href="resource/css/font-awesome.css">
 
-<!--    <script src="../../resource/js/jquery-latest.js" type="text/javascript"></script>-->
+<!--    <script src="resource/js/jquery-latest.js" type="text/javascript"></script>-->
     
     <style type="text/css">
         #line-chart {
@@ -96,10 +96,10 @@
     </style>
 
     <link rel="shortcut icon" href="http://wbpreview.com/previews/assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.html">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.html">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.html">
-    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.html">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.html">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.html">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.html">
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.html">
   </head>
   <body> 
     
@@ -109,7 +109,7 @@
                 <ul class="nav pull-right">
                     
                 </ul>
-                <a class="brand" style="float:none;text-align:center;"href="login.php"><span class="second">Sistema de Gerenciamento de Ossos do Departamento de Morfologia</span><span class="second"></span></a>
+                <a class="brand" style="float:none;text-align:center;"href="index.php"><span class="second">Sistema de Gerenciamento de Ossos do Departamento de Morfologia</span><span class="second"></span></a>
             </div>
         </div>
     </div>
@@ -118,7 +118,7 @@
     <div class="container-fluid">
         
         <div class="row-fluid">
-<!--                <img src="../../resource/img/logo_cinza.jpg" alt="">-->
+<!--                <img src="resource/img/logo_cinza.jpg" alt="">-->
     <div class="dialog span4">
         <div class="block">
             <div class="block-heading">Sign In</div>
@@ -140,7 +140,7 @@
     </div>
                 
 </div>
-    <script src="../../resource/js/bootstrap/bootstrap.js"></script>
+    <script src="resource/js/bootstrap/bootstrap.js"></script>
     
   </body>
 </html>

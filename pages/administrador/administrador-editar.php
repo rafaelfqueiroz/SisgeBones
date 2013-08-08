@@ -28,9 +28,13 @@
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/index.php");
+        header("location: ../../index.php");
         exit();
     else :
+        if (PermissionValidator::isAluno() && DadosSessao::getDadosSessao()->getAtivo() == 0) {
+            header('location: ../home/perfil.php');
+            exit();
+        }
         if (PermissionValidator::isAdministrador()) :
             $admin = unserialize($_SESSION["usuario"]);
             if ($admin->getModerador() == '0') :                
@@ -58,12 +62,31 @@
 
                     $administrador->setUsuario($usuario);
                     $adminController = new ControllerAdministrador();
-                    $adminController->atualizarAdministrador($administrador);                    
+                    $flag = $adminController->atualizarAdministrador($administrador);
+                    if ($flag) {
+                        if ($administrador->getId() == DadosSessao::getDadosSessao()->getId()) {
+                            $_SESSION["usuario"] = serialize($administrador);
+                        }
+                    }
                     header('location: administrador-listar.php');
                     exit();
                 }
 ?>
-
+<script>
+    function showPasswordElements() {
+        $(".passwordComponent").show();
+        $(".cancelAlterPassword").show();
+        $(".alterPassword").hide();
+    }
+    
+    function hidePasswordElements() {
+        $(".passwordComponent").hide();
+        $(".cancelAlterPassword").hide();
+        $(".alterPassword").show();
+        $("#inputSenhaConfirmacao").val("");
+        $("#inputSenha").val("");
+    }
+</script>
 <header>
     <div class="navbar navbar-inverse">
         <div class="navbar-inner">
@@ -138,7 +161,7 @@
         <div class="span12">
             <div class="tabbable widget">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="administrador-cadastrar.php" data-toggle="tab">Cadastrar Administrador</a></li>
+                    <li class="active"><a href="administrador-cadastrar.php" data-toggle="tab">Editar Administrador</a></li>
                     <li><a href="administrador-listar.php" data-toggle="tab">Listar Administrador</a></li>
                 </ul>
                 <div class="tab-content">

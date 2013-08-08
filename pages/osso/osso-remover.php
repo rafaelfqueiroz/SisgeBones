@@ -14,9 +14,13 @@
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/index.php");
+        header("location: ../../index.php");
         exit();
     else :
+        if (PermissionValidator::isAluno() && DadosSessao::getDadosSessao()->getAtivo() == 0) {
+            header('location: ../home/perfil.php');
+            exit();
+        }
          if (PermissionValidator::isAdministrador()) :
             if (isset($_GET["id"])) {
                 $osso = new Osso();

@@ -10,8 +10,12 @@
     
     session_start();
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/index.php");
-    else :        
+        header("location: ../../index.php");
+    else :
+        if (PermissionValidator::isAluno() && DadosSessao::getDadosSessao()->getAtivo() == 0) {
+            header('location: ../home/perfil.php');
+            exit();
+        }
         include_once '../../application/view/header.view.php';
 ?>
 

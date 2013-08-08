@@ -29,9 +29,13 @@
     session_start();
     
     if (empty($_SESSION["usuario"])):
-        header("location: ../login/index.php");
+        header("location: ../../index.php");
         exit();
     else :
+        if (PermissionValidator::isAluno() && DadosSessao::getDadosSessao()->getAtivo() == 0) {
+            header('location: ../home/perfil.php');
+            exit();
+        }
         if (PermissionValidator::isAdministrador()) :
             $admin = unserialize($_SESSION["usuario"]);                        
             if ($admin->getModerador() == '0') :
