@@ -43,7 +43,7 @@
                 $aluno->setMatricula(@$_POST['matricula']);
                 $aluno->setCurso(@$_POST['curso']);
                 $aluno->setEmail(@$_POST['email']);
-                $aluno->setAtivo(true);                
+                $aluno->setAtivo(true);
 
                 if(isset($_POST["eMonitor"])) {
                     $aluno->setEMonitor(true);
@@ -61,7 +61,7 @@
                 
                 $alunoController = new ControllerAluno();
                 $aluno->setUsuario($usuario);
-                $alunoController->atualizarAluno($aluno, @$_POST["id"]);                                
+                $alunoController->atualizarAluno($aluno);
                 header('location: aluno-listar.php');
                 exit();
             }

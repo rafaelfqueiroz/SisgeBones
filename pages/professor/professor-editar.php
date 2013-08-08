@@ -54,7 +54,7 @@
 
                 $professor->setUsuario($usuario);
                 $professorController = new ControllerProfessor();       
-                $professorController->atualizarProfessor($professor, @$_POST["id"]);
+                $professorController->atualizarProfessor($professor);
                                 
                 header("location: professor-listar.php");
                 exit();

@@ -32,12 +32,15 @@
             $viewOsso = new ViewOsso();
 
             if (@$_POST['osso-existente'] == "inserir") {
-                $codigoOsso = @$_POST['codigo'];
+                $idOsso = @$_POST['codigo'];
                 $quantidadeOsso = @$_POST['quantidade'];
-                $ossoController = new ControllerOsso();
-                Validator::validate($codigoOsso == null, "O campo código é necessário");
+                $qtdDisponivel = $quantidadeOsso;
+                $ossoController = new ControllerOsso();                
+                Validator::validate($idOsso == null, "O campo código é necessário");
                 Validator::onErrorRedirectTo("../../pages/osso/osso-cadastrar-existente.php");
-                $osso = $ossoController->encontrarPorCodigo($codigoOsso);
+                $osso = new Osso();
+                $osso->setId($idOsso);
+                $osso = $ossoController->encontrarPorId($osso);
                 $quantidadeOsso += $osso->getQuantidade();
                 $qtdDisponivel += $osso->getQtdDisponivel();
                 $osso->setQuantidade($quantidadeOsso);

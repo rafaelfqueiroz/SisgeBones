@@ -26,7 +26,7 @@
     include_once '../../application/view/ViewEmprestimo.php';
     
     include_once '../../application/model/Professor.php';
-    include_once '../../application/controller/ControllerProfessor.php';    
+    include_once '../../application/controller/ControllerProfessor.php';
     include_once '../../application/persistence/implementacoes/PersistenceProfessor.php';
     
     include_once '../../application/model/Aluno.php';
@@ -146,7 +146,7 @@
       function adicionarComponentesDeEmprestimo() {
           var componentesDiv = '<label class="control-label" for="qtdOssosEmprestimo">Quantidade</label>' +
               '<div class="controls">' +
-              '<input id="qtdOssosEmprestimo" name="qtdOssos" style="width:50px;" required type="number" />&nbsp&nbsp&nbsp' +
+              '<input id="qtdOssosEmprestimo" name="qtdOssos" style="width:50px;" min=\"1\" max=\"30\" required type="number" />&nbsp&nbsp&nbsp' +
               '<a href="#" id="cancel-tray" class="btn" onClick="cancelarDaBandeja()">Cancelar</a>&nbsp&nbsp&nbsp' +
               '<a href="#" id="add-tray" class="btn small-btn btn-success" onClick="adicionarNaBandeja()">Ok</a>' +
               '</div>';
@@ -163,39 +163,44 @@
       function adicionarNaBandeja() {
           var idOsso = $('.select2#selectOsso').val();
           var qtd = $('#qtdOssosEmprestimo').val();
-          var info;
-          if (listDataBones == null) {
-                dataBones.done(function(data) {
-                    listDataBones = $.parseJSON(data);
-                });
-          }
-          var index;
-          for (index = 0; index < listDataBones.length; index++) {
-              if (listDataBones[index].id == idOsso) {
-                  info = listDataBones[index];
-                  break;
-              }
-          }
-          var limite = info.qtdDisponivel - qtd;
-          if (limite >= 0) {
-                info.qtdDisponivel = limite;
-                listDataBones[index] = info;
-                info = JSON.stringify(info);
+          qtd = parseInt(qtd);
+          if (qtd != null && qtd > 0) {
+            var info;
+            if (listDataBones == null) {
+                    dataBones.done(function(data) {
+                        listDataBones = $.parseJSON(data);
+                    });
+            }
+            var index;
+            for (index = 0; index < listDataBones.length; index++) {
+                if (listDataBones[index].id == idOsso) {
+                    info = listDataBones[index];
+                    break;
+                }
+            }
+            var limite = info.qtdDisponivel - qtd;
+            if (limite >= 0) {
+                    info.qtdDisponivel = limite;
+                    listDataBones[index] = info;
+                    info = JSON.stringify(info);
 
-                var posting = $.post("../../application/utils/Bandeja.php", 
-                { item: info, action:"adicionar", qtdOsso: qtd });
-                posting.done(function (response) {
-                    if($('#tableTray').length > 0) {
-                        addRowAtTableTray(response);
-                    } else {
-                        createTableTray();
-                        addRowAtTableTray(response);
-                    }
-            });
-            removerComponentesDeEmprestimo();            
-            return false;
+                    var posting = $.post("../../application/utils/Bandeja.php", 
+                    { item: info, action:"adicionar", qtdOsso: qtd });
+                    posting.done(function (response) {
+                        if($('#tableTray').length > 0) {
+                            addRowAtTableTray(response);
+                        } else {
+                            createTableTray();
+                            addRowAtTableTray(response);
+                        }
+                });
+                removerComponentesDeEmprestimo();            
+                return false;
+            } else {
+                alert("Quantidade indisponível para empréstimo");
+            }
           } else {
-              alert("QUANTIDADE INDISPONIVEL PARA EMPRESTIMO");
+            alert("A quantidade deve ser maior do que zero");
           }
       }
       

@@ -39,7 +39,7 @@
             if (@$_POST['source'] == "cadastrarPlanilha") {
 //                $data = array();
                 if ( $_FILES['planilha']['tmp_name'] ) {
-                    $dom = DOMDocument::load( $_FILES['planilha']['tmp_name'] );                    
+                    $dom = DOMDocument::load( @$_FILES['planilha']['tmp_name'] );
                     $rows = $dom->getElementsByTagName('Row');
                     $first_row = false;
                     foreach ($rows as $row) {
@@ -56,13 +56,27 @@
                                     $content = $cell->nodeValue;
                                 }
                                 $cellContent = explode(" ", $content);
+                                Validator::validate(sizeof($cellContent) == 0, "Dados não conferem, verifique a planilha");
+                                Validator::onErrorRedirectTo("../../pages/aluno/aluno-cadastrar-planilha.php");
+                                $length = sizeof($cellContent);
                                 $aluno = new Aluno();
+                                $nome = "";
+                                for ($i = 1;$i<$length-1;$i++) {
+                                    $nome .= $cellContent[$i];
+                                    if ($i < $length-2) {
+                                        $nome .= " ";
+                                    }
+                                }
+                                var_dump($nome);
+//                                print_r($nome);
+                                exit();
                                 $aluno->setNome($cellContent[1]);
-                                $aluno->setMatricula($cellContent[2]);
+                                
+                                $aluno->setMatricula($cellContent[$length-1]);
                                 $aluno->setAtivo(false);
                                 $aluno->setEMonitor(false);
                                 $aluno->setEmail("Cadastro incompleto");
-                                $aluno->setCurso($_POST["curso"]);
+                                $aluno->setCurso(@$_POST["curso"]);
                                 
                                 $usuario = new Usuario();
                                 $usuario->setLogin($cellContent[2]);
@@ -75,14 +89,18 @@
                                 
                                 $aluno->setUsuario($responseDB);
                                 $alunoController = new ControllerAluno();
-                                $alunoController->salvar($aluno);
+                                $alunoController->salvarPorPlanilha($aluno);
                             }                       
                         }
                     }
                     header('location:' . $_SERVER['PHP_SELF']);
+                } else  {
+                    Validator::validate(true, "Escolha uma planilha.");
+                    Validator::onErrorRedirectTo("../../pages/aluno/aluno-cadastrar-planilha.php");
                 }
             }
 ?>
+
 <style rel="stylesheet" type="text/css">
     .row {
         margin-left: 0px;

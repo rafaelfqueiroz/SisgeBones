@@ -34,7 +34,7 @@
     
     if (@$_POST['source'] == "login") {        
         $usuarioController = new ControllerUsuario();
-        $usuario = $usuarioController->encontrarPorLoginESenha($_POST["login"], $_POST["senha"]);
+        $usuario = $usuarioController->encontrarPorLoginESenha(@$_POST["login"], @$_POST["senha"]);
         if ($usuario != NULL) {
             session_start();            
             if ($usuario->getTipo() == 1) { //administrador
@@ -43,12 +43,16 @@
                 $_SESSION["usuario"] = serialize($admin);       
             } else if ($usuario->getTipo() == 2) { //professor                
                 $professorController = new ControllerProfessor();
-                $professor = $professorController->encontrarProfessorPorIdUsuario($usuario->getId());                
+                $professor = $professorController->encontrarProfessorPorIdUsuario($usuario->getId());
                 $_SESSION["usuario"] = serialize($professor);
             } else if ($usuario->getTipo() == 3) { //aluno
                 $alunoController = new ControllerAluno();
                 $aluno = $alunoController->encontrarAlunoPorIdUsuario($usuario->getId());
                 $_SESSION["usuario"] = serialize($aluno);
+                if ($aluno->getAtivo() == 0) {
+                    header("location: ../home/perfil.php");
+                    die();
+                }
             } 
             header('location: ../home/home.php');
             die();
@@ -114,6 +118,7 @@
     <div class="container-fluid">
         
         <div class="row-fluid">
+<!--                <img src="../../resource/img/logo_cinza.jpg" alt="">-->
     <div class="dialog span4">
         <div class="block">
             <div class="block-heading">Sign In</div>

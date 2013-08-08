@@ -13,7 +13,6 @@ class ControllerUsuario extends CrudController {
     
     public function encontrarPorLogin($login) {
         $resultado = $this->persistencia->encontrarPorLogin(trim($login));
-        
         $uniqueValue = NULL;
         if (sizeof($resultado) == 1) {
             $uniqueValue = $resultado[0];
@@ -39,12 +38,42 @@ class ControllerUsuario extends CrudController {
         return $uniqueValue;
     }
     
+    public function atualizarPerfilUsuario($entidade, $confirmarSenha) {
+        if ($entidade->getSenha() == null && $confirmarSenha == null) {
+            $bdEntity = parent::encontrarPorId($entidade);
+            $entidade->setSenha($bdEntity->getSenha());
+            $confirmarSenha = $bdEntity->getSenha();
+            $this->validatePerfilUsuario($entidade, $confirmarSenha);
+        } else {
+            $this->validatePerfilUsuario($entidade, $confirmarSenha);
+            $senha = $entidade->getSenha();
+            $senha = sha1($senha);
+            $entidade->setSenha($senha);
+        }
+        $this->persistencia->atualizar($entidade);
+    }
+    
+    public function validatePerfilUsuario($entidade, $confirmarSenha) {
+        Validator::validate($entidade == null, "Preencha todos os campos");
+        Validator::validate($entidade->getLogin() == null, "O campo login deve ser preenchido");
+        Validator::validate($entidade->getSenha() != $confirmarSenha, "Os campos 'senha' e 'confirmar senha' devem ser preenchidos");
+        Validator::validate($entidade->getSenha() == null, "O campo senha deve ser preenchido");
+        Validator::onErrorRedirectTo("../../pages/home/perfil.php");
+    }
+    
     public function atualizarUsuario($entidade, $confirmarSenha, $idUsuario) {
         //lembrar de inserir código para escapagem para evitar sql injection
-        $this->validateUsuarioAtualizar($entidade, $confirmarSenha, $idUsuario);
-        $senha = $entidade->getSenha();
-        $senha = sha1($senha);
-        $entidade->setSenha($senha);
+        if ($entidade->getSenha() == null && $confirmarSenha == null) {
+            $bdEntity = $this->persistencia->encontrarPorId($entidade);
+            $entidade->setSenha($bdEntity->getSenha());
+            $confirmarSenha = $bdEntity->getSenha();
+            $this->validateUsuarioAtualizar($entidade, $confirmarSenha, $idUsuario);
+        } else {
+            $this->validateUsuarioAtualizar($entidade, $confirmarSenha, $idUsuario);
+            $senha = $entidade->getSenha();
+            $senha = sha1($senha);
+            $entidade->setSenha($senha);
+        }
         $this->persistencia->atualizar($entidade);
     }
     
@@ -56,10 +85,7 @@ class ControllerUsuario extends CrudController {
     }
     
     public function validateUsuario($entidade, $confirmarSenha) {
-        Validator::validate($entidade == null, "Preencha todos os campos");
-        Validator::validate($entidade->getLogin() == null, "O campo login deve ser preenchido");
-        Validator::validate($entidade->getSenha() != $confirmarSenha, "Os valores dos campos 'senha' e 'confirmar senha' devem ser iguais");
-        Validator::validate($entidade->getSenha() == null, "O campo senha deve ser preenchido");
+        $this->validationMessage($entidade, $confirmarSenha);
         if (PermissionValidator::isAdministrador()) {
             Validator::onErrorRedirectTo("../../pages/administrador/administrador-cadastrar.php");
         } else if (PermissionValidator::isAluno()) {
@@ -70,17 +96,21 @@ class ControllerUsuario extends CrudController {
     }
     
     public function validateUsuarioAtualizar($entidade, $confirmarSenha, $idUsuario) {
+        $this->validationMessage($entidade, $confirmarSenha);
+        if (PermissionValidator::isAdministrador()) {
+            Validator::onErrorRedirectTo("../../pages/administrador/administrador-editar.php?id={$idUsuario}");
+        } else if (PermissionValidator::isAluno()) {
+            Validator::onErrorRedirectTo("../../pages/aluno/aluno-editar.php?id={$idUsuario}");
+        } else if (PermissionValidator::isProfessor()) {
+            Validator::onErrorRedirectTo("../../pages/professor/professor-editar.php?id={$idUsuario}");
+        }
+    }
+    
+    public function validationMessage($entidade, $confirmarSenha) {
         Validator::validate($entidade == null, "Preencha todos os campos");
         Validator::validate($entidade->getLogin() == null, "O campo login deve ser preenchido");
         Validator::validate($entidade->getSenha() != $confirmarSenha, "Os campos 'senha' e 'confirmar senha' devem ser preenchidos");
         Validator::validate($entidade->getSenha() == null, "O campo senha deve ser preenchido");
-        if (PermissionValidator::isAdministrador()) {
-            Validator::onErrorRedirectTo("../../pages/administrador/administrador-editar.php?id={$idUsuario}");
-        } else if (PermissionValidator::isAluno()) {
-            Validator::onErrorRedirectTo("../../pages/aluno/aluno-editar.php?id={$entidade->getId()}");
-        } else if (PermissionValidator::isProfessor()) {
-            Validator::onErrorRedirectTo("../../pages/professor/professor-editar.php?id={$entidade->getId()}");
-        }
     }
 }
 

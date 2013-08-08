@@ -89,7 +89,7 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     public function listarComoUsuario() {
         $this->abrirConexao();
         $this->criarComando("SELECT * FROM aluno AS t INNER JOIN usuario AS u ON
-        t.idUsuarioAluno = u.idUsuario");
+        t.idUsuarioAluno = u.idUsuario and ativo = 1");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();
@@ -113,7 +113,7 @@ class AlunoPersistence extends AbstractPersistence implements AlunoDao{
     public function listarMonitores() {
         $this->abrirConexao();
         $this->criarComando("SELECT * FROM aluno AS t INNER JOIN usuario AS u ON
-        t.idUsuarioAluno = u.idUsuario WHERE eMonitor = 1");
+        t.idUsuarioAluno = u.idUsuario WHERE eMonitor = 1 and ativo = 1");
         $this->executarComando();
         if (gettype($this->resultado) != "boolean") {
             $this->dadosParaModel();

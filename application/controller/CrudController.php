@@ -16,7 +16,7 @@ abstract class CrudController implements Controller {
     
     public function atualizar($entidade) {
         //lembrar de inserir código para escapagem para evitar sql injection        
-        $this->persistencia->atualizar($entidade);
+        return $this->persistencia->atualizar($entidade);
     }
     public function listar() {        
         return $this->persistencia->listar();
@@ -35,10 +35,9 @@ abstract class CrudController implements Controller {
     public function encontrarPorId($entidade) {
         $resultado = $this->persistencia->encontrarPorId($entidade);
         $uniqueValue = NULL;
-        if (sizeof($resultado) == 1) {            
+        if (sizeof($resultado) == 1) {
             $uniqueValue = $resultado[0];
-        }        
-        
+        }
         return $uniqueValue;        
     }
     

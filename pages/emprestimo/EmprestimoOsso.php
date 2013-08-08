@@ -20,8 +20,6 @@
     $ossoController = new ControllerOsso();
     $list = $ossoController->listar();
     if (isset($_SESSION["bandeja"])) {
-        var_dump("ENTROU NO IF DA BANDEJA");
-        exit();
         $hash = array();
         for ($i = 0; $i < sizeof($list);$i++) {
             $hash[$list[$i]->getId()] = $i;            
