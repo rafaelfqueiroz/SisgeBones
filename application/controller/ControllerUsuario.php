@@ -22,7 +22,7 @@ class ControllerUsuario extends CrudController {
     
     public function validateToLogon($login, $senha) {
         Validator::validate($login == null || $senha == null, "Usuário ou senha inválidos.");
-        Validator::onErrorRedirectTo("../../pages/login/index.php");
+        Validator::onErrorRedirectTo("/sisgebones/index.php");
     }
     
     public function encontrarPorLoginESenha($login, $senha) {
@@ -34,7 +34,7 @@ class ControllerUsuario extends CrudController {
             $uniqueValue = $resultado[0];
         }
         Validator::validate($uniqueValue == null, "Usuário não cadastrado no sistema");
-        Validator::onErrorRedirectTo("../../pages/login/index.php");
+        Validator::onErrorRedirectTo("/sisgebones/index.php");
         return $uniqueValue;
     }
     

@@ -26,7 +26,7 @@ class ControllerEmprestimo extends CrudController{
         Validator::validate($entidade == null,"Preencha os campos corretamente.");
         Validator::validate($entidade->getOssos() == null,"Nenhum osso foi escolhido para o empréstimo");
         Validator::validate($entidade->getUsuario() == null,"Nenhum usuario foi escolhido para o empréstimo");
-        Validator::onErrorRedirectTo("../../pages/emprestimo/emprestimo-cadastrar.php");
+        Validator::onErrorRedirectTo("../../pages/emprestimo/emprestimo-registrar.php");
     }
 }
 

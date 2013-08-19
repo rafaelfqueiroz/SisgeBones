@@ -20,9 +20,10 @@
         public static function showError() {
             $error = "";
             if (isset($_SESSION["error"])) {
-                $error .= "<div class=\"row-fluid\">";
+                $error .= "<div id=\"divErrorValidation\" class=\"row-fluid\">";
                     $error .= "<div class=\"span12\">";
                         $error .= "<div class=\"alert alert-error\">";
+                            $error .= "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>";
                             foreach ($_SESSION["error"] as $message) {
                                 $error .= $message . "<br>";
                             }

@@ -36,10 +36,9 @@
     
     session_start();
     
-    if (empty($_SESSION["usuario"])):
+    if (empty($_SESSION["sUsuario"])):
         header("location: ../../index.php");
     else :      
-        include_once '../../application/view/header.view.php';
         $viewUsuario = new ViewUsuario();
         if (@$_POST["source"] == "editar") {
             $usuario = new Usuario();
@@ -59,7 +58,7 @@
                 $administrador->setUsuario($usuario);
                 $flag = $adminController->atualizarPerfilAdministrador($administrador);
                 if ($flag) {
-                    $_SESSION["usuario"] = serialize($administrador);
+                    $_SESSION["sUsuario"] = ($administrador);
                 }
             } else if (PermissionValidator::isProfessor()) { //professor
                 $usuario->setTipo(2);
@@ -75,7 +74,7 @@
                 $professor->setUsuario($usuario);
                 $flag = $professorController->atualizarPerfilProfessor($professor);
                 if ($flag) {
-                    $_SESSION["usuario"] = serialize($professor);
+                    $_SESSION["sUsuario"] = ($professor);
                 }
             } else if (PermissionValidator::isAluno()) { //aluno
                 $usuario->setTipo(3);
@@ -91,10 +90,13 @@
                 $aluno->setUsuario($usuario);
                 $flag = $alunoController->atualizarPerfilAluno($aluno);
                 if ($flag) {
-                    $_SESSION["usuario"] = serialize($aluno);
+                    $_SESSION["sUsuario"] = ($aluno);
                 }
             }
         }
+        
+                include_once '../../application/view/header.view.php';
+
 ?>
 <script>
     function showPasswordElements() {
@@ -121,7 +123,7 @@
                     <span class="icon-bar"></span>
                 </a>
                 
-                <a class="logo" href="#">Sisgebones</a>
+                <a class="logo" href="#"><img src="../../resource/img/logo_mini_white.png" alt=""></a>
                 <?php if (!(PermissionValidator::isAluno() && DadosSessao::getDadosSessao()->getAtivo() == 0)) :  ?>
                     <ul class="breadcrumb visible-desktop">
                         <li class="home"><a href="home.php"></a><span class="divider"></span></li>

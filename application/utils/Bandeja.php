@@ -5,11 +5,11 @@
     $tray = NULL;
     
     if ($_POST["action"] == "adicionar") {        
-        if (isset($_SESSION["bandeja"])) {
-            $tray = unserialize($_SESSION["bandeja"]);            
+        if (isset($_SESSION["sBandeja"])) {
+            $tray = ($_SESSION["sBandeja"]);            
         } else {
             $tray = array();
-            $_SESSION["contador"] = array();
+            $_SESSION["sContador"] = array();
         }
         
         $item = json_decode($_POST["item"]);
@@ -27,23 +27,23 @@
 //            $tray[$osso->getId()]->setQuantidade($soma);
 //        } else {
             $tray[$osso->getId()] = $osso;
-            if (isset($_SESSION["contador"][$osso->getId()])) {
-                $_SESSION["contador"][$osso->getId()] += $_POST["qtdOsso"];
+            if (isset($_SESSION["sContador"][$osso->getId()])) {
+                $_SESSION["sContador"][$osso->getId()] += $_POST["qtdOsso"];
             } else {
-                $_SESSION["contador"][$osso->getId()] = $_POST["qtdOsso"];
+                $_SESSION["sContador"][$osso->getId()] = $_POST["qtdOsso"];
             }
 //        }
     } else if ($_POST["action"] == "remover") {
-        $tray = unserialize($_SESSION["bandeja"]);
+        $tray = ($_SESSION["sBandeja"]);
         $idOsso = json_decode($_POST["item"]);
         unset($tray[$idOsso]);
-        unset($_SESSION["contador"][$idOsso]);
+        unset($_SESSION["sContador"][$idOsso]);
     }
-    $_SESSION["bandeja"] = serialize($tray);
+    $_SESSION["sBandeja"] = ($tray);
     $textTray = "";
     $total = 0;
     foreach ($tray as $itemTray) {
-        $qtdEmprestimo = $_SESSION["contador"][$itemTray->getId()];
+        $qtdEmprestimo = $_SESSION["sContador"][$itemTray->getId()];
         $textTray .= "<tr><td>{$itemTray->getNome()}</td><td>{$itemTray->getCodigo()}</td>
         <td>{$qtdEmprestimo}</td><td><a href=\"#\" onClick=\"removerDaBandeja({$itemTray->getId()}, {$qtdEmprestimo})\">Retirar</a></td></tr>";
         $total += $qtdEmprestimo;

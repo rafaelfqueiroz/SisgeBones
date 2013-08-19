@@ -8,7 +8,7 @@
         }
         
         public function printForm() {
-            $user = unserialize($_SESSION["usuario"]);
+            $user = ($_SESSION["sUsuario"]);
             if (PermissionValidator::isAdministrador()) {
                 $this->formProfileAdministrador($user);
             } else if (PermissionValidator::isAluno()) {

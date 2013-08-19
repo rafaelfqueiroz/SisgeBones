@@ -7,7 +7,7 @@
     class DadosSessao {
         
         public static function getDadosSessao() {
-            return unserialize($_SESSION["usuario"]);
+            return ($_SESSION["sUsuario"]);
         }
     }
 ?>

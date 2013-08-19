@@ -27,7 +27,7 @@
     
     session_start();
     
-    if (empty($_SESSION["usuario"])):
+    if (empty($_SESSION["sUsuario"])):
         header("location: ../../index.php");
         exit();
     else :
@@ -36,7 +36,7 @@
             exit();
         }
         if (PermissionValidator::isAdministrador()) :
-            $admin = unserialize($_SESSION["usuario"]);
+            $admin = ($_SESSION["sUsuario"]);
             if ($admin->getModerador() == '0') :                
                 include_once '../../application/view/header.view.php';   
                 $viewAdministrador = new ViewAdministrador();
@@ -65,7 +65,7 @@
                     $flag = $adminController->atualizarAdministrador($administrador);
                     if ($flag) {
                         if ($administrador->getId() == DadosSessao::getDadosSessao()->getId()) {
-                            $_SESSION["usuario"] = serialize($administrador);
+                            $_SESSION["sUsuario"] = ($administrador);
                         }
                     }
                     header('location: administrador-listar.php');
@@ -97,7 +97,7 @@
                     <span class="icon-bar"></span>
                 </a>
                 
-                <a class="logo" href="#">Sisgebones</a>
+                <a class="logo" href="#"><img src="../../resource/img/logo_mini_white.png" alt=""></a>
                 
                 <ul class="breadcrumb visible-desktop">
                     <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>                

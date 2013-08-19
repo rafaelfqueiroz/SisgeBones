@@ -159,7 +159,7 @@
                             $view .= "</tr>";
                         }
                     }
-                    $view .= "</tbody";
+                    $view .= "</tbody>";
                 $view .= "</table>";
             } else {
                 $view .= "<h5>Não há professores cadastrados</h5>";

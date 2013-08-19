@@ -18,6 +18,7 @@
         <script src="../../resource/js/jquery/jquery-latest.js"></script>    
         <script src="../../resource/js/template/menu.js"></script>
         <script src="../../resource/js/sisgebones/sisgebones.js"></script>
+        <script src="../../resource/js/sisgebones/sisgebones_validation.js"></script>
 <!--        <script src="../../resource/js/bootstrap/bootstrap.min.js"></script>-->
         <script src="../../resource/js/jquery/jquery.dataTables.js"></script>
         <script src="../../resource/js/bootstrap/DT_bootstrap.js"></script>

@@ -200,7 +200,7 @@
                             $view .= "</tr>";
                         }
                     }
-                    $view .= "</tbody";
+                    $view .= "</tbody>";
                 $view .= "</table>";
             } else {
                 $view .= "<h5>Não há alunos cadastrados</h5>";
@@ -247,7 +247,7 @@
                             $view .= "</tr>";
                         }
                     }
-                    $view .= "</tbody";
+                    $view .= "</tbody>";
                 $view .= "</table>";
             } else {
                 $view .= "<h5>Não há monitores cadastrados</h5>";

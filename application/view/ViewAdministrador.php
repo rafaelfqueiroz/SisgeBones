@@ -126,7 +126,7 @@ class ViewAdministrador extends AbstractView{
         }
     
     public function printListAsTable() {
-        $admin = unserialize($_SESSION["usuario"]);
+        $admin = ($_SESSION["sUsuario"]);
         $this->list = $this->administradorController->listarComoUsuario();
         $view = "";
         if ($this->list != null) {
@@ -169,7 +169,7 @@ class ViewAdministrador extends AbstractView{
                             $view .= "</tr>";
                         }
                     }
-                    $view .= "</tbody";
+                    $view .= "</tbody>";
                 $view .= "</table>";
             } else {
                 $view .= "<h5>Não há administradores cadastrados</h5>";

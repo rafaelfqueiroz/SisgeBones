@@ -1,10 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Conexao
  *
@@ -33,7 +27,7 @@ class Conexao {
     }
     
     public function __destruct() {        
-        mysql_close($this->link);
+//        mysql_close($this->link);
     }
 }
 

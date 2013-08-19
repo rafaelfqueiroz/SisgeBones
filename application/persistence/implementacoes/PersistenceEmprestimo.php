@@ -129,7 +129,7 @@ class EmprestimoPersistence extends AbstractPersistence implements EmprestimoDao
             }
             $emprestimoRegistrado = $this->lista[0];            
             foreach ($entidade->getOssos() as $osso) {
-                $qtdEmprestado = $_SESSION["contador"][$osso->getId()];
+                $qtdEmprestado = $_SESSION["sContador"][$osso->getId()];
                 $this->criarComando("INSERT INTO osso_emprestimo
                 (idOssoOsso_Emprestimo, idEmprestimoOsso_Emprestimo, quantidadeOsso_Emprestimo) VALUES 
                 ({$osso->getId()}, {$emprestimoRegistrado->getId()}, {$qtdEmprestado})");

@@ -19,15 +19,15 @@
     session_start();
     $ossoController = new ControllerOsso();
     $list = $ossoController->listar();
-    if (isset($_SESSION["bandeja"])) {
+    if (isset($_SESSION["sBandeja"])) {
         $hash = array();
         for ($i = 0; $i < sizeof($list);$i++) {
             $hash[$list[$i]->getId()] = $i;            
         }
-        $tray = unserialize($_SESSION["bandeja"]);
+        $tray = ($_SESSION["sBandeja"]);
         foreach ($tray as $item) {
             $qtdValue = $list[$hash[$item->getId()]]->getQtdDisponivel();
-            $list[$hash[$item->getId()]]->setQtdDisponivel($qtdValue - $_SESSION["contador"][$item->getId()]);
+            $list[$hash[$item->getId()]]->setQtdDisponivel($qtdValue - $_SESSION["sContador"][$item->getId()]);
         }
     }
     echo json_encode($list);

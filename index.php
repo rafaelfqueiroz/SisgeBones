@@ -40,15 +40,15 @@
             if ($usuario->getTipo() == 1) { //administrador
                 $adminController = new ControllerAdministrador();                
                 $admin = $adminController->encontrarAdministradorPorIdUsuario($usuario->getId());
-                $_SESSION["usuario"] = serialize($admin);       
+                $_SESSION["sUsuario"] = $admin;       
             } else if ($usuario->getTipo() == 2) { //professor                
                 $professorController = new ControllerProfessor();
                 $professor = $professorController->encontrarProfessorPorIdUsuario($usuario->getId());
-                $_SESSION["usuario"] = serialize($professor);
+                $_SESSION["sUsuario"] = $professor;
             } else if ($usuario->getTipo() == 3) { //aluno
                 $alunoController = new ControllerAluno();
                 $aluno = $alunoController->encontrarAlunoPorIdUsuario($usuario->getId());
-                $_SESSION["usuario"] = serialize($aluno);
+                $_SESSION["sUsuario"] = $aluno;
                 if ($aluno->getAtivo() == 0) {
                     header("location: pages/home/perfil.php");
                     die();
@@ -74,8 +74,8 @@
     <link rel="stylesheet" type="text/css" href="resource/css/bootstrap-responsive.css">
     <link rel="stylesheet" type="text/css" href="resource/css/theme.css">
     <link rel="stylesheet" type="text/css" href="resource/css/font-awesome.css">
-
-<!--    <script src="resource/js/jquery-latest.js" type="text/javascript"></script>-->
+    <script src="resource/js/jquery/jquery-latest.js" type="text/javascript"></script>
+    <script src="resource/js/sisgebones/sisgebones_validation.js"></script>
     
     <style type="text/css">
         #line-chart {
@@ -119,6 +119,9 @@
         
         <div class="row-fluid">
 <!--                <img src="resource/img/logo_cinza.jpg" alt="">-->
+            <div style="text-align:center;">
+                    <img src="resource/img/logo.png" alt="">
+            </div>
     <div class="dialog span4">
         <div class="block">
             <div class="block-heading">Sign In</div>

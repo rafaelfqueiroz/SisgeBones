@@ -10,7 +10,12 @@
  *
  * @author RAFAEL
  */
-include_once '../../application/persistence/implementacoes/Conexao.php';
+    $uri = $_SERVER["PHP_SELF"];
+    if ($uri == "/sisgebones/index.php") {
+        include_once 'application/persistence/implementacoes/Conexao.php';
+    } else {
+        include_once '../../application/persistence/implementacoes/Conexao.php';
+    }
 
 abstract class AbstractPersistence implements Dao{
     

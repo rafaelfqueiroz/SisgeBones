@@ -19,7 +19,7 @@
     
     session_start();
     
-    if (empty($_SESSION["usuario"])) {
+    if (empty($_SESSION["sUsuario"])) {
         header("location: ../../index.php");
         exit();
     } else {

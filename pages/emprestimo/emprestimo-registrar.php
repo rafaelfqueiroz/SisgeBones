@@ -47,7 +47,7 @@
     
     session_start();
     
-    if (empty($_SESSION["usuario"])):
+    if (empty($_SESSION["sUsuario"])):
         header("location: ../../index.php");
         exit();
     else :
@@ -57,19 +57,22 @@
         }
         if (PermissionValidator::isAdministrador()) :            
             $viewEmprestimo = new ViewEmprestimo();       
-            $admin = unserialize($_SESSION["usuario"]);
+            $admin = ($_SESSION["sUsuario"]);
             if (@$_POST['source'] == "registrar") {
                 $emprestimo = new Emprestimo();
+                $nomeUsuario = @$_POST['nome'];
+                Validator::validate($nomeUsuario == null, "Escolha um usuário da lista.");
+                Validator::onErrorRedirectTo("../../pages/emprestimo/emprestimo-registrar.php");
                 if (@$_POST['tipo'] == "3") {
                     $alunoController = new ControllerAluno();
                     $aluno = new Aluno();
-                    $aluno->setId(@$_POST['nome']);
+                    $aluno->setId($nomeUsuario);
                     $aluno = $alunoController->encontrarPorId($aluno);
                     $emprestimo->setUsuario($aluno->getUsuario());
                 } else if (@$_POST['tipo'] == "2"){
                     $professorController = new ControllerProfessor();
                     $professor = new Professor();
-                    $professor->setId(@$_POST['nome']);
+                    $professor->setId($nomeUsuario);
                     $professor = $professorController->encontrarPorId($professor);
                     $emprestimo->setUsuario($professor->getUsuario());
                 }                
@@ -81,7 +84,9 @@
                 $emprestimo->setStatus(true);
                 $ossoController = new ControllerOsso();
                 $ossos = array();
-                $ossos = unserialize($_SESSION["bandeja"]);
+                $ossos = ($_SESSION["sBandeja"]);
+                Validator::validate($ossos == null || sizeof($ossos) == 0, "Insira ossos na bandeja.");
+                Validator::onErrorRedirectTo("../../pages/emprestimo/emprestimo-registrar.php");
                 foreach ($ossos as $osso) {
                     $osso = $ossoController->atualizar($osso);
                 }
@@ -89,8 +94,8 @@
                 $emprestimoController = new ControllerEmprestimo();
                 $flag = $emprestimoController->salvar($emprestimo);
                 if ($flag == 1) {
-                    unset($_SESSION["bandeja"]);
-                    unset($_SESSION["contador"]);
+                    unset($_SESSION["sBandeja"]);
+                    unset($_SESSION["sContador"]);
                 }
             } 
 ?>
@@ -279,7 +284,7 @@
                     <span class="icon-bar"></span>
                 </a>
                 
-                <a class="logo" href="#">Sisgebones</a>
+                <a class="logo" href="#"><img src="../../resource/img/logo_mini_white.png" alt=""></a>
                 
                 <ul class="breadcrumb visible-desktop">
                     <li class="home"><a href="../home/home.php"></a><span class="divider"></span></li>                   

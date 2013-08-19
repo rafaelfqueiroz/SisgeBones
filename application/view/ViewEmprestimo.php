@@ -9,7 +9,7 @@
             $this->emprestimoController = new ControllerEmprestimo();
         }
         public function printForm() {
-            $admin = unserialize($_SESSION["usuario"]);
+            $admin = ($_SESSION["sUsuario"]);
             $ossoController = new ControllerOsso();
             $ossos = $ossoController->listar();
             $alunoController = new ControllerAluno();
@@ -65,8 +65,8 @@
                 $view .= "</div>";
             $view .= "</div>";
             $view .= "<br/><br/><div id=\"divTableTray\">";
-            if (isset($_SESSION["bandeja"])) {
-                $tray = unserialize($_SESSION["bandeja"]);
+            if (isset($_SESSION["sBandeja"])) {
+                $tray = ($_SESSION["sBandeja"]);
                 $view .= "<table id=\"tableTray\" class=\"table table-striped table-bordered dataTable\">";
                     $view .= "<thead>";
                         $view .= "<tr role=\"row\">";
@@ -241,7 +241,7 @@
                             $view .= "</tr>";
                         }
                     }
-                    $view .= "</tbody";
+                    $view .= "</tbody>";
                 $view .= "</table>";
             } else {
                 $view .= "<h5>Não há empréstimos registrados</h5>";
@@ -277,7 +277,7 @@
                             $view .= "</tr>";
                         }
                     }
-                    $view .= "</tbody";
+                    $view .= "</tbody>";
                 $view .= "</table>";
             } else {
                 $view .= "<h5>Não há empréstimos pendentes registrados</h5>";
@@ -320,7 +320,7 @@
                             $view .= "</tr>";
                         }
                     }
-                    $view .= "</tbody";
+                    $view .= "</tbody>";
                 $view .= "</table>";
             } else {
                 $view .= "<h5>Não há empréstimos realizados por você</h5>";
